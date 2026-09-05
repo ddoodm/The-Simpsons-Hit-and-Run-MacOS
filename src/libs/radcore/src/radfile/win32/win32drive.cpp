@@ -160,6 +160,29 @@ const char* radWin32Drive::GetDriveName( void )
 }
 
 //=============================================================================
+// Function:    radWin32Drive::ResolvePath
+//=============================================================================
+
+std::filesystem::path radWin32Drive::ResolvePath( const char* pName ) const
+{
+    std::string name( pName );
+    std::replace( name.begin(), name.end(), '\\', '/' );
+
+    // An empty m_DrivePath means this is the default drive, which resolves
+    // against the working directory so the game can be run from the directory
+    // holding the retail data. Otherwise the drive is concatenated rather than
+    // joined, because a Win32 drive prefix like "d:" takes a drive-relative
+    // path; joining would root it instead.
+    std::filesystem::path path = m_DrivePath.empty()
+        ? std::filesystem::current_path() / name
+        : std::filesystem::path( m_DrivePath.string() + name );
+
+    path.make_preferred();
+
+    return path;
+}
+
+//=============================================================================
 // Function:    radWin32Drive::Initialize
 //=============================================================================
 
@@ -188,14 +211,7 @@ radDrive::CompletionStatus radWin32Drive::OpenFile
 )
 {
     std::error_code error;
-    std::string tmp(fileName);
-    std::replace(tmp.begin(), tmp.end(), '\\', '/');
-    std::filesystem::path path;
-    if( m_DrivePath.empty() )
-        path = std::filesystem::current_path() / tmp;
-    else
-        path = m_DrivePath.string() + tmp;
-    path.make_preferred();
+    std::filesystem::path path = ResolvePath( fileName );
     if (std::filesystem::exists(path, error))
     {
         if (!error)
@@ -371,7 +387,7 @@ radDrive::CompletionStatus radWin32Drive::FindFirst
     // Find first
     //
     std::error_code error;
-    *pHandle = std::filesystem::directory_iterator(searchSpec, error);
+    *pHandle = std::filesystem::directory_iterator(ResolvePath(searchSpec), error);
 
     //
     // Fill in our directory info structure
@@ -445,7 +461,7 @@ radDrive::CompletionStatus radWin32Drive::CreateDir( const char* pName )
         "This drive does not support the CreateDir function." );
 
     std::error_code error;
-    if (std::filesystem::create_directory(pName, error))
+    if (std::filesystem::create_directory(ResolvePath(pName), error))
     {
         m_LastError = Success;
         return Complete;
@@ -467,11 +483,7 @@ radDrive::CompletionStatus radWin32Drive::DestroyDir( const char* pName )
         "This drive does not support the DestroyDir function." );
 
     std::error_code error;
-    std::filesystem::path path( pName );
-    if( m_DrivePath.empty() )
-        path = std::filesystem::current_path() / path;
-    else
-        path = m_DrivePath / path;
+    std::filesystem::path path = ResolvePath( pName );
     if (std::filesystem::is_directory(path, error) &&
         std::filesystem::remove(path, error))
     {
@@ -498,11 +510,7 @@ radDrive::CompletionStatus radWin32Drive::DestroyFile( const char* filename )
     //
 
     std::error_code error;
-    std::filesystem::path path( filename );
-    if( m_DrivePath.empty() )
-        path = std::filesystem::current_path() / path;
-    else
-        path = m_DrivePath / path;
+    std::filesystem::path path = ResolvePath( filename );
     if (!std::filesystem::is_directory(path, error) &&
         std::filesystem::remove(path, error))
     {

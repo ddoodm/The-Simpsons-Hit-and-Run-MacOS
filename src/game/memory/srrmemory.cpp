@@ -52,85 +52,50 @@ void MemoryHackCallback() { INIT_MEM() };
 #if defined( RAD_MACOS )
 
 //
-// A global operator new replaces the one every loaded library uses, so dyld's
-// shared library initializers allocate through here -- OpenAL building its
-// static tables, for one -- and those run before the executable's main(). The
-// game's allocator cannot serve them: INIT_MEM calls SDL_CreateMutex, and a
-// library initialized after OpenAL (which SDL is) has not bound its own
-// entry points yet, so the call jumps through a null pointer.
+// dyld initializes shared libraries before the executable, and a global
+// operator new replaces the one every loaded library uses, so those library
+// initializers allocate through here -- OpenAL building its static tables, for
+// one. The game's allocator cannot serve them: INIT_MEM calls
+// SDL_CreateMutex, and SDL is itself a library that may not have been
+// initialized yet, in which case the call jumps through a null pointer.
 //
-// Allocations made before main() therefore come from malloc, behind a tagged
-// header so operator delete can route each free to the allocator that owns it.
-// Reading the header back is safe because every pointer reaching operator
-// delete came from operator new: either malloc with this header, or a game
-// heap block, which always has a radMemory header of its own in front of it.
+// Those allocations therefore come from malloc. On the way back out, the heaps
+// are asked whether they own the block: if none does it came from malloc and
+// is freed the same way. Asking is what radMemoryFree does anyway, and unlike
+// a header written in front of the block it never reads memory the allocation
+// does not own -- a page-aligned block has nothing mapped before it.
 //
 namespace
 {
-    // Two words, because a single 64-bit value is plausible enough to occur by
-    // chance in the bytes preceding a game heap block.
-    const unsigned long long PRE_MAIN_TAG_0 = 0x5052454D41494E30ull;
-    const unsigned long long PRE_MAIN_TAG_1 = 0x5352523248454150ull;
-
-    struct PreMainHeader
+    void* EarlyAlloc( size_t size )
     {
-        unsigned long long tag0;
-        unsigned long long tag1;
-    };
-
-    void* PreMainAlloc( size_t size )
-    {
-        // sizeof( PreMainHeader ) is 16, so the payload keeps the alignment
-        // malloc handed back.
-        PreMainHeader* header =
-            static_cast< PreMainHeader* >( malloc( sizeof( PreMainHeader ) + size ) );
-
-        if( header == NULL )
-        {
-            return NULL;
-        }
-
-        header->tag0 = PRE_MAIN_TAG_0;
-        header->tag1 = PRE_MAIN_TAG_1;
-
-        return header + 1;
+        return malloc( size );
     }
 
-    // Returns false if the block is not one of ours, leaving it for the caller.
-    bool PreMainFree( void* pMemory )
+    // Returns false if the block belongs to a game heap, leaving it for the
+    // caller to free.
+    bool EarlyFree( void* pMemory )
     {
-        if( pMemory == NULL )
+        if( radMemoryIsOwned( pMemory ) )
         {
             return false;
         }
 
-        PreMainHeader* header = reinterpret_cast< PreMainHeader* >(
-            static_cast< char* >( pMemory ) - sizeof( PreMainHeader ) );
-
-        if( header->tag0 != PRE_MAIN_TAG_0 || header->tag1 != PRE_MAIN_TAG_1 )
-        {
-            return false;
-        }
-
-        header->tag0 = 0;
-        header->tag1 = 0;
-        free( header );
+        free( pMemory );
 
         return true;
     }
 }
 
-bool g_PastStaticInit = false;
-
-#define PRE_MAIN_ALLOC( size )                                                 \
-    if( g_PastStaticInit == false ) { return PreMainAlloc( size ); }
-#define PRE_MAIN_FREE( pMemory )                                               \
-    if( PreMainFree( pMemory ) ) { return; }
+#define EARLY_ALLOC( size )                                                    \
+    if( gMemorySystemInitialized == false ) { return EarlyAlloc( size ); }
+#define EARLY_FREE( pMemory )                                                  \
+    if( EarlyFree( pMemory ) ) { return; }
 
 #else
 
-#define PRE_MAIN_ALLOC( size )
-#define PRE_MAIN_FREE( pMemory )
+#define EARLY_ALLOC( size )
+#define EARLY_FREE( pMemory )
 
 #endif // RAD_MACOS
 
@@ -240,7 +205,7 @@ inline void* AllocateThis( GameMemoryAllocator allocator, size_t size )
 //==============================================================================
 void* operator new( size_t size )
 {
-    PRE_MAIN_ALLOC( size )
+    EARLY_ALLOC( size )
 
     if( gMemorySystemInitialized == false )
     {
@@ -283,7 +248,15 @@ void* operator new( size_t size )
 //==============================================================================
 void operator delete(void* pMemory)
 {
-    PRE_MAIN_FREE( pMemory )
+    //
+    // Deleting a null pointer is a no-op; radMemoryFree asserts on one.
+    //
+    if( pMemory == NULL )
+    {
+        return;
+    }
+
+    EARLY_FREE( pMemory )
 
     radMemoryFree( pMemory );
 }
@@ -302,7 +275,7 @@ void operator delete(void* pMemory)
 //==============================================================================
 void* operator new[]( size_t size )
 {
-    PRE_MAIN_ALLOC( size )
+    EARLY_ALLOC( size )
 
     if( gMemorySystemInitialized == false )
     {
@@ -344,7 +317,15 @@ void* operator new[]( size_t size )
 //==============================================================================
 void operator delete[]( void* pMemory )
 {
-    PRE_MAIN_FREE( pMemory )
+    //
+    // Deleting a null pointer is a no-op; radMemoryFree asserts on one.
+    //
+    if( pMemory == NULL )
+    {
+        return;
+    }
+
+    EARLY_FREE( pMemory )
 
     radMemoryFree( pMemory );
 }
@@ -400,6 +381,14 @@ void* operator new( size_t size, GameMemoryAllocator allocator )
 //==============================================================================
 void operator delete( void* pMemory, GameMemoryAllocator allocator )
 {
+    //
+    // Deleting a null pointer is a no-op; radMemoryFree asserts on one.
+    //
+    if( pMemory == NULL )
+    {
+        return;
+    }
+
     radMemoryFree( pMemory );
 }
 
@@ -454,6 +443,14 @@ void* operator new[]( size_t size, GameMemoryAllocator allocator )
 //==============================================================================
 void operator delete[]( void* pMemory, GameMemoryAllocator allocator )
 {
+    //
+    // Deleting a null pointer is a no-op; radMemoryFree asserts on one.
+    //
+    if( pMemory == NULL )
+    {
+        return;
+    }
+
     radMemoryFree( pMemory );
 }
 

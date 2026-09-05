@@ -9,8 +9,17 @@
 #include "platformdrives.hpp"
 #include "remotedrive.hpp"
 
-#if defined(RAD_WIN32) || defined(RAD_UWP)
+#if defined(RAD_WIN32) || defined(RAD_UWP) || defined(RAD_MACOS)
 #include "../win32/win32drive.hpp"
+#endif
+
+#if defined(RAD_MACOS)
+//
+// There are no drive letters to enumerate, and the file layer only needs a
+// name to key the single drive by. This one is never given a path of its own,
+// so the drive resolves filenames against the working directory.
+//
+static const char* const s_MacDriveName = "/";
 #endif
 
 //=============================================================================
@@ -34,6 +43,8 @@ void PlatformDrivesGetDefaultDrive( char* driveSpec )
     strncpy( driveSpec, bigDir, 2 );
     driveSpec[ 2 ] = '\0';
     strupr( driveSpec );
+#elif defined(RAD_MACOS)
+    strcpy( driveSpec, s_MacDriveName );
 #endif // RAD_WIN32 || RAD_UWP
 }
 
@@ -60,7 +71,10 @@ bool PlatformDrivesValidateDriveName( const char* driveSpec )
     {
         return false;
     }
-
+#elif defined(RAD_MACOS)
+    return strcmp( driveSpec, s_MacDriveName ) == 0;
+#else
+    return false;
 #endif // RAD_WIN32 || RAD_UWP
 }
 
@@ -79,7 +93,7 @@ void PlatformDrivesFactory( radDrive** ppDrive, const char* driveSpec, radMemory
         return;
     }
 
-#if defined(RAD_WIN32) || defined(RAD_UWP)
+#if defined(RAD_WIN32) || defined(RAD_UWP) || defined(RAD_MACOS)
     radWin32DriveFactory( ppDrive, driveSpec, alloc );
 #endif
 }

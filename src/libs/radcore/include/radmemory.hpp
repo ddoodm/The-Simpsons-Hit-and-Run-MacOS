@@ -201,6 +201,13 @@ void  radMemoryFree( radMemoryAllocator allocator, void* pMemory );
 
 void  radMemoryFree( void* pMemory );
 
+// True if one of the registered allocators owns this block, i.e. it is safe to
+// pass to radMemoryFree(). Lets a replaced global operator delete recognise
+// memory that came from somewhere else, which happens where system libraries
+// allocate through the game's operator new.
+
+bool  radMemoryIsOwned( void* pMemory );
+
 // These functions allocate aligned memory.  You MUST match
 // radMemoryAllocAligned() with radMemoryFreeAligned( ).
 

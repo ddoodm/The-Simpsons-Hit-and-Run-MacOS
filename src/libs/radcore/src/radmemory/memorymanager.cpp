@@ -42,7 +42,7 @@
 
 #include <memory/leakdetection.h>
 
-#if (defined RAD_UWP) || (defined RAD_MW) || (defined RAD_WIN32)
+#if (defined RAD_UWP) || (defined RAD_MW) || (defined RAD_WIN32) || (defined RAD_MACOS)
     extern void MemoryHackCallback();
 #endif
 
@@ -424,7 +424,7 @@ std::map<void*,AllocState> gbLeakMap;
 
 void * radMemoryAlloc( radMemoryAllocator allocator, unsigned int numberOfBytes )
 {
-#if ( defined RAD_UWP ) || ( defined RAD_MW ) || ( defined RAD_WIN32 )
+#if ( defined RAD_UWP ) || ( defined RAD_MW ) || ( defined RAD_WIN32 ) || ( defined RAD_MACOS )
     if ( !g_Initialized )
     {
         MemoryHackCallback();
@@ -474,7 +474,7 @@ void * radMemoryAllocAligned
     unsigned int alignment
 )
 {
-#if ( defined RAD_UWP ) || ( defined RAD_MW ) || ( defined RAD_WIN32 )
+#if ( defined RAD_UWP ) || ( defined RAD_MW ) || ( defined RAD_WIN32 ) || ( defined RAD_MACOS )
     if ( !g_Initialized )
     {
         MemoryHackCallback();
@@ -609,6 +609,21 @@ void radMemoryFree( void * pMemory )
     }
 
     pIRadMemoryAllocator->FreeMemory( pMemory );
+}
+
+//============================================================================
+// ::radMemoryIsOwned
+//============================================================================
+
+bool radMemoryIsOwned( void * pMemory )
+{
+    if ( pMemory == NULL || !g_Initialized )
+    {
+        return false;
+    }
+
+    return radMemoryFindAllocatorRecursive(
+        & g_AllocatorTreeNode_Root, pMemory ) != NULL;
 }
 
 //============================================================================

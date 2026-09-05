@@ -126,6 +126,10 @@ public:
     CompletionStatus DestroyFile( const char* filename );
 
 private:
+    // Game data paths are written with backslashes, which are an ordinary
+    // filename character rather than a separator off Windows.
+    std::filesystem::path ResolvePath( const char* pName ) const;
+
     void SetMediaInfo( void );
     radFileError TranslateError( std::error_code error );
     void TranslateDirInfo( IRadDrive::DirectoryInfo*   pDirectoryInfo, 

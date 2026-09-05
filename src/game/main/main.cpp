@@ -58,15 +58,6 @@ static void LogOutputFunction(void* userdata, int category, SDL_LogPriority prio
 //=============================================================================
 int main( int argc, char *argv[] )
 {
-#if defined( RAD_MACOS )
-    //
-    // Must be the first statement: every shared library initializer has run by
-    // now, so the game's allocator is safe to bring up and operator new can
-    // stop falling back to malloc.
-    //
-    g_PastStaticInit = true;
-#endif
-
     //
     // Pick out and store command line settings.
     //

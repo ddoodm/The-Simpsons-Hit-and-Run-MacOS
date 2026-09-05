@@ -84,6 +84,7 @@ void TrackingHeap::AddRef( void )
 //=============================================================================
 bool TrackingHeap::CanFreeMemory( void* pMemory )
 {
+    std::lock_guard< std::recursive_mutex > lock( m_Mutex );
     ADDRESS_SIZE_MAP::iterator found = m_Map.find( pMemory );
     if( found == m_Map.end() )
     {
@@ -119,6 +120,7 @@ bool TrackingHeap::CanFreeMemoryAligned( void* pMemory )
 //=============================================================================
 void TrackingHeap::FreeMemory( void* pMemory )
 {
+    std::lock_guard< std::recursive_mutex > lock( m_Mutex );
     ADDRESS_SIZE_MAP::iterator found = m_Map.find( pMemory );
     if( ( found == m_Map.end() ) && m_TrackAllocations )
     {
@@ -147,6 +149,7 @@ void TrackingHeap::FreeMemory( void* pMemory )
 //=============================================================================
 void TrackingHeap::FreeMemoryAligned( void* pMemory )
 {
+    std::lock_guard< std::recursive_mutex > lock( m_Mutex );
     ADDRESS_SIZE_MAP::iterator found = m_Map.find( pMemory );
     if( ( found == m_Map.end() ) && m_TrackAllocations )
     {
@@ -175,6 +178,7 @@ void TrackingHeap::FreeMemoryAligned( void* pMemory )
 //=============================================================================
 void* TrackingHeap::GetMemory ( unsigned int size )
 {
+    std::lock_guard< std::recursive_mutex > lock( m_Mutex );
     void* returnMe = radMemoryPlatAlloc( size );
     if( returnMe != NULL )
     {
@@ -196,6 +200,7 @@ void* TrackingHeap::GetMemory ( unsigned int size )
 //=============================================================================
 void* TrackingHeap::GetMemoryAligned( unsigned int size, unsigned int align )
 {
+    std::lock_guard< std::recursive_mutex > lock( m_Mutex );
     void* returnMe = radMemoryPlatAllocAligned( size, align );
     if( returnMe != NULL )
     {
@@ -266,6 +271,7 @@ void TrackingHeap::GetStatus(
 	unsigned int* numberOfObjects,
 	unsigned int* highWaterMark )
 {
+    std::lock_guard< std::recursive_mutex > lock( m_Mutex );
     if( totalFreeMemory != NULL )    *totalFreeMemory = m_MaxSize - m_TotalAllocated;
     if( largestBlock    != NULL )    *largestBlock    = 0;
     if( numberOfObjects != NULL )    *numberOfObjects = m_NumberOfAllocations;
@@ -285,6 +291,7 @@ void TrackingHeap::GetStatus(
 //=============================================================================
 void TrackingHeap::RecordAllocation( void* address, size_t size )
 {
+    std::lock_guard< std::recursive_mutex > lock( m_Mutex );
     //rAssert( reinterpret_cast< unsigned int >( address ) != 0x024D3320 );
     ++m_NumberOfAllocations;
     if( m_TotalAllocated > m_HighWater )
@@ -330,6 +337,7 @@ void TrackingHeap::Release( void )
 //=============================================================================
 void TrackingHeap::SetSize( size_t size )
 {
+    std::lock_guard< std::recursive_mutex > lock( m_Mutex );
     m_MaxSize = size;
 }
 
@@ -345,6 +353,7 @@ void TrackingHeap::SetSize( size_t size )
 //=============================================================================
 void TrackingHeap::TrackAllocations( bool trackAllocations )
 {
+    std::lock_guard< std::recursive_mutex > lock( m_Mutex );
     m_TrackAllocations = trackAllocations;
 }
 
@@ -360,6 +369,7 @@ void TrackingHeap::TrackAllocations( bool trackAllocations )
 //=============================================================================
 bool TrackingHeap::ValidateHeap( void )
 {
+    std::lock_guard< std::recursive_mutex > lock( m_Mutex );
     return true;
 }
 
