@@ -29,10 +29,12 @@
 #define GL_BGRA_EXT                       0x80E1
 #endif
 
-// srgb selects the sRGB-decoding internal formats, which is what makes the
-// game's lighting come out right. Callers must pass false when the context
-// lacks EXT_texture_sRGB, since these enums are then not accepted.
-static inline GLenum PickPixelFormat(pddiPixelFormat format, bool srgb)
+// Plain (non-sRGB) internal formats on purpose. The renderer never re-encodes
+// on output -- there is no GL_FRAMEBUFFER_SRGB anywhere and the default
+// framebuffer is not sRGB -- so sRGB-decoding formats would sample textures
+// into linear and send them to the display raw, crushing everything dark. The
+// game was authored for D3D8, which samples, blends and writes in one space.
+static inline GLenum PickPixelFormat(pddiPixelFormat format)
 {
     switch (format)
     {
@@ -40,8 +42,8 @@ static inline GLenum PickPixelFormat(pddiPixelFormat format, bool srgb)
     case PDDI_PIXEL_RGB565: return GL_RGB5;
     case PDDI_PIXEL_ARGB1555: return GL_RGB5_A1;
     case PDDI_PIXEL_ARGB4444: return GL_RGBA4;
-    case PDDI_PIXEL_RGB888: return srgb ? GL_SRGB8 : GL_RGB8;
-    case PDDI_PIXEL_ARGB8888: return srgb ? GL_SRGB8_ALPHA8 : GL_RGBA8;
+    case PDDI_PIXEL_RGB888: return GL_RGB8;
+    case PDDI_PIXEL_ARGB8888: return GL_RGBA8;
     case PDDI_PIXEL_PAL8: return GL_RGB8;
     case PDDI_PIXEL_PAL4: return GL_RGB8;
     case PDDI_PIXEL_LUM8: return GL_R8;
@@ -133,7 +135,7 @@ void pglTexture::SetGLState(void)
         else
         {
             glTexImage2D(GL_TEXTURE_2D, 0,
-                PickPixelFormat(lock.format, context->GetDisplay()->ExtSRGB()), xSize,
+                PickPixelFormat(lock.format), xSize,
                 ySize, 0, lock.native ? GL_BGRA_EXT : GL_RGBA, GL_UNSIGNED_BYTE,
                 (GLvoid *)bits[0]);
         }

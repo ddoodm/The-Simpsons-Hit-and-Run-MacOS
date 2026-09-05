@@ -598,7 +598,7 @@ tImageFactory::tImageFactory() :
     AddHandler(new tBMPHandler);
     AddHandler(new tTargaHandler); 
     AddHandler(new tRawImageHandler);
-#if defined(RAD_WIN32) || defined(RAD_UWP)
+#if defined(RAD_WIN32) || defined(RAD_UWP) || defined(RAD_MACOS)
     AddHandler( new tDXTNHandler );
 #endif
 }

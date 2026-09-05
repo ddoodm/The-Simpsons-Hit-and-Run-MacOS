@@ -47,7 +47,6 @@ public:
 
     void SetContext(pglContext* c) {context = c;}
     bool ExtBGRA(void) { return extBGRA;}
-    bool ExtSRGB(void) { return extSRGB;}
 #ifdef RAD_GLES
     bool ExtBlend(void) { return extBlend; }
 #endif
@@ -82,7 +81,6 @@ private:
     void* prevRC;
 
     bool extBGRA;
-    bool extSRGB;
 #ifdef RAD_GLES
     bool extBlend;
 #endif

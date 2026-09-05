@@ -39,7 +39,6 @@ pglDisplay ::pglDisplay(pddiDisplayInfo* info)
     prevRC = NULL;
 
     extBGRA = false;
-    extSRGB = false;
 
     gammaR = gammaG = gammaB = 1.0f;
 
@@ -220,7 +219,6 @@ bool pglDisplay ::InitDisplay(const pddiDisplayInit* init)
     }
 
     extBGRA = CheckExtension("GL_EXT_bgra") || CheckExtension("GL_EXT_texture_format_BGRA8888");
-    extSRGB = CheckExtension("GL_EXT_texture_sRGB") || CheckExtension("GL_ARB_framebuffer_sRGB");
 
     SDL_Log("OpenGL - Vendor: %s, Renderer: %s, Version: %s",glVendor,glRenderer,glVersion);
 

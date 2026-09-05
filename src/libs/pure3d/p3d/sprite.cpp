@@ -606,10 +606,17 @@ tEntity* tSpriteLoader::LoadObject(tChunkFile* f, tEntityStore* store)
                       if (images)
                       {
                           tTexture* texture = LoadTexture(f, 32);
-                          
-                          images[count] = texture;
-                          images[count]->AddRef();
-                          count++;
+
+                          // NULL means no registered handler claimed the
+                          // image's format, which leaves the sprite short an
+                          // animation frame rather than crashing here.
+                          P3DASSERT(texture);
+                          if (texture)
+                          {
+                              images[count] = texture;
+                              images[count]->AddRef();
+                              count++;
+                          }
                       }
                       else
                       {
