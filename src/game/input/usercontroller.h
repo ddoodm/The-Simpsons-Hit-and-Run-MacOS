@@ -7,7 +7,7 @@
 #include <radcontroller.hpp>
 #include <radkey.hpp>
 
-#if defined(RAD_WIN32)
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
 #include <input/steeringspring.h>
 #include <input/baseDamper.h>
 #include <input/constanteffect.h>

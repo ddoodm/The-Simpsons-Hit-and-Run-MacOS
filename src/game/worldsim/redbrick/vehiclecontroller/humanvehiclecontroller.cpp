@@ -11,7 +11,7 @@
 
 #include <main/commandlineoptions.h>
 
-#if defined(RAD_WIN32)
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
 #include <input/basedamper.h>
 #include <input/steeringspring.h>
 #include <input/constanteffect.h>
@@ -69,7 +69,7 @@ HumanVehicleController::HumanVehicleController( void )
 :
 mpMappable( 0 ),
 mControllerId( -1 ),
-#if defined(RAD_WIN32)
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
 mSpring( NULL ),
 mDamper( NULL ),
 mConstantEffect( NULL ),
@@ -199,7 +199,7 @@ void HumanVehicleController::Update( float timeins )
     Vehicle* vehicle = GetVehicle();
     float speed = vehicle->GetSpeedKmh();
 
-#if defined(RAD_WIN32)
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
     UserController* uc = NULL;
 
     //Set up the output points to default settings.
@@ -290,7 +290,7 @@ void HumanVehicleController::Update( float timeins )
             {
                 GetInputManager()->GetController( mControllerId )->ApplyEffect( RumbleEffect::GROUND2, 250 );
 
-#if defined(RAD_WIN32)
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
                 if ( mWheelRumble )
                 {
 //                    mWheelRumble->SetMagDir( 200, 90 );
@@ -306,7 +306,7 @@ void HumanVehicleController::Update( float timeins )
             {
                 GetInputManager()->GetController( mControllerId )->ApplyEffect( RumbleEffect::GROUND4, 250 );
 
-#if defined(RAD_WIN32)
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
                 if ( mWheelRumble )
                 {
 //                    mWheelRumble->SetMagDir( 200, 90 );
@@ -327,7 +327,7 @@ void HumanVehicleController::Update( float timeins )
             if ( speed > 40.0f ) //Hmmmm...  TODO: allow this to be modified
             {
                 GetInputManager()->GetController( mControllerId )->ApplyEffect( RumbleEffect::GROUND2, 250 );
-#if defined(RAD_WIN32)
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
                 if ( mWheelRumble )
                 {
 //                    mWheelRumble->SetMagDir( 255, 90 );
@@ -369,7 +369,7 @@ void HumanVehicleController::Init()
 
     UserController* uc = NULL;
 
-#if defined(RAD_WIN32)
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
     //Set up the output points to default settings.
     uc = GetInputManager()->GetController( mControllerId );
     if ( uc ) SetupRumbleFeatures( uc );
@@ -394,7 +394,7 @@ void HumanVehicleController::Init()
 //=============================================================================
 void HumanVehicleController::Shutdown()
 {
-#if defined(RAD_WIN32)
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
     //Stop the vehicle output point settings
 
     if ( mSpring )
@@ -436,7 +436,7 @@ void HumanVehicleController::HandleEvent( EventEnum id, void* pEventData )
     case EVENT_BIG_CRASH:
     case EVENT_BIG_VEHICLE_CRASH:
         {
-#if defined(RAD_WIN32)
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
             if ( mHeavyWheelRumble )
             {
 #ifdef RAD_WIN32
@@ -479,7 +479,7 @@ void HumanVehicleController::HandleEvent( EventEnum id, void* pEventData )
                 GetInputManager()->GetController( mControllerId )->ApplyDynaEffect( RumbleEffect::COLLISION1, 333, rc->normalizedForce );
                 GetInputManager()->GetController( mControllerId )->ApplyDynaEffect( RumbleEffect::COLLISION2, 333, rc->normalizedForce );
 
-#if defined(RAD_WIN32)
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
                 if ( mConstantEffect )
                 {
                     if ( mWheelRumble && rc->normalizedForce > 0.02f )
@@ -525,7 +525,7 @@ void HumanVehicleController::HandleEvent( EventEnum id, void* pEventData )
 }
 
 
-#if defined(RAD_WIN32)
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
 //=============================================================================
 // HumanVehicleController::SetupRumbleFeatures
 //=============================================================================

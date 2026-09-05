@@ -595,7 +595,7 @@
     <ClInclude Include="..\game\main\platform.h" />
     <ClInclude Include="..\game\main\singletons.h" />
     <ClInclude Include="..\game\main\tuidunaligned.h" />
-    <ClInclude Include="..\game\main\win32platform.h" />
+    <ClInclude Include="..\game\main\sdlplatform.h" />
     <ClInclude Include="..\game\memory\allocpool.h" />
     <ClInclude Include="..\game\memory\classsizetracker.h" />
     <ClInclude Include="..\game\memory\createheap.h" />
@@ -1231,8 +1231,8 @@
     </ClCompile>
     <ClCompile Include="..\game\main\singletons.cpp" />
     <ClCompile Include="..\game\main\tuidunaligned.cpp" />
-    <ClCompile Include="..\game\main\win32main.cpp" />
-    <ClCompile Include="..\game\main\win32platform.cpp" />
+    <ClCompile Include="..\game\main\main.cpp" />
+    <ClCompile Include="..\game\main\sdlplatform.cpp" />
     <ClCompile Include="..\game\memory\classsizetracker.cpp" />
     <ClCompile Include="..\game\memory\createheap.cpp" />
     <ClCompile Include="..\game\memory\leakdetection.cpp" />

@@ -27,7 +27,7 @@
 // Project Includes
 //========================================
 #include <main/game.h>
-#include <main/win32platform.h>
+#include <main/sdlplatform.h>
 #include <main/singletons.h>
 #include <main/commandlineoptions.h>
 #include <memory/memoryutilities.h>
@@ -77,11 +77,11 @@ int main( int argc, char *argv[] )
     // The initialize window call will fail if another Simpsons window exists. In
     // this case, we exit.
     //
-    if( !Win32Platform::InitializeWindow() )
+    if( !SdlPlatform::InitializeWindow() )
     {
         return 0;
     }
-    Win32Platform::InitializeFoundation();
+    SdlPlatform::InitializeFoundation();
 
     srand (Game::GetRandomSeed ());
 
@@ -105,7 +105,7 @@ int main( int argc, char *argv[] )
     //
     // Construct the platform object.
     //
-    Win32Platform* pPlatform = Win32Platform::CreateInstance();
+    SdlPlatform* pPlatform = SdlPlatform::CreateInstance();
     rAssert( pPlatform != NULL );
 
     //
@@ -151,10 +151,10 @@ int main( int argc, char *argv[] )
     // Destroy the game and platform (do it in this order in case the game's 
     // destructor references the platform.
     //
-    Win32Platform::DestroyInstance();
+    SdlPlatform::DestroyInstance();
 
     // As a last thing, shut down the memory.
-    Win32Platform::ShutdownMemory();
+    SdlPlatform::ShutdownMemory();
 
     // Re-enable the default heap
     //

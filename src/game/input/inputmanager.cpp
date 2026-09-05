@@ -441,7 +441,7 @@ void InputManager::EnumerateControllers( void )
 
 #if defined(RAD_CONSOLE) && !defined( RAD_GC )
             sprintf( szLocation, "Port%d\\Slot%d", port, slot );
-#elif defined(RAD_WIN32)
+#elif defined(RAD_WIN32) || defined(RAD_MACOS)
             char szJoystickLoc[ 256 ];
             char szMouseLoc[ 256 ];
             char szWheelLoc[ 256 ];

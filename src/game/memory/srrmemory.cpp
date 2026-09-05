@@ -37,9 +37,9 @@
 
 #include <mission/gameplaymanager.h>
 
-#if defined(RAD_WIN32)
-#include <main/win32platform.h>
-#define PLATFORMCLASS Win32Platform
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
+#include <main/sdlplatform.h>
+#define PLATFORMCLASS SdlPlatform
 #else if defined(RAD_UWP)
 #include <main/uwpplatform.h>
 #define PLATFORMCLASS UwpPlatform
@@ -1449,7 +1449,7 @@ void HeapManager::DumpArtStats ()
     const float HS_SPECIAL = 10.0f;
     #endif
 
-#elif defined (RAD_WIN32) // these have not been optimized yet.
+#elif defined (RAD_WIN32) || defined(RAD_MACOS) // these have not been optimized yet.
     #ifdef RAD_RELEASE
     const float HS_DEFAULT = 0.1f;  // For only very core FTech stuff
     #else

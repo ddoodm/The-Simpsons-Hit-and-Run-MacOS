@@ -141,7 +141,9 @@ set(SRR2_SOURCES
     ../game/loading/soundfilehandler.cpp
     ../game/main/commandlineoptions.cpp
     ../game/main/game.cpp
+    ../game/main/main.cpp
     ../game/main/pchsrr2.cpp
+    ../game/main/sdlplatform.cpp
     ../game/main/singletons.cpp
     ../game/main/tuidunaligned.cpp
     ../game/memory/classsizetracker.cpp
@@ -531,8 +533,7 @@ set(SRR2_SOURCES
 
 if(WIN32)
     list(APPEND SRR2_SOURCES
-        ../game/main/win32main.cpp
-        ../game/main/win32platform.cpp)
+)
 endif()
 
 if(APPLE)

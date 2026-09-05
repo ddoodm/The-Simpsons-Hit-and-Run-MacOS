@@ -8,7 +8,7 @@ namespace Input
     const static unsigned int MaxPorts = 4;
     const static unsigned int MaxSlots = 1;
     #endif
-    #if defined( RAD_WIN32 )
+    #if defined( RAD_WIN32 ) || defined( RAD_MACOS )
     const static unsigned int MaxPorts = 4;
     const static unsigned int MaxSlots = 1;
     #endif

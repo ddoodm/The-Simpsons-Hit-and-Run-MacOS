@@ -22,19 +22,10 @@ WINDOWS_ONLY = {
         'src/raddebugcommunication/targetconnection.cpp',
         'src/raddebugcommunication/targetsocketchannel.cpp',
     ],
-    'SRR2': [
-        '../game/main/win32main.cpp',
-        '../game/main/win32platform.cpp',
-    ],
 }
 
-# Sources compiled only on macOS, added by the platform-layer work.
-MACOS_ONLY = {
-    'SRR2': [
-        '../game/main/macosmain.cpp',
-        '../game/main/macosplatform.cpp',
-    ],
-}
+# Sources compiled only on macOS.
+MACOS_ONLY = {}
 
 LIBS = [
     dict(name='radmath', proj='src/libs/radmath/radmath.vcxproj',

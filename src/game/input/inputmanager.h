@@ -84,7 +84,7 @@ public:
         RightStickX,
         RightStickY
     };
-#elif defined(RAD_WIN32)  // Clumsy because of pc<->console differences
+#elif defined(RAD_WIN32) || defined(RAD_MACOS) // Clumsy because of pc<->console differences
     enum eButtonMap
     {
         MoveUp,                 // These are the real buttons names

@@ -161,13 +161,13 @@ void FollowCam::Update( unsigned int milliseconds )
 #ifdef CUT_LOOK
 #if defined(RAD_UWP)
     float leftRight = mController->GetValue( SuperCamController::stickX );
-#elif defined(RAD_WIN32)
+#elif defined(RAD_WIN32) || defined(RAD_MACOS)
     float left = mController->GetValue( SuperCamController::carLookLeft );
     float right = mController->GetValue( SuperCamController::carLookRight );
     float leftRight = ( right > left ) ? right : -left;
 #endif
 
-#if defined(RAD_WIN32)
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
     if ( mController->IsWheel() )
     {
         //This is a wheel.  No left right on wheels.
@@ -929,7 +929,7 @@ void FollowCam::GetTargetPosition( rmt::Vector* position,
 #if defined(RAD_UWP)
         lookUp = mController->GetValue( SuperCamController::stickY );
         lookLeftRight = mController->GetValue( SuperCamController::stickX );
-#elif defined(RAD_WIN32)
+#elif defined(RAD_WIN32) || defined(RAD_MACOS)
         lookUp = mController->GetValue( SuperCamController::carLookUp );
         float left = mController->GetValue( SuperCamController::carLookLeft );
         float right = mController->GetValue( SuperCamController::carLookRight );
@@ -938,7 +938,7 @@ void FollowCam::GetTargetPosition( rmt::Vector* position,
 #else
 #if defined(RAD_UWP)
         lookUp = mController->GetValue( SuperCamController::stickY );
-#elif defined(RAD_WIN32)
+#elif defined(RAD_WIN32) || defined(RAD_MACOS)
         lookUp = mController->GetValue( SuperCamController::carLookUp );
 #endif
 #endif
@@ -1026,7 +1026,7 @@ void FollowCam::CalculateRod( rmt::Vector* rod,
     float invertMod = GetSuperCamManager()->GetSCC( GetPlayerID() )->IsInvertedCameraEnabled() ? -1.0f : 1.0f;
 #if defined(RAD_UWP)
     float leftRight = -mController->GetAxisValue( SuperCamController::stickX );
-#elif defined(RAD_WIN32)
+#elif defined(RAD_WIN32) || defined(RAD_MACOS)
     float left = mController->GetValue( SuperCamController::carLookLeft );
     float right = mController->GetValue( SuperCamController::carLookRight );
     float leftRight = ( right > left ) ? -right : left;
@@ -1041,7 +1041,7 @@ void FollowCam::CalculateRod( rmt::Vector* rod,
         SetFlag( (Flag)LOS_CORRECTED, false );
     }
 
-#if defined(RAD_WIN32)
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
     if ( mController->IsWheel() )
     {
         //This is a wheel.  No left right on wheels.
@@ -1209,7 +1209,7 @@ bool FollowCam::GetDesiredRod( rmt::Vector* rod)
         float invertMod = GetSuperCamManager()->GetSCC( GetPlayerID() )->IsInvertedCameraEnabled() ? -1.0f : 1.0f;
 #if defined(RAD_UWP)
         float leftRight = mController->GetValue( SuperCamController::stickX );
-#elif defined(RAD_WIN32)
+#elif defined(RAD_WIN32) || defined(RAD_MACOS)
         float left = mController->GetValue( SuperCamController::carLookLeft );
         float right = mController->GetValue( SuperCamController::carLookRight );
         float leftRight = ( right > left ) ? right : -left;
@@ -1240,7 +1240,7 @@ bool FollowCam::IsPushingStick()
 {
 #if defined(RAD_UWP)
     float xAxis = mController->GetValue( SuperCamController::stickX );
-#elif defined(RAD_WIN32)
+#elif defined(RAD_WIN32) || defined(RAD_MACOS)
     float left = mController->GetValue( SuperCamController::carLookLeft );
     float right = mController->GetValue( SuperCamController::carLookRight );
     float xAxis = ( right > left ) ? right : -left;

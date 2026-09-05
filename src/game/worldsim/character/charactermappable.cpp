@@ -124,7 +124,7 @@ void CharacterMappable::LoadControllerMappings( unsigned int controllerId )
     Map("B", CharacterController::Dash, 0, controllerId);
     Map("X", CharacterController::Attack, 0, controllerId);
 
-#elif defined( RAD_WIN32 )
+#elif defined( RAD_WIN32 ) || defined(RAD_MACOS)
 
     ClearMap( 0 );
     Map( "MoveUp", CharacterController::DPadUp, 0, controllerId );

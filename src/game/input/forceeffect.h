@@ -22,7 +22,7 @@
 #include <dinput.h>
 #endif
 
-#if defined(RAD_WIN32)
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
 typedef char s8;
 typedef unsigned char u8;
 typedef short s16;

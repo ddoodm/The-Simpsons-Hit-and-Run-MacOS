@@ -5,7 +5,7 @@
 #include <gameflow/gameflow.h>
 #include <contexts/contextenum.h>
 #include <contexts/gameplay/gameplaycontext.h>
-#include <main/win32platform.h>
+#include <main/sdlplatform.h>
 #include <SDL2/SDL.h>
 
 #ifdef ENABLE_DYNA_LOADED_IMAGES
@@ -312,7 +312,7 @@ void FEMouse::SetupInGameMode()
 
     m_pCursor->SetVisible( !ingame );
 
-    SDL_Window* wnd = Win32Platform::GetInstance()->GetWindow();
+    SDL_Window* wnd = SdlPlatform::GetInstance()->GetWindow();
 
     if( ingame )
     {

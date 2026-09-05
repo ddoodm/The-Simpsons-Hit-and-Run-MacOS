@@ -57,7 +57,7 @@ const ControlMap GUI_CONTROL_MAP[] =
     { "LeftTrigger",    GuiInput::L1 },
     { "RightTrigger",   GuiInput::R1 },
 
-#elif defined(RAD_WIN32)
+#elif defined(RAD_WIN32) || defined(RAD_MACOS)
 
     { "feMoveLeft",     GuiInput::Left },
     { "feMoveRight",    GuiInput::Right },

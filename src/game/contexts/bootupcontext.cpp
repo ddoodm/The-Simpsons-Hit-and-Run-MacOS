@@ -60,8 +60,8 @@
 #include <worldsim/worldphysicsmanager.h>
 #include <worldsim/character/charactermanager.h>
 
-#if defined(RAD_WIN32)
-    #include <main/win32platform.h>
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
+    #include <main/sdlplatform.h>
     #include <data/config/gameconfigmanager.h>
 #elif defined(RAD_UWP)
     #include <main/uwpplatform.h>
@@ -231,7 +231,7 @@ void BootupContext::LoadConfig()
     // If we couldn't load the config file, create a new one.
     if( !success )
     {
-        Win32Platform::GetInstance()->LoadDefaults();
+        SdlPlatform::GetInstance()->LoadDefaults();
         gc->SaveConfigFile();
     }
 }
@@ -309,7 +309,7 @@ void BootupContext::OnStart( ContextEnum previousContext )
     //
     GetLoadingManager()->AddCallback( this );
 
-#if defined( RAD_WIN32 ) && defined( SHOW_MOVIES )
+#if ( defined( RAD_WIN32 ) || defined( RAD_MACOS ) ) && defined( SHOW_MOVIES )
     GetInputManager()->GetFEMouse()->SetInGameMode( true );
 #endif
 }
@@ -335,7 +335,7 @@ void BootupContext::OnStop( ContextEnum nextContext )
     // release GUI bootup
     GetGuiSystem()->HandleMessage( GUI_MSG_RELEASE_BOOTUP );
 
-#if defined( RAD_WIN32 ) && defined( SHOW_MOVIES )
+#if ( defined( RAD_WIN32 ) || defined( RAD_MACOS ) ) && defined( SHOW_MOVIES )
     GetInputManager()->GetFEMouse()->SetInGameMode( false );
 #endif
 

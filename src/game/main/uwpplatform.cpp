@@ -481,7 +481,7 @@ void UwpPlatform::ResetMachine()
 void UwpPlatform::LaunchDashboard()
 {
     //
-    // TODO(3UR): Maybe we need to change logic here to be more like win32platform (comment out some stuff)
+    // TODO(3UR): Maybe we need to change logic here to be more like sdlplatform (comment out some stuff)
     //
 
     GetLoadingManager()->CancelPendingRequests();

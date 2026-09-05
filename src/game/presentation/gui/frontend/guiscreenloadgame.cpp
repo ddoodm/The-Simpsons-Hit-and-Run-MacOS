@@ -673,7 +673,7 @@ void CGuiScreenLoadGame::LoadGame()
 
 #if defined(RAD_UWP)
     m_guiManager->DisplayMessage( CGuiScreenMessage::MSG_ID_LOADING_GAME_XBOX, this );
-#elif defined(RAD_WIN32)
+#elif defined(RAD_WIN32) || defined(RAD_MACOS)
     m_guiManager->DisplayMessage( CGuiScreenMessage::MSG_ID_LOADING_GAME_PC, this );
 #endif
 }
@@ -781,7 +781,7 @@ CGuiScreenAutoLoad::LoadGame()
 
 #if defined(RAD_UWP)
     m_guiManager->DisplayMessage( CGuiScreenMessage::MSG_ID_AUTO_LOADING_GAME_XBOX, this );
-#elif defined(RAD_WIN32)
+#elif defined(RAD_WIN32) || defined(RAD_MACOS)
     m_guiManager->DisplayMessage( CGuiScreenMessage::MSG_ID_AUTO_LOADING_GAME_PC, this );
 #endif
 }

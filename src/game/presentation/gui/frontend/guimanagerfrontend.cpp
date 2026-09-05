@@ -386,7 +386,7 @@ CGuiManagerFrontEnd::Start( CGuiWindow::eGuiWindowID initialWindow )
                    CGuiWindow::GUI_SCREEN_ID_MAIN_MENU;
 
 // On PC never show the splash screen.. it is very console-ish...
-#if defined(SHOW_SPLASH_SCREEN) && !defined(RAD_WIN32)
+#if defined(SHOW_SPLASH_SCREEN) && !defined(RAD_WIN32) && !defined(RAD_MACOS)
     bool skipSplashScreen = CommandLineOptions::Get( CLO_NO_SPLASH );
 #else
     bool skipSplashScreen = true;

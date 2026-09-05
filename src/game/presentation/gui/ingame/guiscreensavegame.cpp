@@ -736,7 +736,7 @@ CGuiScreenSaveGame::SaveGame()
 	m_operation = SAVE;
 #if defined(RAD_UWP)
     m_guiManager->DisplayMessage( CGuiScreenMessage::MSG_ID_SAVING_GAME_XBOX, this );
-#elif defined(RAD_WIN32)
+#elif defined(RAD_WIN32) || defined(RAD_MACOS)
     m_guiManager->DisplayMessage( CGuiScreenMessage::MSG_ID_SAVING_GAME_PC, this );
 #endif
 }

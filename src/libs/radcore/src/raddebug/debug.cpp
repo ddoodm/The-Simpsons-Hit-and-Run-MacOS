@@ -31,6 +31,11 @@
 #include <windows.h>
 #endif
 
+#if defined(RAD_MACOS)
+#include <stdlib.h>
+#include <SDL2/SDL.h>
+#endif
+
 //=============================================================================
 // Local Functions 
 //=============================================================================
@@ -131,6 +136,56 @@ static DWORD rErrorMessageBox(const char* text)
 
 #endif
 
+#if defined(RAD_MACOS)
+
+enum rAssertChoice
+{
+    rAssertChoice_Ignore = 0,
+    rAssertChoice_Break  = 1,
+    rAssertChoice_Abort  = 2
+};
+
+//=============================================================================
+// Function:    rErrorMessageBox
+//=============================================================================
+// Description: Displays the assertion dialog and blocks until dismissed.
+//
+// Parameters:  text - text of error message
+//
+// Returns:     the rAssertChoice the user picked
+//
+// Notes:
+//      Unlike Win32 this runs on the calling thread: SDL requires message
+//      boxes to be shown from the thread that set up video.
+//
+//------------------------------------------------------------------------------
+static int rErrorMessageBox( const char* text )
+{
+    static const SDL_MessageBoxButtonData buttons[] =
+    {
+        { SDL_MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT, rAssertChoice_Ignore, "Ignore" },
+        { SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT, rAssertChoice_Break,  "Break"  },
+        { 0,                                       rAssertChoice_Abort,  "Abort"  }
+    };
+
+    const SDL_MessageBoxData data =
+    {
+        SDL_MESSAGEBOX_ERROR, NULL, "Internal Error", text,
+        SDL_arraysize( buttons ), buttons, NULL
+    };
+
+    int choice = rAssertChoice_Break;
+    if ( SDL_ShowMessageBox( &data, &choice ) != 0 )
+    {
+        // No video subsystem yet, or no display. Break rather than swallow it.
+        return rAssertChoice_Break;
+    }
+
+    return choice;
+}
+
+#endif
+
 //=============================================================================
 // Public Functions
 //=============================================================================
@@ -206,6 +261,19 @@ bool rDebugAssertFail_Implementation
           return true;
         }
         return( false );
+    }
+#elif defined(RAD_MACOS)
+    {
+        switch ( rErrorMessageBox( text ) )
+        {
+            case rAssertChoice_Abort:
+                exit( -10 );
+                return false;
+            case rAssertChoice_Break:
+                return true;
+            default:
+                return false;
+        }
     }
 #else
 	return true;

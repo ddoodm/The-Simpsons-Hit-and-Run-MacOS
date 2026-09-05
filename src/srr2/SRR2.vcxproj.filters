@@ -796,7 +796,7 @@
     <ClInclude Include="..\game\loading\soundfilehandler.h">
       <Filter>Source Files\loading</Filter>
     </ClInclude>
-    <ClInclude Include="..\game\main\win32platform.h">
+    <ClInclude Include="..\game\main\sdlplatform.h">
       <Filter>Source Files\main</Filter>
     </ClInclude>
     <ClInclude Include="..\game\main\commandlineoptions.h">
@@ -2542,10 +2542,10 @@
     <ClCompile Include="..\game\main\tuidunaligned.cpp">
       <Filter>Source Files\main</Filter>
     </ClCompile>
-    <ClCompile Include="..\game\main\win32main.cpp">
+    <ClCompile Include="..\game\main\main.cpp">
       <Filter>Source Files\main</Filter>
     </ClCompile>
-    <ClCompile Include="..\game\main\win32platform.cpp">
+    <ClCompile Include="..\game\main\sdlplatform.cpp">
       <Filter>Source Files\main</Filter>
     </ClCompile>
     <ClCompile Include="..\game\memory\classsizetracker.cpp">

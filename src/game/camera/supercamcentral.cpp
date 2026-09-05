@@ -710,7 +710,7 @@ void SuperCamCentral::Update( unsigned int milliseconds, bool isFirstSubstep )
             lookBack = lookBack < -0.8f ? -1.0f : 0.0f;
 
             if ( altLookBack == 1.0f || lookBack == -1.0f )
-#elif defined(RAD_WIN32)
+#elif defined(RAD_WIN32) || defined(RAD_MACOS)
             if( lookBack > 0.8f )
 #endif
             {

@@ -1,7 +1,7 @@
 //===========================================================================
 // Copyright (C) 2002 Radical Entertainment Ltd.  All rights reserved.
 //
-// Component:   Win32Platform   
+// Component:   SdlPlatform   
 //
 // Description: Abstracts the differences for setting up and shutting down
 //              the different platforms.
@@ -91,7 +91,7 @@
 // Project Includes
 //========================================
 #include <input/inputmanager.h>
-#include <main/win32platform.h>
+#include <main/sdlplatform.h>
 #include <main/commandlineoptions.h>
 #include <main/game.h>
 #include <render/RenderManager/RenderManager.h>
@@ -137,17 +137,17 @@
 //******************************************************************************
 
 // Static pointer to instance of singleton.
-Win32Platform* Win32Platform::spInstance = NULL;
+SdlPlatform* SdlPlatform::spInstance = NULL;
 
 // Other static members.
-SDL_Window* Win32Platform::mWnd = NULL;
-void* Win32Platform::mhMutex = NULL;
-bool Win32Platform::mShowCursor = true;
+SDL_Window* SdlPlatform::mWnd = NULL;
+void* SdlPlatform::mhMutex = NULL;
+bool SdlPlatform::mShowCursor = true;
 
 //
 // Define the starting resolution.
 //
-static const Win32Platform::Resolution StartingResolution = Win32Platform::Res_800x600;
+static const SdlPlatform::Resolution StartingResolution = SdlPlatform::Res_800x600;
 static const int StartingBPP = 32;
 
 // This specifies the PDDI DLL to use.
@@ -184,45 +184,45 @@ void LoadMemP3DFile( unsigned char* buffer, unsigned int size, tEntityStore* sto
 //******************************************************************************
 
 //==============================================================================
-// Win32Platform::CreateInstance
+// SdlPlatform::CreateInstance
 //==============================================================================
 //
-// Description: Creates the Win32Platform.
+// Description: Creates the SdlPlatform.
 //
 // Parameters:	win32 parameters.
 //
-// Return:      Pointer to the Win32Platform.
+// Return:      Pointer to the SdlPlatform.
 //
 // Constraints: This is a singleton so only one instance is allowed.
 //
 //==============================================================================
-Win32Platform* Win32Platform::CreateInstance()
+SdlPlatform* SdlPlatform::CreateInstance()
 {
-MEMTRACK_PUSH_GROUP( "Win32Platform" );
+MEMTRACK_PUSH_GROUP( "SdlPlatform" );
     rAssert( spInstance == NULL );
 
-    spInstance = new(GMA_PERSISTENT) Win32Platform();
+    spInstance = new(GMA_PERSISTENT) SdlPlatform();
 
     rAssert( spInstance );
-MEMTRACK_POP_GROUP( "Win32Platform" );
+MEMTRACK_POP_GROUP( "SdlPlatform" );
 
     return spInstance;
 }
 
 //==============================================================================
-// Win32Platform::GetInstance
+// SdlPlatform::GetInstance
 //==============================================================================
 //
-// Description: - Access point for the Win32Platform singleton.  
+// Description: - Access point for the SdlPlatform singleton.  
 //
 // Parameters:	None.
 //
-// Return:      Pointer to the Win32Platform.
+// Return:      Pointer to the SdlPlatform.
 //
 // Constraints: This is a singleton so only one instance is allowed.
 //
 //==============================================================================
-Win32Platform* Win32Platform::GetInstance()
+SdlPlatform* SdlPlatform::GetInstance()
 {
     rAssert( spInstance != NULL );
 
@@ -231,17 +231,17 @@ Win32Platform* Win32Platform::GetInstance()
 
 
 //==============================================================================
-// Win32Platform::DestroyInstance
+// SdlPlatform::DestroyInstance
 //==============================================================================
 //
-// Description: Destroy the Win32Platform.
+// Description: Destroy the SdlPlatform.
 //
 // Parameters:	None.
 //
 // Return:      None.
 //
 //==============================================================================
-void Win32Platform::DestroyInstance()
+void SdlPlatform::DestroyInstance()
 {
     rAssert( spInstance != NULL );
 
@@ -252,7 +252,7 @@ void Win32Platform::DestroyInstance()
 
 
 //==============================================================================
-// Win32Platform::InitializeWindow
+// SdlPlatform::InitializeWindow
 //==============================================================================
 // Description: Creates the window class and window instance for the application.
 //              We must do this before initializing the platform.
@@ -266,8 +266,9 @@ void Win32Platform::DestroyInstance()
 // Constraints: Must be initialized before the platform.
 //
 //==============================================================================
-bool Win32Platform::InitializeWindow() 
+bool SdlPlatform::InitializeWindow() 
 {
+#if defined( RAD_WIN32 )
     // check to see if another instance is running...
     mhMutex = CreateMutex(NULL, 0, ApplicationName);
     if (GetLastError() == ERROR_ALREADY_EXISTS)
@@ -293,6 +294,7 @@ bool Win32Platform::InitializeWindow()
             return false;
         }
     }
+#endif
 
     // These three attributes must be set prior to creating the first window
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_COMPATIBILITY);
@@ -320,7 +322,7 @@ bool Win32Platform::InitializeWindow()
 }
 
 //==============================================================================
-// Win32Platform::InitializeFoundation
+// SdlPlatform::InitializeFoundation
 //==============================================================================
 // Description: FTech must be setup first so that all the memory services
 //              are ready to go before we begin allocating anything.
@@ -333,7 +335,7 @@ bool Win32Platform::InitializeWindow()
 //              Consult their documentation before changing.
 //
 //==============================================================================
-void Win32Platform::InitializeFoundation() 
+void SdlPlatform::InitializeFoundation() 
 {
     //
     // Initialize the memory heaps
@@ -411,7 +413,7 @@ void Win32Platform::InitializeFoundation()
 }
 
 //==============================================================================
-// Win32Platform::InitializeMemory
+// SdlPlatform::InitializeMemory
 //==============================================================================
 //
 // Description: 
@@ -421,7 +423,7 @@ void Win32Platform::InitializeFoundation()
 // Return:      
 //
 //==============================================================================
-void Win32Platform::InitializeMemory()
+void SdlPlatform::InitializeMemory()
 {
     //
     // Only do this once!
@@ -445,7 +447,7 @@ void Win32Platform::InitializeMemory()
 }
 
 //==============================================================================
-// Win32Platform::ShutdownMemory
+// SdlPlatform::ShutdownMemory
 //==============================================================================
 //
 // Description: 
@@ -455,7 +457,7 @@ void Win32Platform::InitializeMemory()
 // Return:      
 //
 //==============================================================================
-void Win32Platform::ShutdownMemory()
+void SdlPlatform::ShutdownMemory()
 {
     if( gMemorySystemInitialized )
     {
@@ -470,7 +472,7 @@ void Win32Platform::ShutdownMemory()
 }
 
 //==============================================================================
-// Win32Platform::InitializePlatform
+// SdlPlatform::InitializePlatform
 //==============================================================================
 // Description: Get the Win32 ready to go.
 //
@@ -479,7 +481,7 @@ void Win32Platform::ShutdownMemory()
 // Return:      None.
 //
 //==============================================================================
-void Win32Platform::InitializePlatform() 
+void SdlPlatform::InitializePlatform() 
 {
     HeapMgr()->PushHeap (GMA_PERSISTENT);
 
@@ -513,7 +515,7 @@ void Win32Platform::InitializePlatform()
 
 
 //==============================================================================
-// Win32Platform::ShutdownPlatform
+// SdlPlatform::ShutdownPlatform
 //==============================================================================
 // Description: Shut down the PS2.
 //
@@ -522,14 +524,14 @@ void Win32Platform::InitializePlatform()
 // Return:      None.
 //
 //==============================================================================
-void Win32Platform::ShutdownPlatform()
+void SdlPlatform::ShutdownPlatform()
 {
     ShutdownPure3D();
     ShutdownFoundation();
 }
 
 //=============================================================================
-// Win32Platform::LaunchDashboard
+// SdlPlatform::LaunchDashboard
 //=============================================================================
 // Description: We use this a the emergency exit from the game if we arent in a context that suppose the transition 
 //                    to the CONTEXT_EXIT  
@@ -538,7 +540,7 @@ void Win32Platform::ShutdownPlatform()
 // Return:      void 
 //
 //=============================================================================
-void Win32Platform::LaunchDashboard()
+void SdlPlatform::LaunchDashboard()
 {   
 
     {
@@ -570,7 +572,7 @@ void Win32Platform::LaunchDashboard()
 }
 
 //=============================================================================
-// Win32Platform::ResetMachine
+// SdlPlatform::ResetMachine
 //=============================================================================
 // Description: Comment
 //
@@ -579,13 +581,13 @@ void Win32Platform::LaunchDashboard()
 // Return:      void 
 //
 //=============================================================================
-void Win32Platform::ResetMachine()
+void SdlPlatform::ResetMachine()
 {
     rAssertMsg( false, "Doesn't make sense for win32." );
 }
 
 //=============================================================================
-// Win32Platform::DisplaySplashScreen
+// SdlPlatform::DisplaySplashScreen
 //=============================================================================
 // Description: Comment
 //
@@ -600,7 +602,7 @@ void Win32Platform::ResetMachine()
 // Return:      void 
 //
 //=============================================================================
-void Win32Platform::DisplaySplashScreen( SplashScreen screenID, 
+void SdlPlatform::DisplaySplashScreen( SplashScreen screenID, 
                                        const char* overlayText, 
                                        float fontScale, 
                                        float textPosX, 
@@ -710,7 +712,7 @@ void Win32Platform::DisplaySplashScreen( SplashScreen screenID,
 
 
 //=============================================================================
-// Win32Platform::DisplaySplashScreen
+// SdlPlatform::DisplaySplashScreen
 //=============================================================================
 // Description: Comment
 //
@@ -725,7 +727,7 @@ void Win32Platform::DisplaySplashScreen( SplashScreen screenID,
 // Return:      void 
 //
 //=============================================================================
-void Win32Platform::DisplaySplashScreen( const char* textureName,
+void SdlPlatform::DisplaySplashScreen( const char* textureName,
                                        const char* overlayText, 
                                        float fontScale, 
                                        float textPosX, 
@@ -735,7 +737,7 @@ void Win32Platform::DisplaySplashScreen( const char* textureName,
 {
 }
 
-void Win32Platform::OnControllerError(const char *msg)
+void SdlPlatform::OnControllerError(const char *msg)
 {
     DisplaySplashScreen( Error, msg, 0.7f, 0.0f, 0.0f, tColour(255, 255, 255), 0 );
     mErrorState = CTL_ERROR;
@@ -745,7 +747,7 @@ void Win32Platform::OnControllerError(const char *msg)
 
 
 //=============================================================================
-// Win32Platform::OnDriveError
+// SdlPlatform::OnDriveError
 //=============================================================================
 // Description: Comment
 //
@@ -754,7 +756,7 @@ void Win32Platform::OnControllerError(const char *msg)
 // Return:      bool 
 //
 //=============================================================================
-bool Win32Platform::OnDriveError( radFileError error, const char* pDriveName, void* pUserData )
+bool SdlPlatform::OnDriveError( radFileError error, const char* pDriveName, void* pUserData )
 {
     // First check if the error is related to loading/saving games.
     // We do this here because windows has one drive for all operations.
@@ -842,7 +844,7 @@ bool Win32Platform::OnDriveError( radFileError error, const char* pDriveName, vo
 }
 
 //=============================================================================
-// Win32Platform::SetResolution
+// SdlPlatform::SetResolution
 //=============================================================================
 // Description: Sets the screen resolution
 //
@@ -854,7 +856,7 @@ bool Win32Platform::OnDriveError( radFileError error, const char* pDriveName, vo
 // Notes:
 //=============================================================================
 
-bool Win32Platform::SetResolution( Resolution res, int bpp, bool fullscreen )
+bool SdlPlatform::SetResolution( Resolution res, int bpp, bool fullscreen )
 {
     // Check if resolution is supported.
     if( !mpContext || !IsResolutionSupported( res, bpp ) )
@@ -877,7 +879,7 @@ bool Win32Platform::SetResolution( Resolution res, int bpp, bool fullscreen )
 }
 
 //=============================================================================
-// Win32Platform::GetResolution
+// SdlPlatform::GetResolution
 //=============================================================================
 // Description: Returns the current resolution
 //
@@ -888,13 +890,13 @@ bool Win32Platform::SetResolution( Resolution res, int bpp, bool fullscreen )
 // Notes:
 //=============================================================================
 
-Win32Platform::Resolution Win32Platform::GetResolution() const
+SdlPlatform::Resolution SdlPlatform::GetResolution() const
 {
     return mResolution;
 }
 
 //=============================================================================
-// Win32Platform::GetBPP
+// SdlPlatform::GetBPP
 //=============================================================================
 // Description: Returns the current bit depth.
 //
@@ -905,13 +907,13 @@ Win32Platform::Resolution Win32Platform::GetResolution() const
 // Notes:
 //=============================================================================
 
-int Win32Platform::GetBPP() const
+int SdlPlatform::GetBPP() const
 {
     return mbpp;
 }
 
 //=============================================================================
-// Win32Platform::IsFullscreen
+// SdlPlatform::IsFullscreen
 //=============================================================================
 // Description: Returns true if currently in full screen mode
 //
@@ -922,13 +924,13 @@ int Win32Platform::GetBPP() const
 // Notes:
 //=============================================================================
 
-bool Win32Platform::IsFullscreen() const
+bool SdlPlatform::IsFullscreen() const
 {
     return mFullscreen;
 }
 
 //=============================================================================
-// Win32Platform::GetConfigName
+// SdlPlatform::GetConfigName
 //=============================================================================
 // Description: Returns the name of the win32 platform's config
 //
@@ -939,13 +941,13 @@ bool Win32Platform::IsFullscreen() const
 // Notes:
 //=============================================================================
 
-const char* Win32Platform::GetConfigName() const
+const char* SdlPlatform::GetConfigName() const
 {
     return "System";
 }
 
 //=============================================================================
-// Win32Platform::GetNumProperties
+// SdlPlatform::GetNumProperties
 //=============================================================================
 // Description: Returns the number of config properties
 //
@@ -956,13 +958,13 @@ const char* Win32Platform::GetConfigName() const
 // Notes:
 //=============================================================================
 
-int Win32Platform::GetNumProperties() const
+int SdlPlatform::GetNumProperties() const
 {
     return 4;
 }
 
 //=============================================================================
-// Win32Platform::LoadDefaults
+// SdlPlatform::LoadDefaults
 //=============================================================================
 // Description: Loads the default configuration for the system.
 //
@@ -973,7 +975,7 @@ int Win32Platform::GetNumProperties() const
 // Notes:
 //=============================================================================
 
-void Win32Platform::LoadDefaults()
+void SdlPlatform::LoadDefaults()
 {
 #ifdef RAD_DEBUG
     SetResolution( StartingResolution, StartingBPP, !CommandLineOptions::Get( CLO_WINDOW_MODE ) );
@@ -986,7 +988,7 @@ void Win32Platform::LoadDefaults()
 }
 
 //=============================================================================
-// Win32Platform::LoadConfig
+// SdlPlatform::LoadConfig
 //=============================================================================
 // Description: Loads the platforms configuration
 //
@@ -997,7 +999,7 @@ void Win32Platform::LoadDefaults()
 // Notes:
 //=============================================================================
 
-void Win32Platform::LoadConfig( ConfigString& config )
+void SdlPlatform::LoadConfig( ConfigString& config )
 {
     char property[ ConfigString::MaxLength ];
     char value[ ConfigString::MaxLength ];
@@ -1092,7 +1094,7 @@ void Win32Platform::LoadConfig( ConfigString& config )
 }
 
 //=============================================================================
-// Win32Platform::SaveConfig
+// SdlPlatform::SaveConfig
 //=============================================================================
 // Description: Saves the system configuration to the config string.
 //
@@ -1103,7 +1105,7 @@ void Win32Platform::LoadConfig( ConfigString& config )
 // Notes:
 //=============================================================================
 
-void Win32Platform::SaveConfig( ConfigString& config )
+void SdlPlatform::SaveConfig( ConfigString& config )
 {
     config.WriteProperty( "display", mFullscreen ? "fullscreen" : "window" );
 
@@ -1190,7 +1192,7 @@ void Win32Platform::SaveConfig( ConfigString& config )
 //******************************************************************************
 
 //==============================================================================
-// Win32Platform::Win32Platform
+// SdlPlatform::SdlPlatform
 //==============================================================================
 // Description: Constructor.
 //
@@ -1199,7 +1201,7 @@ void Win32Platform::SaveConfig( ConfigString& config )
 // Return:      N/A.
 //
 //==============================================================================
-Win32Platform::Win32Platform() :
+SdlPlatform::SdlPlatform() :
     mpPlatform( NULL ),
     mpContext( NULL ),
     mResolution( StartingResolution ),
@@ -1211,7 +1213,7 @@ Win32Platform::Win32Platform() :
 
 
 //==============================================================================
-// Win32Platform::~Win32Platform
+// SdlPlatform::~SdlPlatform
 //==============================================================================
 // Description: Destructor.
 //
@@ -1220,15 +1222,17 @@ Win32Platform::Win32Platform() :
 // Return:      N/A.
 //
 //==============================================================================
-Win32Platform::~Win32Platform()
+SdlPlatform::~SdlPlatform()
 {
     HeapManager::DestroyInstance();
 
+#if defined( RAD_WIN32 )
     CloseHandle( mhMutex );
+#endif
 }
 
 //==============================================================================
-// Win32Platform::InitializeFoundationDrive
+// SdlPlatform::InitializeFoundationDrive
 //==============================================================================
 // Description: Get FTech ready to go.
 //
@@ -1240,7 +1244,7 @@ Win32Platform::~Win32Platform()
 //              Consult their documentation before changing.
 //
 //==============================================================================
-void Win32Platform::InitializeFoundationDrive() 
+void SdlPlatform::InitializeFoundationDrive() 
 {
     //
     // Get the default drive and hold it open for the life of the game.
@@ -1263,7 +1267,7 @@ void Win32Platform::InitializeFoundationDrive()
 
 
 //==============================================================================
-// Win32Platform::ShutdownFoundation
+// SdlPlatform::ShutdownFoundation
 //==============================================================================
 // Description: Shut down Foundation Tech.
 //
@@ -1275,7 +1279,7 @@ void Win32Platform::InitializeFoundationDrive()
 //              they were initialized in.
 //
 //==============================================================================
-void Win32Platform::ShutdownFoundation()
+void SdlPlatform::ShutdownFoundation()
 {
     //
     // Release the drive we've held open since the begining.
@@ -1302,7 +1306,7 @@ void Win32Platform::ShutdownFoundation()
 
 
 //==============================================================================
-// Win32Platform::InitializePure3D
+// SdlPlatform::InitializePure3D
 //==============================================================================
 // Description: Get Pure3D ready to go.
 //
@@ -1311,9 +1315,9 @@ void Win32Platform::ShutdownFoundation()
 // Return:      None.
 //
 //==============================================================================
-void Win32Platform::InitializePure3D() 
+void SdlPlatform::InitializePure3D() 
 {
-MEMTRACK_PUSH_GROUP( "Win32Platform" );
+MEMTRACK_PUSH_GROUP( "SdlPlatform" );
     //    p3d::SetMemAllocator( p3d::ALLOC_DEFAULT, GMA_PERSISTENT );
     //    p3d::SetMemAllocator( p3d::ALLOC_LOADED, GMA_LEVEL );
 
@@ -1512,12 +1516,12 @@ MEMTRACK_PUSH_GROUP( "Win32Platform" );
     //p3d->AddHandler(new(GMA_PERSISTENT) RoadLoader);    
     p3d->AddHandler(new(GMA_PERSISTENT) RoadDataSegmentLoader);    
     p3d->AddHandler(new(GMA_PERSISTENT) CStatePropDataLoader);
-MEMTRACK_POP_GROUP( "Win32Platform" );
+MEMTRACK_POP_GROUP( "SdlPlatform" );
 }
 
 
 //==============================================================================
-// Win32Platform::ShutdownPure3D
+// SdlPlatform::ShutdownPure3D
 //==============================================================================
 // Description: Clean up and shut down Pure3D.
 //
@@ -1526,7 +1530,7 @@ MEMTRACK_POP_GROUP( "Win32Platform" );
 // Return:      None.
 //
 //==============================================================================
-void Win32Platform::ShutdownPure3D()
+void SdlPlatform::ShutdownPure3D()
 {
     //
     // Clean-up the Pure3D Inventory
@@ -1554,7 +1558,7 @@ void Win32Platform::ShutdownPure3D()
 }
 
 //==============================================================================
-// Win32Platform::InitializeContext
+// SdlPlatform::InitializeContext
 //==============================================================================
 // Description: Initializes the d3d context for this application according to
 //              the class' display settings - resolution, bpp, fullscreen.
@@ -1565,7 +1569,7 @@ void Win32Platform::ShutdownPure3D()
 //
 //==============================================================================
 
-void Win32Platform::InitializeContext()
+void SdlPlatform::InitializeContext()
 {
     tContextInitData init;
 
@@ -1627,7 +1631,7 @@ void Win32Platform::InitializeContext()
 }
 
 //==============================================================================
-// Win32Platform::TranslateResolution
+// SdlPlatform::TranslateResolution
 //==============================================================================
 // Description: translates resolution enums to x and y
 //
@@ -1640,7 +1644,7 @@ void Win32Platform::InitializeContext()
 //==============================================================================
 
 // TODO(3ur): this sucks, dynamic would be nicer
-void Win32Platform::TranslateResolution( Resolution res, int&x, int&y )
+void SdlPlatform::TranslateResolution( Resolution res, int&x, int&y )
 {
     switch( res )
     {
@@ -1719,7 +1723,7 @@ void Win32Platform::TranslateResolution( Resolution res, int&x, int&y )
 }
 
 //==============================================================================
-// Win32Platform::IsResolutionSupported
+// SdlPlatform::IsResolutionSupported
 //==============================================================================
 // Description: Determines if a resolution is supported on this pc
 //
@@ -1729,7 +1733,7 @@ void Win32Platform::TranslateResolution( Resolution res, int&x, int&y )
 //
 //==============================================================================
 
-bool Win32Platform::IsResolutionSupported( Resolution res, int bpp ) const
+bool SdlPlatform::IsResolutionSupported( Resolution res, int bpp ) const
 {
     int x,y;
 
@@ -1756,7 +1760,7 @@ bool Win32Platform::IsResolutionSupported( Resolution res, int bpp ) const
 }
 
 //=============================================================================
-// Win32Platform::ResizeWindow
+// SdlPlatform::ResizeWindow
 //=============================================================================
 // Description: Resizes the app's window based on the current resolution.
 //
@@ -1767,7 +1771,7 @@ bool Win32Platform::IsResolutionSupported( Resolution res, int bpp ) const
 // Notes:
 //=============================================================================
 
-void Win32Platform::ResizeWindow()
+void SdlPlatform::ResizeWindow()
 {
     // If fullscreen, no need to change the window size.
     if( mFullscreen )
@@ -1784,7 +1788,7 @@ void Win32Platform::ResizeWindow()
 }
 
 //=============================================================================
-// Win32Platform::ShowTheCursor
+// SdlPlatform::ShowTheCursor
 //=============================================================================
 // Description: Shows or hides the cursor.  Wrapper for the windows ShowCursor
 //              function, except it doesn't keep a counter for the number of
@@ -1797,7 +1801,7 @@ void Win32Platform::ResizeWindow()
 // Notes:
 //=============================================================================
 
-void Win32Platform::ShowTheCursor( bool show )
+void SdlPlatform::ShowTheCursor( bool show )
 {
     if( mShowCursor != show )
     {        
@@ -1807,7 +1811,7 @@ void Win32Platform::ShowTheCursor( bool show )
 }
 
 //=============================================================================
-// Win32Platform::WndProc
+// SdlPlatform::WndProc
 //=============================================================================
 // Description: The windows os messaging callback for the game.
 //              Routes messages to pure3d.
@@ -1822,7 +1826,7 @@ void Win32Platform::ShowTheCursor( bool show )
 // Notes:
 //=============================================================================
 
-int SDLCALL Win32Platform::WndProc( void * userdata, SDL_Event * event )
+int SDLCALL SdlPlatform::WndProc( void * userdata, SDL_Event * event )
 {
     SDL_Window * wnd = (SDL_Window *)userdata;
 

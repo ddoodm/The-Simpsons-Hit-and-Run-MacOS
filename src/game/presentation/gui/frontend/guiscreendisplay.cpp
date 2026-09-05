@@ -19,7 +19,7 @@
 #include <presentation/gui/guimenu.h>
 
 #include <data/config/gameconfigmanager.h>
-#include <main/win32platform.h>
+#include <main/sdlplatform.h>
 #include <memory/srrmemory.h>
 #include <render/RenderFlow/renderflow.h>
 
@@ -251,9 +251,9 @@ void CGuiScreenDisplay::InitIntro()
 {
     // update settings
     //
-    Win32Platform* plat = Win32Platform::GetInstance();
+    SdlPlatform* plat = SdlPlatform::GetInstance();
 
-    Win32Platform::Resolution res = plat->GetResolution();
+    SdlPlatform::Resolution res = plat->GetResolution();
     m_pMenu->SetSelectionValue( MENU_ITEM_RESOLUTION,
                                 res );
 
@@ -331,14 +331,14 @@ void CGuiScreenDisplay::ApplySettings()
 {
     // Retrieve the settings.
     //
-    Win32Platform::Resolution res = static_cast< Win32Platform::Resolution >( m_pMenu->GetSelectionValue( MENU_ITEM_RESOLUTION ) );
+    SdlPlatform::Resolution res = static_cast< SdlPlatform::Resolution >( m_pMenu->GetSelectionValue( MENU_ITEM_RESOLUTION ) );
 
     int bpp = m_pMenu->GetSelectionValue( MENU_ITEM_COLOUR_DEPTH ) ? 32: 16;
 
     bool fullscreen = m_pMenu->GetSelectionValue( MENU_ITEM_DISPLAY_MODE ) == 1;
 
     // Set the resolution.
-    Win32Platform::GetInstance()->SetResolution( res, bpp, fullscreen );
+    SdlPlatform::GetInstance()->SetResolution( res, bpp, fullscreen );
 
     // Save the change to the config file.
     GetGameConfigManager()->SaveConfigFile();

@@ -1,7 +1,7 @@
 //=============================================================================
 // Copyright (C) 2002 Radical Entertainment Ltd.  All rights reserved.
 //
-// Component:   Win32Platform   
+// Component:   SdlPlatform   
 //
 // Description: Abstracts the differences for setting up and shutting down
 //              the different platforms.
@@ -10,14 +10,16 @@
 //
 //=============================================================================
 
-#ifndef WIN32PLATFORM_H
-#define WIN32PLATFORM_H
+#ifndef SDLPLATFORM_H
+#define SDLPLATFORM_H
 
 //========================================
 // System Includes
 //========================================
 
+#if defined( RAD_WIN32 )
 #include <windows.h>
+#endif
 
 //========================================
 // Nested Includes
@@ -38,7 +40,7 @@ class tContext;
 // Synopsis:    Provides abstraction for setting up and closing a win32 exe.
 //
 //=============================================================================
-class Win32Platform : public GamePlatform, public GameConfigHandler
+class SdlPlatform : public GamePlatform, public GameConfigHandler
 {
 public:
 
@@ -60,8 +62,8 @@ public:
 public:
 
     // Static Methods for accessing this singleton.
-    static Win32Platform* CreateInstance();
-    static Win32Platform* GetInstance();
+    static SdlPlatform* CreateInstance();
+    static SdlPlatform* GetInstance();
     static void DestroyInstance();
 
     // Had to workaround our nice clean design cause FTech must be init'ed
@@ -116,12 +118,12 @@ public:
 private:
 
     // Constructors, Destructors, and Operators
-    Win32Platform();
-    virtual ~Win32Platform();
+    SdlPlatform();
+    virtual ~SdlPlatform();
 
     // Unused Constructors, Destructors, and Operators
-    Win32Platform( const Win32Platform& aPlatform );
-    Win32Platform& operator=( const Win32Platform& aPlatform );
+    SdlPlatform( const SdlPlatform& aPlatform );
+    SdlPlatform& operator=( const SdlPlatform& aPlatform );
 
     // Methods from Platform
     virtual void InitializeFoundationDrive();
@@ -145,7 +147,7 @@ private:
 private:
 
     // Pointer to the one and only instance of this singleton.
-    static Win32Platform* spInstance;
+    static SdlPlatform* spInstance;
 
     // Private Attributes
     // Had to make these static because of the initialization order problem.
@@ -164,4 +166,4 @@ private:
     char mRenderer[ConfigString::MaxLength];
 };
 
-#endif // WIN32PLATFORM_H
+#endif // SDLPLATFORM_H

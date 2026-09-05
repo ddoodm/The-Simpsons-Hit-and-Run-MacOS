@@ -29,7 +29,7 @@ typedef unsigned char GameDataByte; // single byte of data
 // Interface Definitions
 //===========================================================================
 
-#if defined(RAD_WIN32) // TODO(3UR): cant enable for UWP rn "FileNotFound: Save5" why is it forcing save files to exist even...? this shouldnt happen as people may ot always have a save 
+#if defined(RAD_WIN32) || defined(RAD_MACOS) // TODO(3UR): cant enable for UWP rn "FileNotFound: Save5" why is it forcing save files to exist even...? this shouldnt happen as people may ot always have a save 
 const unsigned int NUM_GAME_SLOTS = 8; // number of available game slots
 #else
 const unsigned int NUM_GAME_SLOTS = 4; // number of available game slots
