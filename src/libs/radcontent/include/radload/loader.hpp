@@ -20,7 +20,7 @@ class radLoadUpdatableRequest;
 typedef unsigned char radLoadByte;
 typedef unsigned short radLoadWord;
 typedef unsigned int radLoadDWord;
-#if defined(RAD_WIN32) || defined(RAD_UWP)
+#if defined(RAD_WIN32) || defined(RAD_UWP) || defined( RAD_MACOS )
 typedef uint64_t radLoadQWord;
 #else
 typedef unsigned long long radLoadQWord;

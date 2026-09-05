@@ -4,7 +4,7 @@
 //
 // only win32 and UWP take advantage of the pch at this moment.
 //
-#if defined( RAD_WIN32 ) || defined( RAD_UWP )
+#if defined( RAD_WIN32 ) || defined( RAD_UWP ) || defined( RAD_MACOS )
 //
 // Microsoft header files
 //

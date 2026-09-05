@@ -31,14 +31,14 @@
 // Build Configuration Check
 //=============================================================================
 
-#if !defined(RAD_UWP) && !defined(RAD_WIN32)
-    #error 'FTech requires definition of RAD_UWP or RAD_WIN32'
+#if !defined(RAD_UWP) && !defined(RAD_WIN32) && !defined(RAD_MACOS)
+    #error 'FTech requires definition of RAD_UWP, RAD_WIN32 or RAD_MACOS'
 #endif
 #if !defined(RAD_DEBUG) && !defined(RAD_TUNE) && !defined(RAD_RELEASE) 
     #error 'FTech requires definition of RAD_DEBUG, RAD_TUNE, or RAD_RELEASE'
 #endif
 
-#if defined (RAD_WIN32) || defined (RAD_UWP)
+#if defined (RAD_WIN32) || defined (RAD_UWP) || defined( RAD_MACOS )
 #pragma warning ( disable : 4291 )      // Get rid of delete warning
 #endif
 

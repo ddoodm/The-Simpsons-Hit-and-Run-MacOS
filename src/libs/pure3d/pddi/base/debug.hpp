@@ -10,7 +10,7 @@
 #include <pddi/buildconfig.hpp>
 
 // PDDI Debugging support
-#if defined (RAD_WIN32) || defined (RAD_UWP)
+#if defined (RAD_WIN32) || defined (RAD_UWP) || defined( RAD_MACOS )
     #define pddiBreak() { __debugbreak(); }
 #else
     #define pddiBreak() { __builtin_trap(); }

@@ -31,7 +31,7 @@ class radDrive;
 // Typedefs
 //=============================================================================
 
-#if defined( RAD_WIN32 ) || defined( RAD_UWP )
+#if defined( RAD_WIN32 ) || defined( RAD_UWP ) || defined( RAD_MACOS )
 #include <fstream>
 #include <filesystem>
 typedef std::fstream* radFileHandle;

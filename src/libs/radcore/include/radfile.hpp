@@ -25,8 +25,8 @@
 // Build Configuration Check
 //=============================================================================
  
-#if !defined(RAD_UWP) && !defined(RAD_WIN32)
-    #error 'FTech requires definition of RAD_UWP, or RAD_WIN32'
+#if !defined(RAD_UWP) && !defined(RAD_WIN32) && !defined(RAD_MACOS)
+    #error 'FTech requires definition of RAD_UWP, RAD_WIN32 or RAD_MACOS'
 #endif
  
 //=============================================================================
@@ -138,7 +138,7 @@ const unsigned int radFileDriveMax = 26;
 // Save Game Structures
 //=============================================================================
 
-#if defined(RAD_WIN32) || defined(RAD_UWP)
+#if defined(RAD_WIN32) || defined(RAD_UWP) || defined( RAD_MACOS )
 
 //
 // We don't have save games for win32.

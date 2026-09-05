@@ -22,11 +22,11 @@ class PascalCString;
 #include "strings/unicodeString.h"
 
 // TODO(3UR): if text is still scaled weirdly remove all uwp references from this file otherwise remove the todo here and in other places
-#if defined( RAD_WIN32 ) || defined( RAD_UWP )
+#if defined( RAD_WIN32 ) || defined( RAD_UWP ) || defined( RAD_MACOS )
 #pragma warning( disable : 4250 )
 #endif
 
-#if defined( RAD_WIN32 ) || defined( RAD_UWP )
+#if defined( RAD_WIN32 ) || defined( RAD_UWP ) || defined( RAD_MACOS )
 struct ShortRectExtents
 {
     short xMin,
@@ -94,7 +94,7 @@ class FeText
         int GetTextWidth();
         int GetTextHeight();
 
-#if defined( RAD_WIN32 ) || defined( RAD_UWP )
+#if defined( RAD_WIN32 ) || defined( RAD_UWP ) || defined( RAD_MACOS )
         virtual bool IsPointInBoundingRect( float x, float y );
 #endif
         // Whether or not to show text with a drop shadow
@@ -126,7 +126,7 @@ class FeText
 
         void ResetText();       
         void ReCalculateAlignment();
-#if defined( RAD_WIN32 ) || defined( RAD_UWP )
+#if defined( RAD_WIN32 ) || defined( RAD_UWP ) || defined( RAD_MACOS )
         void RecalculateRectExtents();
 #endif
 
@@ -147,14 +147,14 @@ class FeText
         bool mOverrideStringBuffer : 1;
         bool mDisplayShadow : 1;
         bool mDisplayOutline : 1;
-#if defined( RAD_WIN32 ) || defined( RAD_UWP )
+#if defined( RAD_WIN32 ) || defined( RAD_UWP ) || defined( RAD_MACOS )
         bool mIsBoundingBoxStretched : 1;
 #endif
         // TC: Added text outline support
         //
         tColour mOutlineColour;
 
-#if defined( RAD_WIN32 ) || defined( RAD_UWP )
+#if defined( RAD_WIN32 ) || defined( RAD_UWP ) || defined( RAD_MACOS )
         ShortRectExtents m_rectExtents;     //stores the bounding rect info in windows coordinate system.
 #endif
 

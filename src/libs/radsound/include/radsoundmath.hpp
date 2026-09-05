@@ -10,8 +10,8 @@
 // Build Configuration Check
 //=============================================================================
 
-#if !defined(RAD_UWP) && !defined(RAD_WIN32)
-    #error 'FTech requires definition of RAD_UWP or RAD_WIN32'
+#if !defined(RAD_UWP) && !defined(RAD_WIN32) && !defined(RAD_MACOS)
+    #error 'FTech requires definition of RAD_UWP, RAD_WIN32 or RAD_MACOS'
 #endif
 
 //============================================================================

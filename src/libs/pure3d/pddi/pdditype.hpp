@@ -98,7 +98,7 @@ public:
 };
 
 // system-dependent includes
-#if defined(RAD_WIN32) || defined(RAD_UWP)
+#if defined(RAD_WIN32) || defined(RAD_UWP) || defined( RAD_MACOS )
     #include <pddi/pddiwin32.hpp>
 #endif
 

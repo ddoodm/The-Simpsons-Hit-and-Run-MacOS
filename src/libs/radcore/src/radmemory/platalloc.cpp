@@ -8,9 +8,10 @@
 #include <raddebug.hpp>
 #include "platalloc.hpp"
 
+#include <stdlib.h>
+
 #if defined WIN32 || defined RAD_UWP
-    
-    #include <stdlib.h>
+
     #include <malloc.h>
     
     #if defined MALLOC_DEBUG
@@ -73,7 +74,20 @@ void * radMemoryPlatAllocAligned( unsigned int numberOfBytes, unsigned int align
 {
 	#ifndef WIN32
 
-		return ::aligned_alloc( alignment, numberOfBytes );
+		// posix_memalign rather than aligned_alloc: callers pass sizes that are
+		// not multiples of the alignment, which aligned_alloc rejects. It also
+		// requires alignment to be at least a pointer width.
+		if ( alignment < sizeof( void * ) )
+		{
+			alignment = sizeof( void * );
+		}
+
+		void * pMemory = NULL;
+		if ( ::posix_memalign( &pMemory, alignment, numberOfBytes ) != 0 )
+		{
+			return NULL;
+		}
+		return pMemory;
 
 	#else
 

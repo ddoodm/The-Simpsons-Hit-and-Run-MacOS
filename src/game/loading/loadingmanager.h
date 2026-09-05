@@ -106,7 +106,7 @@ class LoadingManager : public FileHandler::LoadFileCallback
 
         void CancelPendingRequests();  //This will not cancel the current request.
 
-#if defined( RAD_WIN32 ) || defined( RAD_UWP )
+#if defined( RAD_WIN32 ) || defined( RAD_UWP ) || defined( RAD_MACOS )
         int GetNumRequestsProcessed() const { return mRequestsProcessed; }
         inline void ResetRequestsProcessed();
 #endif
@@ -165,7 +165,7 @@ class LoadingManager : public FileHandler::LoadFileCallback
 
         bool mCancellingLoads;
 
-#if defined( RAD_WIN32 ) || defined( RAD_UWP )
+#if defined( RAD_WIN32 ) || defined( RAD_UWP ) || defined( RAD_MACOS )
         int mRequestsProcessed;
 #endif
 
@@ -203,7 +203,7 @@ inline int LoadingManager::GetNumCurrentRequests() const
     return( (mRequestTail - mRequestHead + MAX_REQUESTS) % MAX_REQUESTS );
 }
 
-#if defined( RAD_WIN32 ) || defined( RAD_UWP )
+#if defined( RAD_WIN32 ) || defined( RAD_UWP ) || defined( RAD_MACOS )
     inline void LoadingManager::ResetRequestsProcessed()
     {
         mRequestsProcessed = 0;

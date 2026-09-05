@@ -18,7 +18,7 @@
 //===========================================================================
 // Nested Includes
 //===========================================================================
-#if defined( RAD_WIN32 ) || defined( RAD_UWP )
+#if defined( RAD_WIN32 ) || defined( RAD_UWP ) || defined( RAD_MACOS )
 #pragma warning ( disable : 4530 )
 #endif
 

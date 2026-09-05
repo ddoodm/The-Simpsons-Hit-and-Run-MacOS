@@ -19,11 +19,11 @@
 //
 // This is a 64 bit number
 //
-#if defined( RAD_WIN32 ) || defined ( RAD_UWP )
+#if defined( RAD_WIN32 ) || defined ( RAD_UWP ) || defined( RAD_MACOS )
     #include <cstdint>
     typedef uint64_t radInt64;
 #else
-    #error 'FTech requires definition of RAD_UWP or RAD_WIN32'
+    #error 'FTech requires definition of RAD_UWP, RAD_WIN32 or RAD_MACOS'
 #endif
 
 

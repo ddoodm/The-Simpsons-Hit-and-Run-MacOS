@@ -6,8 +6,6 @@ set(radcore_SOURCES
     src/raddebug/debug.cpp
     src/raddebugcommunication/host.cpp
     src/raddebugcommunication/hostchannel.cpp
-    src/raddebugcommunication/targetconnection.cpp
-    src/raddebugcommunication/targetsocketchannel.cpp
     src/raddebugcommunication/targetx.cpp
     src/raddebugconsole/consoleclient.cpp
     src/raddebugfileserver/fileserver.cpp
@@ -70,6 +68,8 @@ set(radcore_SOURCES
 if(WIN32)
     list(APPEND radcore_SOURCES
         src/radcontroller/directinputcontroller.cpp
+        src/raddebugcommunication/targetconnection.cpp
+        src/raddebugcommunication/targetsocketchannel.cpp
         src/radstacktrace/win32/stacktrace.cpp)
 endif()
 

@@ -16,6 +16,11 @@ WINDOWS_ONLY = {
     'radcore': [
         'src/radcontroller/directinputcontroller.cpp',
         'src/radstacktrace/win32/stacktrace.cpp',
+        # Winsock DECI2 transport. Only reachable when RADDEBUGCOMMUNICATION is
+        # enabled in radoptions.hpp, which it is not; targetx.cpp supplies the
+        # no-op public API either way.
+        'src/raddebugcommunication/targetconnection.cpp',
+        'src/raddebugcommunication/targetsocketchannel.cpp',
     ],
     'SRR2': [
         '../game/main/win32main.cpp',

@@ -1151,7 +1151,7 @@ inline IRadTypeInfo * IRadTypeInfoSystem::GetTypeInfo( IRefCount * pIRefCount )
         char interfaceName[ 128 ]; 
         const char * pClassName = NULL;
     
-        #if defined( RAD_WIN32 ) || defined( RAD_UWP )
+        #if defined( RAD_WIN32 ) || defined( RAD_UWP ) || defined( RAD_MACOS )
         {
             //
             // The pName takes the form "class Scope::ClassName" or

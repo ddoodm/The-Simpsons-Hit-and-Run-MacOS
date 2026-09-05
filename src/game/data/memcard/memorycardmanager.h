@@ -181,7 +181,7 @@ private:
     eState m_currentState;
     unsigned int m_numDrivesOpened;
 
-#if defined(RAD_WIN32) || defined(RAD_UWP)
+#if defined(RAD_WIN32) || defined(RAD_UWP) || defined( RAD_MACOS )
     enum eMemcardInfoLoadState
     {
         MEMCARD_INFO_NOT_LOADED,

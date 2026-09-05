@@ -132,7 +132,7 @@ struct IRadMoviePlayer2 : public IRefCount
     //      * Audio Secondary Buffer:   This can be quite small (you'll hear skips if it's too small)
     //
 
-#if defined( RAD_WIN32 ) || defined( RAD_UWP )
+#if defined( RAD_WIN32 ) || defined( RAD_UWP ) || defined( RAD_MACOS )
 
     virtual void Initialize( 
         IRadMovieRenderLoop * pIRadMovieRenderLoop, 
@@ -233,7 +233,7 @@ struct IRadMovieRenderLoop : public IRefCount
 
 struct IRadMovieRenderStrategy : public IRefCount
 {
-    #if defined( RAD_WIN32 ) || defined( RAD_UWP )
+    #if defined( RAD_WIN32 ) || defined( RAD_UWP ) || defined( RAD_MACOS )
 
         struct LockedDestination
         {
@@ -270,7 +270,7 @@ struct IRadMovieRenderStrategy : public IRefCount
 
     #else
 
-        #if defined( RAD_WIN32 ) || defined( RAD_UWP )
+        #if defined( RAD_WIN32 ) || defined( RAD_UWP ) || defined( RAD_MACOS )
 
         virtual void SetParameters( unsigned int width, unsigned int height ) = 0;
         virtual bool Render( void * pBuffers[], int strides[] ) = 0;

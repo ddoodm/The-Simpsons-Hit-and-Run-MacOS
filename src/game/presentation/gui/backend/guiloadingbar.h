@@ -21,7 +21,7 @@
 
 const int MB = 1024 * 1024; // bytes
 
-#if defined( RAD_WIN32 ) || defined( RAD_UWP )
+#if defined( RAD_WIN32 ) || defined( RAD_UWP ) || defined( RAD_MACOS )
     // These settings are for release mode, which has difft memory behaviour than Tune,
     // only because Tune has debug information.
     const float TOTAL_INGAME_MEMORY_USAGE = 1.3f * MB;

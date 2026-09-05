@@ -489,11 +489,11 @@ struct IRadSoundHalSystem : public IRefCount
         unsigned int m_MaxRootAllocations;
         unsigned int m_NumAuxSends;
 
-        #if defined( RAD_WIN32 ) || defined( RAD_UWP )
+        #if defined( RAD_WIN32 ) || defined( RAD_UWP ) || defined( RAD_MACOS )
         unsigned int m_ReservedSoundMemory;
         #endif 
 
-        #if defined( RAD_WIN32 ) || defined( RAD_UWP )
+        #if defined( RAD_WIN32 ) || defined( RAD_UWP ) || defined( RAD_MACOS )
         unsigned int m_SamplingRate;
         #endif
     };

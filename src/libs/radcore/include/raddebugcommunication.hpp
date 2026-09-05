@@ -29,8 +29,8 @@
 // Build Configuration Check
 //=============================================================================
 
-#if !defined(RAD_UWP) && !defined(RAD_WIN32)
-    #error 'FTech requires definition of RAD_UWP or RAD_WIN32'
+#if !defined(RAD_UWP) && !defined(RAD_WIN32) && !defined(RAD_MACOS)
+    #error 'FTech requires definition of RAD_UWP, RAD_WIN32 or RAD_MACOS'
 #endif
 
 //=============================================================================
@@ -63,7 +63,7 @@ const unsigned short radDbgComMaxProtocol = 0xEFFF;
 //
 enum radDbgComType
 {
-  #if defined (RAD_WIN32) || defined (RAD_UWP)
+  #if defined (RAD_WIN32) || defined (RAD_UWP) || defined( RAD_MACOS )
     WinSocket,                          // Sockets
     FileSockets                         // Socket emulation using files (obsolete)
   #endif
@@ -106,7 +106,7 @@ struct IRadDbgComChannelReceiveCallback;
 // the second function to obtain a communincaiton channel for communication with
 // the 
 //
-#if defined (RAD_WIN32) || defined (RAD_UWP)
+#if defined (RAD_WIN32) || defined (RAD_UWP) || defined( RAD_MACOS )
 
 void radDbgComHostGetTargetTable( IRadDbgComTargetTable** pIRadDbgComTargetTable );
 void radDbgComHostCreateChannel( const radDbgComTargetName pName, unsigned short protocol, 

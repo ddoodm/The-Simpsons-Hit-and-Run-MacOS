@@ -8,7 +8,7 @@
 
 #if defined(RAD_LINUX)
     #include <p3d/platform/linux/platform.hpp>
-#elif defined(RAD_WIN32) || defined(RAD_UWP)
+#elif defined(RAD_WIN32) || defined(RAD_UWP) || defined( RAD_MACOS )
     #include <p3d/platform/win32/platform.hpp>
 #endif
 

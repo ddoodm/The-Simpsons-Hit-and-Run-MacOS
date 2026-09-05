@@ -7,7 +7,7 @@
 #define _SHADOW_IMPLIMENTATION_HPP_
 
 
-#if defined (RAD_WIN32) || defined(RAD_UWP)
+#if defined (RAD_WIN32) || defined(RAD_UWP) || defined( RAD_MACOS )
 #define CARMACK_REVERSE // use inverted z-buffer mode 
 #define DRAW_CAPS // draw caps on volumes
 #endif

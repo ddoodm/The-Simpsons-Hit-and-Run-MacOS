@@ -34,8 +34,8 @@
 // Build Configuration Check
 //=============================================================================
 
-#if !defined(RAD_UWP) && !defined(RAD_WIN32)
-    #error 'FTech requires definition of RAD_UWP or RAD_WIN32'
+#if !defined(RAD_UWP) && !defined(RAD_WIN32) && !defined(RAD_MACOS)
+    #error 'FTech requires definition of RAD_UWP, RAD_WIN32 or RAD_MACOS'
 #endif
 
 //=============================================================================
@@ -97,7 +97,7 @@ inline float radPlatformEndian<float>( float value ) { return( value ); }
 #define radPlatformEndian32     radPlatformEndian<unsigned int>
 #define radPlatformEndianFloat  radPlatformEndian<float>
 
-#if defined(RAD_WIN32) || defined(RAD_UWP)
+#if defined(RAD_WIN32) || defined(RAD_UWP) || defined(RAD_MACOS)
 
 //=============================================================================
 // RAD_WIN32 Platform
@@ -127,7 +127,7 @@ struct IRadPlatformWin32MessageCallback
 struct IRadPlatform : public IRefCount
 {
     // TODO(3ur): callbacks are fine to stay uncommented yes? maybe? no?
-#ifndef RAD_UWP
+#if !defined(RAD_UWP) && !defined(RAD_MACOS)
     virtual HWND GetMainWindowHandle( void ) = 0;
     virtual HINSTANCE GetInstanceHandle( void ) = 0;
 #endif

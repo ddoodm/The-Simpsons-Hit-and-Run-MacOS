@@ -26,8 +26,8 @@
 // Build Configuration Check
 //=============================================================================
 
-#if !defined(RAD_UWP) && !defined(RAD_WIN32)
-    #error 'FTech requires definition of RAD_UWP, or RAD_WIN32'
+#if !defined(RAD_UWP) && !defined(RAD_WIN32) && !defined(RAD_MACOS)
+    #error 'FTech requires definition of RAD_UWP, RAD_WIN32 or RAD_MACOS'
 #endif
 
 //=============================================================================
@@ -67,7 +67,7 @@ struct IRadMemoryAllocator;
 // Platform Alignment and Caching Macros
 //=============================================================================
 
-#if defined (RAD_WIN32) || defined (RAD_UWP)
+#if defined (RAD_WIN32) || defined (RAD_UWP) || defined( RAD_MACOS )
 #define STANDARD_ALIGNMENT  4
 #define UNCACHE_BIT         0x00000000
 #endif
@@ -260,7 +260,7 @@ struct IRadMemorySpaceCopyRequest;
 enum radMemorySpace
 {
     radMemorySpace_Null,
-#if defined (RAD_WIN32) || defined (RAD_UWP)
+#if defined (RAD_WIN32) || defined (RAD_UWP) || defined( RAD_MACOS )
     radMemorySpace_Main         // Win/UWP main memory.
 #endif
 };

@@ -28,7 +28,7 @@
 
 namespace MovieNames
 {
-#if defined(RAD_WIN32) || defined(RAD_UWP)
+#if defined(RAD_WIN32) || defined(RAD_UWP) || defined( RAD_MACOS )
 
     //static const char* DEMO = "movies\\demo.rmv";
     static const char* RADICALLOGO = "movies\\radlogo.rmv";

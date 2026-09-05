@@ -27,8 +27,8 @@
 // Build Configuration Check
 //=============================================================================
 
-#if !defined(RAD_UWP) && !defined(RAD_WIN32)
-    #error 'FTech requires definition of RAD_UWP, or RAD_WIN32'
+#if !defined(RAD_UWP) && !defined(RAD_WIN32) && !defined(RAD_MACOS)
+    #error 'FTech requires definition of RAD_UWP, RAD_WIN32 or RAD_MACOS'
 #endif
 #if !defined(RAD_DEBUG) && !defined(RAD_TUNE) && !defined(RAD_RELEASE) 
     #error 'FTech requires definition of RAD_DEBUG, RAD_TUNE, or RAD_RELEASE'
@@ -64,7 +64,7 @@ typedef void (radDebugOutputHandler)(const char * pString );
 // DON'T USE THESE FUNCTIONS, USE THE MACROS BELOW.
 //
 
-#if defined (RAD_WIN32) || defined (RAD_UWP)
+#if defined (RAD_WIN32) || defined (RAD_UWP) || defined( RAD_MACOS )
 #ifdef __cplusplus
     bool rDebugAssertFail_Implementation( const char* condition, const char* filename, unsigned int linenum);
 #else
@@ -143,7 +143,7 @@ void rReleasePrintf( const char *fmt, ... );
     #define rTuneWarning( x ) ((void)0)           // If x false, display warning
     #define rTuneWarningMsg( x, msg ) ((void)0)   // If x false, display msg
 
-    #if defined (RAD_WIN32) || defined (RAD_UWP)
+    #if defined (RAD_WIN32) || defined (RAD_UWP) || defined( RAD_MACOS )
         inline void rTunePrintf( const char *fmt, ... ) { }
     #endif
 
@@ -193,7 +193,7 @@ void rReleasePrintf( const char *fmt, ... );
     #define rDebugChannelDisable( y ) ((void)0)
     #define rDebugChannelTerminate()((void)0)
 
-    #if defined (RAD_WIN32) || defined (RAD_UWP)
+    #if defined (RAD_WIN32) || defined (RAD_UWP) || defined( RAD_MACOS )
         inline void rDebugPrintf( const char *fmt, ... ) { }
         inline void rDebugChannelPrintf( const char *fmt, ... ) { }
     #endif

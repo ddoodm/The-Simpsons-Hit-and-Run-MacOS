@@ -15,12 +15,12 @@
 #endif
 
 // check that we have a valid platform define
-#if !defined(RAD_UWP) && !defined(RAD_WIN32) && !defined(RAD_LINUX)
-#error No platform defined (define one of RAD_UWP, RAD_WIN32 or RAD_LINUX) 
+#if !defined(RAD_UWP) && !defined(RAD_WIN32) && !defined(RAD_LINUX) && !defined(RAD_MACOS)
+#error No platform defined (define one of RAD_UWP, RAD_WIN32, RAD_LINUX or RAD_MACOS) 
 #endif
 
-#if !defined(RAD_WIN32) && !defined(RAD_CONSOLE) 
-#error No platform type defined (Define one of RAD_WIN32, RAD_CONSOLE)
+#if !defined(RAD_WIN32) && !defined(RAD_CONSOLE) && !defined(RAD_MACOS) 
+#error No platform type defined (Define one of RAD_WIN32, RAD_CONSOLE or RAD_MACOS)
 #endif
 
 #if defined(RAD_WIN32) && defined(RAD_CONSOLE) 
