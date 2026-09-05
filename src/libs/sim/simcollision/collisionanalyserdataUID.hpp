@@ -1,7 +1,7 @@
 #ifndef _COLLISIONANALYSERDATAUID_HPP_
 #define _COLLISIONANALYSERDATAUID_HPP_
 
-#include <vadefs.h> // -_-
+#include <stdint.h> // uintptr_t
 
 namespace sim
 {

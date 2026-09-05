@@ -270,7 +270,7 @@ bool radMovieRenderStrategyBink::Render( void )
 
         // Set up position info of the tile
         
-        #if defined( RAD_WIN32 ) || defined( RAD_UWP )
+        #if defined( RAD_WIN32 ) || defined( RAD_UWP ) || defined( RAD_MACOS )
 
         float u = 0.0f;
         float du = m_pTile[ tile ].m_Width / ( float ) m_pTile[ tile ].m_pTexture->GetWidth( );
@@ -287,7 +287,7 @@ bool radMovieRenderStrategyBink::Render( void )
 
         #endif
 
-        #if defined( RAD_WIN32 ) || defined( RAD_UWP )
+        #if defined( RAD_WIN32 ) || defined( RAD_UWP ) || defined( RAD_MACOS )
 
         float x = ( float ) m_DisplayMultiplier * m_pTile[ tile ].m_PosX + m_MoviePosX;
         float y = ( float ) m_DisplayMultiplier * m_pTile[ tile ].m_PosY + m_MoviePosY;
