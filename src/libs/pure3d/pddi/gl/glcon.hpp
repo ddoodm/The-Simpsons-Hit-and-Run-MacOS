@@ -10,6 +10,10 @@
 
 #include <pddi/pddi.hpp>
 #include <pddi/base/basecontext.hpp>
+#include <pddi/gl/gl.hpp>
+#include <radthread.hpp>
+
+#include <vector>
 
 class pglDisplay;
 class pglDevice;
@@ -83,6 +87,11 @@ public :
     // internal pddiglfunctions
     pglDisplay* GetDisplay(void) {return display;}
 
+    // GL calls are only legal on the thread that owns the GL context; other
+    // threads (e.g. the loader) must queue texture deletes here instead.
+    bool IsGLThread(void);
+    void DeferTextureDelete(GLuint texture);
+
     unsigned contextID;
 
 protected:
@@ -94,8 +103,17 @@ protected:
 
     void SetVertexArray(unsigned descr, void* data, int count);
 
+    void DrainDeferredTextureDeletes(void);
+
     pglDevice* device;
     pglDisplay* display;
+
+    IRadThread* glThread;
+    IRadThreadMutex* deferredDeleteMutex;
+    std::vector<GLuint> deferredTextureDeletes;
+    // Set when SetAmbientLight is called off the GL thread; BeginFrame
+    // re-applies the colour stored in the base context state.
+    bool ambientDirty;
 
     pglExtContext* extContext;
     pglExtGamma* extGamma;

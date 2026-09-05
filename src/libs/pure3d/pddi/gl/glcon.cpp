@@ -75,6 +75,11 @@ pglContext::pglContext(pglDevice* dev, pglDisplay* disp) : pddiBaseContext((pddi
     display->AddRef();
     disp->SetContext(this);
 
+    // The constructing thread owns the GL context; only it may issue GL calls.
+    glThread = ::radThreadGetActiveThread();
+    ::radThreadCreateMutex(&deferredDeleteMutex);
+    ambientDirty = false;
+
     glGetIntegerv(GL_MAX_TEXTURE_SIZE, &maxTexSize);
     DefaultState();
     contextID = 0;
@@ -93,15 +98,49 @@ pglContext::~pglContext()
     delete extContext;
     delete extGamma;
 
+    DrainDeferredTextureDeletes();
+    deferredDeleteMutex->Release();
+
     display->SetContext(NULL);
     display->Release();
     device->Release();
+}
+
+bool pglContext::IsGLThread(void)
+{
+    return ::radThreadGetActiveThread() == glThread;
+}
+
+void pglContext::DeferTextureDelete(GLuint texture)
+{
+    deferredDeleteMutex->Lock();
+    deferredTextureDeletes.push_back(texture);
+    deferredDeleteMutex->Unlock();
+}
+
+void pglContext::DrainDeferredTextureDeletes(void)
+{
+    deferredDeleteMutex->Lock();
+    if(!deferredTextureDeletes.empty())
+    {
+        glDeleteTextures((GLsizei)deferredTextureDeletes.size(), &deferredTextureDeletes[0]);
+        deferredTextureDeletes.clear();
+    }
+    deferredDeleteMutex->Unlock();
 }
 
 // frame synchronisation
 void pglContext::BeginFrame()
 {
     pddiBaseContext::BeginFrame();
+
+    DrainDeferredTextureDeletes();
+
+    if(ambientDirty)
+    {
+        ambientDirty = false;
+        SetAmbientLight(GetAmbientLight());
+    }
 
     SDL_GL_SetSwapInterval(display->GetForceVSync() ? 1 : 0);
 
@@ -746,6 +785,15 @@ void pglContext::SetupHardwareLight(int handle)
 void pglContext::SetAmbientLight(pddiColour col)
 {
     pddiBaseContext::SetAmbientLight(col);
+
+    // tAmbientLight::Update calls this from the loader thread while light
+    // chunks load; BeginFrame re-applies the stored colour on the GL thread.
+    if(!IsGLThread())
+    {
+        ambientDirty = true;
+        return;
+    }
+
     float ambient[4];
     FillGLColour(col,ambient);
     glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambient);

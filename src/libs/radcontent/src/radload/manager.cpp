@@ -65,7 +65,9 @@ m_pDataLoaders( NULL ),
 m_pLoadQueue( NULL ),
 m_pThread( NULL ),
 m_pSemaphore(NULL),
-m_pMutex( NULL )
+m_pMutex( NULL ),
+m_pServiceThread( NULL ),
+m_pCallbackMutex( NULL )
 {
     // Make our hash tables so that they will never resize or repack
     m_pFileLoaders = new RefHashTable<radLoadFileLoader>( init.fileLoaderListSize, 200, init.fileLoaderListSize );
@@ -77,8 +79,11 @@ m_pMutex( NULL )
     m_pCallbacks = new RefQueue<radLoadCallback>( 32 );
     m_pCallbacks ->AddRef();
 
+    m_pServiceThread = ::radThreadGetActiveThread();
+
     ::radThreadCreateSemaphore(&m_pSemaphore);
     ::radThreadCreateMutex( &m_pMutex );
+    ::radThreadCreateMutex( &m_pCallbackMutex );
     ::radThreadCreateThread( &m_pThread, radLoadManager::LoadThreadEntry, static_cast<void*>(this), IRadThread::PriorityNormal, init.loadThreadStackSize );
 
 #ifdef RADLOAD_GATHER_STATS
@@ -180,7 +185,9 @@ void radLoadManager::InternalService()
             radLoadCallback* callback = dynamic_cast<radLoadCallback*>( obj );
             if( callback )
             {
+                m_pCallbackMutex->Lock();
                 m_pCallbacks->Push(callback);
+                m_pCallbackMutex->Unlock();
             }
             else
             {
@@ -381,14 +388,26 @@ void radLoadManager::Service()
         SwitchTasks();
     }
 
-    if(!m_pCallbacks->Empty())
+    // The loader thread also calls Service() while yielding; callbacks must
+    // wait for the main-thread pump so game code never runs on the loader.
+    if( ::radThreadGetActiveThread() != m_pServiceThread )
     {
-        radLoadCallback* callback = m_pCallbacks->Pop();
+        return;
+    }
+
+    radLoadCallback* callback = NULL;
+    m_pCallbackMutex->Lock();
+    if( !m_pCallbacks->Empty() )
+    {
+        callback = m_pCallbacks->Pop();
+    }
+    m_pCallbackMutex->Unlock();
+
+    if( callback )
+    {
         callback->Done();
         callback->Release();
     }
-
-
 }
 
 void radLoadManager::SetSyncLoading( bool sync )
@@ -418,6 +437,7 @@ void radLoadManager::Terminate()
 
     m_pSemaphore->Release();
     m_pMutex->Release();
+    m_pCallbackMutex->Release();
 
     delete this;
 }

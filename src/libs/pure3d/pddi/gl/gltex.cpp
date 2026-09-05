@@ -105,6 +105,8 @@ static inline pddiPixelFormat PickPixelFormat(pddiTextureType type, int bitDepth
 
 void pglTexture::SetGLState(void)
 {
+    PDDIASSERT(context->IsGLThread());
+
     if(context->contextID != contextID)
     {
         contextID = context->contextID;
@@ -254,7 +256,15 @@ pglTexture::pglTexture(pglContext* c)
 
 pglTexture::~pglTexture()
 {
-    if(gltexture) glDeleteTextures(1, &gltexture);
+    // Textures can be released on the loader thread (e.g. when a load
+    // replaces one already in the inventory), where GL calls are illegal.
+    if(gltexture)
+    {
+        if(context->IsGLThread())
+            glDeleteTextures(1, &gltexture);
+        else
+            context->DeferTextureDelete(gltexture);
+    }
 
     for(int i = 0; i < nMipMap+1; i++)
         radMemoryFreeAligned(bits[i]);

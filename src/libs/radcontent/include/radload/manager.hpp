@@ -95,6 +95,13 @@ protected:
     IRadThread* m_pThread;
     IRadThreadSemaphore* m_pSemaphore;
     IRadThreadMutex* m_pMutex;
+
+    // Callbacks run game code that may touch the GL context, so only this
+    // thread (the one that created the manager) may run them in Service().
+    IRadThread* m_pServiceThread;
+    // Protects m_pCallbacks. Kept separate from m_pMutex, which the loader
+    // thread holds for the whole duration of a file load.
+    IRadThreadMutex* m_pCallbackMutex;
 };
 
 #endif
