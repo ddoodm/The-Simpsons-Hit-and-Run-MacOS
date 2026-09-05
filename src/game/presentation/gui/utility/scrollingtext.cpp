@@ -199,7 +199,7 @@ ScrollingText::ClipText( int x, int y )
 
         // TODO(3UR): remove RAD_UWP from all lines in this file if it doesnt fix the weird scaling on text !
 
-#if defined( RAD_WIN32 ) || defined( RAD_UWP )
+#if defined(RAD_WIN32) || defined(RAD_UWP) || defined(RAD_MACOS)
         // TC: for PC sku, the source fonts are actually twice as big (for higher resolution display),
         //     so we need to stretch the bounding box accordingly for proper text clipping
         //
@@ -210,7 +210,7 @@ ScrollingText::ClipText( int x, int y )
     {
         m_pText->SetBoundingBoxSize( m_x1 - m_x0, m_y1 - y );
 
-#if defined( RAD_WIN32 ) || defined( RAD_UWP )
+#if defined(RAD_WIN32) || defined(RAD_UWP) || defined(RAD_MACOS)
         // TC: for PC sku, the source fonts are actually twice as big (for higher resolution display),
         //     so we need to stretch the bounding box accordingly for proper text clipping
         //
@@ -233,7 +233,7 @@ ScrollingText::ClipText( int x, int y )
                                         Scrooby::App::GetInstance()->GetScreenWidth() /
                                         Scrooby::App::GetInstance()->GetScreenHeight();
 
-#if defined( RAD_WIN32 ) || defined( RAD_UWP )
+#if defined(RAD_WIN32) || defined(RAD_UWP) || defined(RAD_MACOS)
                 // TC: for PC sku, the source fonts are actually twice as big (for higher resolution display),
                 //     so the width of the current text string is only half as wide
                 //

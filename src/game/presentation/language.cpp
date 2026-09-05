@@ -73,7 +73,7 @@ Language GetHardwareLanguage()
     #endif
     
     // TODO(3ur): above. adding uwp here for temp
-    #if defined(RAD_WIN32) || defined(RAD_UWP)
+    #if defined(RAD_WIN32) || defined(RAD_UWP) || defined(RAD_MACOS)
     ////////////////////////////////////////////////////////////
     // WIN32
     ////////////////////////////////////////////////////////////

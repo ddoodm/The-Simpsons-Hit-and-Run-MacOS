@@ -48,7 +48,7 @@ public:
 
     virtual CGuiMenu* HasMenu() { return m_pMenu; }
 
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
     virtual eFEHotspotType CheckCursorAgainstHotspots( float x, float y );
 #endif
 
@@ -71,7 +71,7 @@ private:
     Scrooby::Group* m_repairCostInfo;
     Scrooby::Text* m_vehicleRepairCost;
 
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
     Scrooby::Sprite* m_leftArrow;
     Scrooby::Sprite* m_rightArrow;
 #endif

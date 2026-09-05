@@ -21,7 +21,7 @@
 //============================================================================
 
 #include "pch.hpp"
-#if defined(RAD_UWP)
+#if defined(RAD_UWP) || defined(RAD_MACOS)
 #include <algorithm>
 #include <stdio.h>
 #include <string.h>
@@ -36,6 +36,7 @@
 #include "radcontrollerbuffer.hpp"
 
 #include <SDL2/SDL.h>
+#include <raddinputcodes.hpp>
 
 //============================================================================
 // Internal Interfaces
@@ -76,7 +77,22 @@ static const char * g_Sdlipt[] =
     "Button",
     "AnalogButton",
     "XAxis",
-    "YAxis"
+    "YAxis",
+    "RelXAxis",
+    "RelYAxis",
+    "RelZAxis"
+};
+
+//
+// Which kind of device an input point belongs to. Pads read through
+// SDL_GameController; keyboard and mouse read global SDL state instead.
+//
+
+enum SDLDeviceKind
+{
+    SDLDevice_Pad,
+    SDLDevice_Keyboard,
+    SDLDevice_Mouse
 };
 
 static SDLInputPoint g_SDLPoints[] =
@@ -109,6 +125,204 @@ static SDLInputPoint g_SDLPoints[] =
     { g_Sdlipt[ 2 ], "RightStickX",      SDL_CONTROLLER_AXIS_RIGHTX },
     { g_Sdlipt[ 3 ], "RightStickY",      SDL_CONTROLLER_AXIS_RIGHTY }
 };
+
+//
+// The input layer names keys by DirectInput scancode, so the keyboard device
+// publishes one input point per DIK_* code and reads it from the matching SDL
+// scancode. m_Mask holds the SDL scancode; m_pName the DIK code, since the
+// point's index in this table is what VirtualKeyToIndex resolves to.
+//
+
+struct SDLKeyPoint
+{
+    int          m_DIK;
+    unsigned int m_Scancode;
+};
+
+static const SDLKeyPoint g_SDLKeyPoints[] =
+{
+    { DIK_ESCAPE,       SDL_SCANCODE_ESCAPE },
+    { DIK_1,            SDL_SCANCODE_1 },
+    { DIK_2,            SDL_SCANCODE_2 },
+    { DIK_3,            SDL_SCANCODE_3 },
+    { DIK_4,            SDL_SCANCODE_4 },
+    { DIK_5,            SDL_SCANCODE_5 },
+    { DIK_6,            SDL_SCANCODE_6 },
+    { DIK_7,            SDL_SCANCODE_7 },
+    { DIK_8,            SDL_SCANCODE_8 },
+    { DIK_9,            SDL_SCANCODE_9 },
+    { DIK_0,            SDL_SCANCODE_0 },
+    { DIK_MINUS,        SDL_SCANCODE_MINUS },
+    { DIK_EQUALS,       SDL_SCANCODE_EQUALS },
+    { DIK_BACK,         SDL_SCANCODE_BACKSPACE },
+    { DIK_TAB,          SDL_SCANCODE_TAB },
+    { DIK_Q,            SDL_SCANCODE_Q },
+    { DIK_W,            SDL_SCANCODE_W },
+    { DIK_E,            SDL_SCANCODE_E },
+    { DIK_R,            SDL_SCANCODE_R },
+    { DIK_T,            SDL_SCANCODE_T },
+    { DIK_Y,            SDL_SCANCODE_Y },
+    { DIK_U,            SDL_SCANCODE_U },
+    { DIK_I,            SDL_SCANCODE_I },
+    { DIK_O,            SDL_SCANCODE_O },
+    { DIK_P,            SDL_SCANCODE_P },
+    { DIK_LBRACKET,     SDL_SCANCODE_LEFTBRACKET },
+    { DIK_RBRACKET,     SDL_SCANCODE_RIGHTBRACKET },
+    { DIK_RETURN,       SDL_SCANCODE_RETURN },
+    { DIK_LCONTROL,     SDL_SCANCODE_LCTRL },
+    { DIK_A,            SDL_SCANCODE_A },
+    { DIK_S,            SDL_SCANCODE_S },
+    { DIK_D,            SDL_SCANCODE_D },
+    { DIK_F,            SDL_SCANCODE_F },
+    { DIK_G,            SDL_SCANCODE_G },
+    { DIK_H,            SDL_SCANCODE_H },
+    { DIK_J,            SDL_SCANCODE_J },
+    { DIK_K,            SDL_SCANCODE_K },
+    { DIK_L,            SDL_SCANCODE_L },
+    { DIK_SEMICOLON,    SDL_SCANCODE_SEMICOLON },
+    { DIK_APOSTROPHE,   SDL_SCANCODE_APOSTROPHE },
+    { DIK_GRAVE,        SDL_SCANCODE_GRAVE },
+    { DIK_LSHIFT,       SDL_SCANCODE_LSHIFT },
+    { DIK_BACKSLASH,    SDL_SCANCODE_BACKSLASH },
+    { DIK_Z,            SDL_SCANCODE_Z },
+    { DIK_X,            SDL_SCANCODE_X },
+    { DIK_C,            SDL_SCANCODE_C },
+    { DIK_V,            SDL_SCANCODE_V },
+    { DIK_B,            SDL_SCANCODE_B },
+    { DIK_N,            SDL_SCANCODE_N },
+    { DIK_M,            SDL_SCANCODE_M },
+    { DIK_COMMA,        SDL_SCANCODE_COMMA },
+    { DIK_PERIOD,       SDL_SCANCODE_PERIOD },
+    { DIK_SLASH,        SDL_SCANCODE_SLASH },
+    { DIK_RSHIFT,       SDL_SCANCODE_RSHIFT },
+    { DIK_MULTIPLY,     SDL_SCANCODE_KP_MULTIPLY },
+    { DIK_LMENU,        SDL_SCANCODE_LALT },
+    { DIK_SPACE,        SDL_SCANCODE_SPACE },
+    { DIK_CAPITAL,      SDL_SCANCODE_CAPSLOCK },
+    { DIK_F1,           SDL_SCANCODE_F1 },
+    { DIK_F2,           SDL_SCANCODE_F2 },
+    { DIK_F3,           SDL_SCANCODE_F3 },
+    { DIK_F4,           SDL_SCANCODE_F4 },
+    { DIK_F5,           SDL_SCANCODE_F5 },
+    { DIK_F6,           SDL_SCANCODE_F6 },
+    { DIK_F7,           SDL_SCANCODE_F7 },
+    { DIK_F8,           SDL_SCANCODE_F8 },
+    { DIK_F9,           SDL_SCANCODE_F9 },
+    { DIK_F10,          SDL_SCANCODE_F10 },
+    { DIK_NUMLOCK,      SDL_SCANCODE_NUMLOCKCLEAR },
+    { DIK_SCROLL,       SDL_SCANCODE_SCROLLLOCK },
+    { DIK_NUMPAD7,      SDL_SCANCODE_KP_7 },
+    { DIK_NUMPAD8,      SDL_SCANCODE_KP_8 },
+    { DIK_NUMPAD9,      SDL_SCANCODE_KP_9 },
+    { DIK_SUBTRACT,     SDL_SCANCODE_KP_MINUS },
+    { DIK_NUMPAD4,      SDL_SCANCODE_KP_4 },
+    { DIK_NUMPAD5,      SDL_SCANCODE_KP_5 },
+    { DIK_NUMPAD6,      SDL_SCANCODE_KP_6 },
+    { DIK_ADD,          SDL_SCANCODE_KP_PLUS },
+    { DIK_NUMPAD1,      SDL_SCANCODE_KP_1 },
+    { DIK_NUMPAD2,      SDL_SCANCODE_KP_2 },
+    { DIK_NUMPAD3,      SDL_SCANCODE_KP_3 },
+    { DIK_NUMPAD0,      SDL_SCANCODE_KP_0 },
+    { DIK_DECIMAL,      SDL_SCANCODE_KP_PERIOD },
+    { DIK_OEM_102,      SDL_SCANCODE_NONUSBACKSLASH },
+    { DIK_F11,          SDL_SCANCODE_F11 },
+    { DIK_F12,          SDL_SCANCODE_F12 },
+    { DIK_F13,          SDL_SCANCODE_F13 },
+    { DIK_F14,          SDL_SCANCODE_F14 },
+    { DIK_F15,          SDL_SCANCODE_F15 },
+    { DIK_NUMPADEQUALS, SDL_SCANCODE_KP_EQUALS },
+    { DIK_PREVTRACK,    SDL_SCANCODE_AUDIOPREV },
+    { DIK_STOP,         SDL_SCANCODE_STOP },
+    { DIK_NEXTTRACK,    SDL_SCANCODE_AUDIONEXT },
+    { DIK_NUMPADENTER,  SDL_SCANCODE_KP_ENTER },
+    { DIK_RCONTROL,     SDL_SCANCODE_RCTRL },
+    { DIK_MUTE,         SDL_SCANCODE_AUDIOMUTE },
+    { DIK_CALCULATOR,   SDL_SCANCODE_CALCULATOR },
+    { DIK_PLAYPAUSE,    SDL_SCANCODE_AUDIOPLAY },
+    { DIK_MEDIASTOP,    SDL_SCANCODE_AUDIOSTOP },
+    { DIK_VOLUMEDOWN,   SDL_SCANCODE_VOLUMEDOWN },
+    { DIK_VOLUMEUP,     SDL_SCANCODE_VOLUMEUP },
+    { DIK_WEBHOME,      SDL_SCANCODE_AC_HOME },
+    { DIK_NUMPADCOMMA,  SDL_SCANCODE_KP_COMMA },
+    { DIK_DIVIDE,       SDL_SCANCODE_KP_DIVIDE },
+    { DIK_SYSRQ,        SDL_SCANCODE_PRINTSCREEN },
+    { DIK_RMENU,        SDL_SCANCODE_RALT },
+    { DIK_PAUSE,        SDL_SCANCODE_PAUSE },
+    { DIK_HOME,         SDL_SCANCODE_HOME },
+    { DIK_UP,           SDL_SCANCODE_UP },
+    { DIK_PRIOR,        SDL_SCANCODE_PAGEUP },
+    { DIK_LEFT,         SDL_SCANCODE_LEFT },
+    { DIK_RIGHT,        SDL_SCANCODE_RIGHT },
+    { DIK_END,          SDL_SCANCODE_END },
+    { DIK_DOWN,         SDL_SCANCODE_DOWN },
+    { DIK_NEXT,         SDL_SCANCODE_PAGEDOWN },
+    { DIK_INSERT,       SDL_SCANCODE_INSERT },
+    { DIK_DELETE,       SDL_SCANCODE_DELETE },
+    { DIK_LWIN,         SDL_SCANCODE_LGUI },
+    { DIK_RWIN,         SDL_SCANCODE_RGUI },
+    { DIK_APPS,         SDL_SCANCODE_APPLICATION },
+    { DIK_POWER,        SDL_SCANCODE_POWER },
+    { DIK_WEBSEARCH,    SDL_SCANCODE_AC_SEARCH },
+    { DIK_WEBFAVORITES, SDL_SCANCODE_AC_BOOKMARKS },
+    { DIK_WEBREFRESH,   SDL_SCANCODE_AC_REFRESH },
+    { DIK_WEBSTOP,      SDL_SCANCODE_AC_STOP },
+    { DIK_WEBFORWARD,   SDL_SCANCODE_AC_FORWARD },
+    { DIK_WEBBACK,      SDL_SCANCODE_AC_BACK },
+    { DIK_MYCOMPUTER,   SDL_SCANCODE_COMPUTER },
+    { DIK_MAIL,         SDL_SCANCODE_MAIL },
+    { DIK_MEDIASELECT,  SDL_SCANCODE_MEDIASELECT }
+};
+
+//
+// Mouse points are ordered to match DIMOUSESTATE2's button order (left,
+// right, middle, then extras), because Mouse::MapInputToDICode() turns
+// "Button <n>" straight into DIMOFS_BUTTON<n>.
+//
+
+static SDLInputPoint g_SDLMousePoints[] =
+{
+    // Axis m_Mask indexes s_MouseDelta; button m_Mask is the SDL button mask.
+    { g_Sdlipt[ 4 ], "X Axis",   0 },
+    { g_Sdlipt[ 5 ], "Y Axis",   1 },
+    { g_Sdlipt[ 6 ], "Wheel",    2 },
+    { g_Sdlipt[ 0 ], "Button 0", SDL_BUTTON_LMASK },
+    { g_Sdlipt[ 0 ], "Button 1", SDL_BUTTON_RMASK },
+    { g_Sdlipt[ 0 ], "Button 2", SDL_BUTTON_MMASK },
+    { g_Sdlipt[ 0 ], "Button 3", SDL_BUTTON_X1MASK },
+    { g_Sdlipt[ 0 ], "Button 4", SDL_BUTTON_X2MASK }
+};
+
+//
+// Relative mouse motion has to be accumulated as it arrives, since polling it
+// with SDL_GetRelativeMouseState() would consume the delta for whichever axis
+// asked first. Each axis takes and clears its own total once per poll.
+//
+
+static float s_MouseDelta[ 3 ] = { 0.0f, 0.0f, 0.0f };
+
+static int SDLWatchMouseMotion( void * userdata, SDL_Event * event )
+{
+    if ( event->type == SDL_MOUSEMOTION )
+    {
+        s_MouseDelta[ 0 ] += (float) event->motion.xrel;
+        s_MouseDelta[ 1 ] += (float) event->motion.yrel;
+    }
+    else if ( event->type == SDL_MOUSEWHEEL )
+    {
+        s_MouseDelta[ 2 ] += (float) event->wheel.y;
+    }
+
+    return 1;
+}
+
+//
+// Names keys by DirectInput scancode for the game's input layer. Index is
+// DIK code, value is the keyboard device's input point index, or -1.
+//
+
+static int    s_VirtualKeyToIndex[ 256 ];
+const int *   VirtualKeyToIndex    = &s_VirtualKeyToIndex[ -1 ]; // DIK_* starts at 1 not 0
+const int *   VirtualJoyKeyToIndex = &s_VirtualKeyToIndex[ -48 ]; // DIJOFS_BUTTON(0) is 48
 
 static class radControllerSystemSDL* s_pTheSDLControllerSystem2 = NULL;
 static radMemoryAllocator g_ControllerSystemAllocator = RADMEMORY_ALLOC_DEFAULT;
@@ -248,6 +462,31 @@ class radControllerInputPointSDL
         //
 
         float newValue = 0.0f;
+
+        if ( m_DeviceKind == SDLDevice_Keyboard )
+        {
+            const Uint8 * pKeys = SDL_GetKeyboardState( NULL );
+
+            return ( pKeys != NULL && pKeys[ m_Identifier ] ) ? 1.0f : 0.0f;
+        }
+
+        if ( m_DeviceKind == SDLDevice_Mouse )
+        {
+            if ( m_pType == g_Sdlipt[ 0 ] ) // Button
+            {
+                return ( SDL_GetMouseState( NULL, NULL ) & m_Identifier ) ? 1.0f : 0.0f;
+            }
+
+            //
+            // Relative axis. Take the accumulated delta and clear it, so the
+            // next poll reports only motion that happened since this one.
+            //
+
+            newValue = s_MouseDelta[ m_Identifier ];
+            s_MouseDelta[ m_Identifier ] = 0.0f;
+
+            return newValue;
+        }
 
         if ( m_pController != NULL )
         {
@@ -547,7 +786,14 @@ class radControllerInputPointSDL
     // radControllerInputPointSDL::radControllerInputPointSDL
     //========================================================================
 
-    radControllerInputPointSDL( SDL_GameController * pController, const char * pType, const char * pName, int id )
+    radControllerInputPointSDL
+    (
+        SDL_GameController * pController,
+        const char * pType,
+        const char * pName,
+        int id,
+        SDLDeviceKind deviceKind = SDLDevice_Pad
+    )
         :
         radRefCount( 0 ),
         m_Value( 0.0f ),
@@ -559,7 +805,8 @@ class radControllerInputPointSDL
         m_pType( pType ),
         m_pName( pName ),
         m_Identifier( id ),
-        m_pController( pController )
+        m_pController( pController ),
+        m_DeviceKind( deviceKind )
     {
         radMemoryMonitorIdentifyAllocation( this, g_nameFTech, "radControllerInputPointSDL" );
         
@@ -596,6 +843,7 @@ class radControllerInputPointSDL
 
     int m_Identifier;
     SDL_GameController * m_pController;
+    SDLDeviceKind m_DeviceKind;
 
     radRef< IRadObjectList > m_xIOl_Callbacks;
 };
@@ -636,6 +884,7 @@ class radControllerSDL
             // Send our output point data to the device here
             //
 
+            if ( m_DeviceKind == SDLDevice_Pad )
             {                
                 IRadControllerOutputPoint * pICop2_Left  = reinterpret_cast< IRadControllerOutputPoint * >( m_xIOl_OutputPoints->GetAt( 0 ) );
                 IRadControllerOutputPoint * pICop2_Right = reinterpret_cast< IRadControllerOutputPoint * >( m_xIOl_OutputPoints->GetAt( 1 ) );
@@ -733,6 +982,11 @@ class radControllerSDL
 
     virtual bool IsConnected( void )
     {
+        if ( m_DeviceKind != SDLDevice_Pad )
+        {
+            return true;
+        }
+
         return SDL_GameControllerGetAttached( m_pController ) == SDL_TRUE;
     }
 
@@ -742,10 +996,12 @@ class radControllerSDL
 
     virtual const char * GetType( void )
     {
-        //
-        // Allways an SDLStandard joystick
-        //
-        return "SDLStandard";
+        switch ( m_DeviceKind )
+        {
+            case SDLDevice_Keyboard: return "SDLKeyboard";
+            case SDLDevice_Mouse:    return "SDLMouse";
+            default:                 return "SDLStandard";
+        }
     }
     
     //========================================================================
@@ -755,10 +1011,16 @@ class radControllerSDL
     virtual const char * GetClassification( void )
     {
         //
-        // Always a joystick
+        // The game looks devices up by this string, so it has to match the
+        // names the DirectInput backend reports.
         //
 
-        return "Joystick";
+        switch ( m_DeviceKind )
+        {
+            case SDLDevice_Keyboard: return "Keyboard";
+            case SDLDevice_Mouse:    return "Mouse";
+            default:                 return "Joystick";
+        }
     }
 
     //========================================================================
@@ -1027,7 +1289,8 @@ class radControllerSDL
     )
         :
         radRefCount( 0 ),
-        m_pController( pController )
+        m_pController( pController ),
+        m_DeviceKind( SDLDevice_Pad )
     {
         radMemoryMonitorIdentifyAllocation( this, g_nameFTech, "radControllerSDL" );
 
@@ -1052,9 +1315,14 @@ class radControllerSDL
 
         int iController = ( std::max )( SDL_GameControllerGetPlayerIndex( pController ), 0 );
         m_xIString_Location->SetSize( 12 );
+#if defined( RAD_MACOS )
+        m_xIString_Location->Append( "Joystick" );
+        m_xIString_Location->Append( (unsigned int) iController );
+#else
         m_xIString_Location->Append( "Port" );
         m_xIString_Location->Append( (unsigned int) iController );
         m_xIString_Location->Append( "\\Slot0" );
+#endif
 
         //
         // Create all of our intput points, this is always the same for every
@@ -1101,11 +1369,100 @@ class radControllerSDL
     }
 
     //========================================================================
+    // radControllerSDL::radControllerSDL (keyboard / mouse)
+    //========================================================================
+
+    radControllerSDL
+    (
+        unsigned int thisAllocator,
+        SDLDeviceKind deviceKind,
+        unsigned int virtualTime,
+        unsigned int bufferTime,
+        unsigned int pollingRate
+    )
+        :
+        radRefCount( 0 ),
+        m_pController( NULL ),
+        m_DeviceKind( deviceKind )
+    {
+        radMemoryMonitorIdentifyAllocation( this, g_nameFTech, "radControllerSDL" );
+
+        m_LeftGain = m_RightGain = 0;
+
+        ::radObjectListCreate( & m_xIOl_InputPoints, g_ControllerSystemAllocator );
+        ::radStringCreate( & m_xIString_Location, g_ControllerSystemAllocator );
+
+        //
+        // The game looks these devices up by name, matching the locations the
+        // DirectInput backend uses. There is only ever one of each.
+        //
+
+        m_xIString_Location->SetSize( 12 );
+        m_xIString_Location->Append( deviceKind == SDLDevice_Keyboard ? "Keyboard0" : "Mouse0" );
+
+        if ( deviceKind == SDLDevice_Keyboard )
+        {
+            for ( unsigned int i = 0; i < 256; i++ )
+            {
+                s_VirtualKeyToIndex[ i ] = -1;
+            }
+
+            for ( unsigned int key = 0; key < ( sizeof( g_SDLKeyPoints ) / sizeof( SDLKeyPoint ) ); key++ )
+            {
+                radRef< radControllerInputPointSDL > pInputPoint = new( g_ControllerSystemAllocator ) radControllerInputPointSDL
+                (
+                    NULL,
+                    g_Sdlipt[ 0 ],
+                    SDL_GetScancodeName( (SDL_Scancode) g_SDLKeyPoints[ key ].m_Scancode ),
+                    g_SDLKeyPoints[ key ].m_Scancode,
+                    SDLDevice_Keyboard
+                );
+
+                //
+                // Keyboard.cpp resolves a DIK code to an input point through
+                // VirtualKeyToIndex, so record where each key landed.
+                //
+
+                s_VirtualKeyToIndex[ g_SDLKeyPoints[ key ].m_DIK - 1 ] = (int) m_xIOl_InputPoints->GetSize( );
+
+                m_xIOl_InputPoints->AddObject( pInputPoint );
+                pInputPoint->iInitialize( );
+            }
+        }
+        else
+        {
+            SDL_AddEventWatch( SDLWatchMouseMotion, this );
+
+            for ( unsigned int i = 0; i < ( sizeof( g_SDLMousePoints ) / sizeof( SDLInputPoint ) ); i++ )
+            {
+                radRef< radControllerInputPointSDL > pInputPoint = new( g_ControllerSystemAllocator ) radControllerInputPointSDL
+                (
+                    NULL,
+                    g_SDLMousePoints[ i ].m_pType,
+                    g_SDLMousePoints[ i ].m_pName,
+                    g_SDLMousePoints[ i ].m_Mask,
+                    SDLDevice_Mouse
+                );
+
+                m_xIOl_InputPoints->AddObject( pInputPoint );
+                pInputPoint->iInitialize( );
+            }
+        }
+
+        iSetBufferTime( bufferTime, pollingRate );
+        iVirtualTimeReMapped( virtualTime );
+    }
+
+    //========================================================================
     // radControllerSDL::
     //========================================================================
 
     ~radControllerSDL( void )
     {
+        if ( m_DeviceKind == SDLDevice_Mouse )
+        {
+            SDL_DelEventWatch( SDLWatchMouseMotion, this );
+        }
     }
 
     //========================================================================
@@ -1113,6 +1470,7 @@ class radControllerSDL
     //========================================================================
 
     SDL_GameController *              m_pController;
+    SDLDeviceKind                     m_DeviceKind;
 
     radRef< IRadObjectList >             m_xIOl_InputPoints;
     radRef< IRadObjectList >             m_xIOl_OutputPoints;
@@ -1165,7 +1523,11 @@ class radControllerSystemSDL
         char location[255];
 
         int iController = ( std::max )( SDL_GameControllerGetPlayerIndex( pController ), 0 );
+#if defined( RAD_MACOS )
+        sprintf( location, "Joystick%d", iController );
+#else
         sprintf( location, "Port%d\\Slot0", iController );
+#endif
 
         xIController2 = sys->GetControllerAtLocation( location );
 
@@ -1567,6 +1929,32 @@ class radControllerSystemSDL
         }
 
         //
+        // Keyboard and mouse are always present, so create them up front.
+        // The game requires a keyboard at Keyboard0 to accept player one.
+        //
+
+        {
+            unsigned int virtualTime = radTimeGetMilliseconds() + m_VirtualTimeAdjust;
+            unsigned int pollingRate = ( m_xITimer != NULL ) ? m_xITimer->GetTimeout() : 10;
+
+            static const SDLDeviceKind kinds[] = { SDLDevice_Keyboard, SDLDevice_Mouse };
+
+            for( unsigned int i = 0; i < 2; i++ )
+            {
+                radRef< IRadController > xIController2 = new (g_ControllerSystemAllocator) radControllerSDL
+                (
+                    g_ControllerSystemAllocator,
+                    kinds[ i ],
+                    virtualTime,
+                    m_EventBufferTime,
+                    pollingRate
+                );
+
+                m_xIOl_Controllers->AddObject( xIController2 );
+            }
+        }
+
+        //
         // TODO: If there is no connection change callback, wait synchronously for the connection
         //
         for( int i = 0; i < SDL_NumJoysticks(); i++ )
@@ -1727,4 +2115,4 @@ void radControllerSystemService( void )
     }
 }
 
-#endif // RAD_UWP
+#endif // RAD_UWP || RAD_MACOS

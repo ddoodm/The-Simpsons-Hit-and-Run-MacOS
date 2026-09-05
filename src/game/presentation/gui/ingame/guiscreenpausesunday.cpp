@@ -43,7 +43,7 @@ enum ePauseSundayMenuItem
     MENU_ITEM_PAUSE_SUNDAY_OPTIONS,
     MENU_ITEM_SAVE_GAME,
     MENU_ITEM_PAUSE_SUNDAY_QUIT_GAME,
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
     MENU_ITEM_PAUSE_SUNDAY_EXIT_GAME,
 #endif
 
@@ -59,7 +59,7 @@ static const char* PAUSE_SUNDAY_MENU_ITEMS[] =
     "Options",
     "SaveGame",
     "QuitGame"
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
     ,"ExitToSystem"
 #endif
 };
@@ -220,7 +220,7 @@ void CGuiScreenPauseSunday::HandleMessage
 
                         break;
                     }
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
                     case MENU_ITEM_PAUSE_SUNDAY_EXIT_GAME:
                     {
                         this->HandleQuitToSystem();

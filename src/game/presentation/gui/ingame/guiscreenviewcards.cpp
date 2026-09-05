@@ -71,7 +71,7 @@ CGuiScreenViewCards::CGuiScreenViewCards
         m_bigBoardFgdLayer = pPage->GetLayerByIndex( 0 );
     }
 
-#ifndef RAD_WIN32
+#if !defined(RAD_WIN32) && !defined(RAD_MACOS)
     m_cardScaleLarge = (1.0f / m_cardScaleSmall) * 0.8f;
     m_cardScaleSmall = 1.0f;
 #endif

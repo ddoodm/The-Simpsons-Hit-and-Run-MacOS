@@ -47,13 +47,13 @@ MemoryCardManager* MemoryCardManager::spInstance = NULL;
 const unsigned int MINIMUM_MEMCARD_CHECK_TIME = 0; // in msec
 const int MAX_SAVED_GAME_TITLE_LENGTH = 32; // # chars
 
-#if defined(RAD_WIN32) || defined(RAD_UWP)
+#if defined(RAD_WIN32) || defined(RAD_UWP) || defined(RAD_MACOS)
 char DEFAULT_GAME_DRIVE[radFileDrivenameMax+1]; // for win32, need to store the default.
 #endif
 
 const char* SAVE_GAME_DRIVE[] =
 {
-#if defined(RAD_WIN32) || defined(RAD_UWP)
+#if defined(RAD_WIN32) || defined(RAD_UWP) || defined(RAD_MACOS)
     DEFAULT_GAME_DRIVE,
 #endif
     "" // dummy terminator
@@ -200,7 +200,7 @@ MemoryCardManager::~MemoryCardManager()
         {
             if( m_pDrives[ i ] != NULL )
             {
-#if !defined(RAD_WIN32) && !defined(RAD_UWP)
+#if !defined(RAD_WIN32) && !defined(RAD_UWP) && !defined(RAD_MACOS)
                 m_pDrives[ i ]->UnregisterErrorHandler( this );
 #endif
 
@@ -210,7 +210,7 @@ MemoryCardManager::~MemoryCardManager()
                 m_numDrivesOpened--;
             }
 
-#if !defined(RAD_WIN32) && !defined(RAD_UWP)
+#if !defined(RAD_WIN32) && !defined(RAD_UWP) && !defined(RAD_MACOS)
             radDriveUnmount( SAVE_GAME_DRIVE[ i ] );
 #endif
         }
@@ -235,7 +235,7 @@ MemoryCardManager::Init( IRadDriveErrorCallback* radDriveErrorCallback )
 {
     m_radDriveErrorCallback = radDriveErrorCallback;
 
-#if defined(RAD_WIN32) || defined(RAD_UWP)
+#if defined(RAD_WIN32) || defined(RAD_UWP) || defined(RAD_MACOS)
     radGetDefaultDrive( DEFAULT_GAME_DRIVE );
 #endif
 
@@ -243,7 +243,7 @@ MemoryCardManager::Init( IRadDriveErrorCallback* radDriveErrorCallback )
     //
     for( unsigned int i = 0; i < NUM_SAVE_GAME_DRIVES; i++ )
     {
-#if !defined(RAD_WIN32) && !defined(RAD_UWP)
+#if !defined(RAD_WIN32) && !defined(RAD_UWP) && !defined(RAD_MACOS)
         bool driveAlreadyMounted = radDriveMount( SAVE_GAME_DRIVE[ i ], GMA_PERSISTENT );
         rAssert( !driveAlreadyMounted );
 #endif
@@ -254,7 +254,7 @@ MemoryCardManager::Init( IRadDriveErrorCallback* radDriveErrorCallback )
 
         // register error handler
         //
-#if !defined(RAD_WIN32) && !defined(RAD_UWP)
+#if !defined(RAD_WIN32) && !defined(RAD_UWP) && !defined(RAD_MACOS)
         m_pDrives[ i ]->RegisterErrorHandler( this, NULL );
 #endif
     }
@@ -353,7 +353,7 @@ MEMTRACK_PUSH_GROUP( "MemcardInfo" );
 
         m_elapsedMemcardInfoLoadTime = radTimeGetMilliseconds();
 
-#if defined(RAD_WIN32) || defined(RAD_UWP)
+#if defined(RAD_WIN32) || defined(RAD_UWP) || defined(RAD_MACOS)
         // go straight to the requests complete method; there is no
         // memcard info.
         OnProcessRequestsComplete( NULL );
@@ -765,7 +765,7 @@ MemoryCardManager::OnMemoryCardCheckCompleted()
         }
     }
 
-#if defined(RAD_WIN32) || defined(RAD_UWP)
+#if defined(RAD_WIN32) || defined(RAD_UWP) || defined(RAD_MACOS)
     rAssertMsg( m_mediaInfos[ 0 ].m_MediaState == IRadDrive::MediaInfo::MediaPresent,
                 "ERROR: Default hard drive didn't mount." );
 #endif // RAD_WIN32

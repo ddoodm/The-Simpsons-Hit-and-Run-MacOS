@@ -48,7 +48,7 @@
 ConstantEffect::ConstantEffect()
 {
     //Setup the respective force effect structures.
-#ifdef RAD_WIN32
+#ifdef RAD_FORCE_FEEDBACK
     m_diConstant.lMagnitude              = 0;
     m_diEnvelope.dwSize                  = sizeof(DIENVELOPE);
     m_diEnvelope.dwAttackLevel           = 0;
@@ -107,7 +107,7 @@ ConstantEffect::~ConstantEffect()
 //=============================================================================
 void ConstantEffect::OnInit()
 {
-#ifdef RAD_WIN32
+#ifdef RAD_FORCE_FEEDBACK
     m_diConstant.lMagnitude = 0;
 #else
     mForceEffect.p.constant.magnitude = 0;
@@ -126,7 +126,7 @@ void ConstantEffect::OnInit()
 //=============================================================================
 void ConstantEffect::SetMagnitude( s16 magnitude )
 {
-#ifdef RAD_WIN32
+#ifdef RAD_FORCE_FEEDBACK
     m_diConstant.lMagnitude = magnitude;
 #else
     mForceEffect.p.constant.magnitude = magnitude;
@@ -146,7 +146,7 @@ void ConstantEffect::SetMagnitude( s16 magnitude )
 //=============================================================================
 void ConstantEffect::SetDirection( u16 direction )
 {
-#ifdef RAD_WIN32
+#ifdef RAD_FORCE_FEEDBACK
     LONG rglDirection[2]      = { direction, 0 };
     mForceEffect.rglDirection = rglDirection;
 #else

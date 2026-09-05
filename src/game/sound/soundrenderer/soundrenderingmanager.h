@@ -201,7 +201,7 @@ private:
     //
     // Cement file handles, in case we want to release them
     //
-#if defined( RAD_UWP ) || defined( RAD_WIN32 )
+#if defined(RAD_UWP) || defined(RAD_WIN32) || defined(RAD_MACOS)
     static const unsigned int NUM_SOUND_CEMENT_FILES = 12;
 #endif
     unsigned int m_soundCementFileHandles[NUM_SOUND_CEMENT_FILES];

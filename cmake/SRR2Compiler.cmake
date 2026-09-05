@@ -11,7 +11,10 @@ target_compile_definitions(srr2_options INTERFACE
 if(APPLE)
     target_compile_definitions(srr2_options INTERFACE RAD_MACOS RAD_UNIX)
 elseif(WIN32)
-    target_compile_definitions(srr2_options INTERFACE RAD_WIN32 WIN64 _CRT_SECURE_NO_WARNINGS)
+    # RAD_FORCE_FEEDBACK gates the force-feedback effect classes, which are
+    # written directly against DirectInput's DIEFFECT.
+    target_compile_definitions(srr2_options INTERFACE
+        RAD_WIN32 WIN64 _CRT_SECURE_NO_WARNINGS RAD_FORCE_FEEDBACK)
 else()
     message(FATAL_ERROR "Unsupported target platform")
 endif()

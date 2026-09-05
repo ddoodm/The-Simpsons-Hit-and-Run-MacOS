@@ -7,7 +7,7 @@
 //
 #include <worldsim/avatarmanager.h>
 
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
 #include <gameflow/gameflow.h>
 #include <contexts/context.h>
 #endif
@@ -120,7 +120,7 @@ void VehicleMappable::LoadControllerMappings( unsigned int controllerId )
 	Map( "Back", Reset, 0, controllerId );
     #endif
 
-    #ifdef RAD_WIN32
+    #if defined(RAD_WIN32) || defined(RAD_MACOS)
 
     ClearMap(0);
     if ( GetGameFlow()->GetCurrentContext() == CONTEXT_LOADING_SUPERSPRINT &&

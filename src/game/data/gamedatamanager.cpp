@@ -393,7 +393,7 @@ GameDataManager::LoadGame( unsigned int slot, GameDataLoadCallback* callback, co
 		strcpy( filename, load_filename ); // TODO(3ur): safe to remove the if and else check?
     IRadDrive* currentDrive = GetMemoryCardManager()->GetCurrentDrive();
     rAssert( currentDrive );
-#if !defined(RAD_WIN32) && !defined(RAD_UWP)
+#if !defined(RAD_WIN32) && !defined(RAD_UWP) && !defined(RAD_MACOS)
     currentDrive->SaveGameOpenAsync( &m_radFile,
                                      filename,
                                      false,
@@ -488,7 +488,7 @@ GameDataManager::SaveGame( unsigned int slot, GameDataSaveCallback* callback )
 
     // update saved game title in memcard info before saving
     //
-#if defined(RAD_WIN32) || defined(RAD_UWP)
+#if defined(RAD_WIN32) || defined(RAD_UWP) || defined(RAD_MACOS)
     GetMemoryCardManager()->UpdateMemcardInfo( NULL );
 #endif
 

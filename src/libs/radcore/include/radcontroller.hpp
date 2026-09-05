@@ -441,7 +441,7 @@ struct IRadControllerInputPointCallback
     virtual void OnControllerInputPointChange( unsigned int userData, float newValue ) = 0;
 };
 
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
 //
 // Virtual key table. Pass in one of the DIK_* defines from dinput.h, and this will return the
 // index of the input point from the system keyboard (keyboard0), or -1 if the key doesn't exist.

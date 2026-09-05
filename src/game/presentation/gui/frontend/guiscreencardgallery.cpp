@@ -46,7 +46,7 @@ const unsigned int NUM_CARD_COLUMNS = 4;
 const float CARD_TRANSITION_TIME = 250.0f; // in msec
 const float CARD_PROJECTILE_GRAVITY = 0.005f; // in m/ms/ms
 
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
 const float CARD_THUMBNAIL_SCALE = 0.44f;
 const float CARD_DESCRIPTION_TEXT_SCALE = 0.9f;
 const float CARD_QUESTION_CORRECTION_SCALE = 2.0f / 3.0f;

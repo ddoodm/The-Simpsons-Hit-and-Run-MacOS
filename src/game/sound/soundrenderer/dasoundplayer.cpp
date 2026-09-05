@@ -42,10 +42,10 @@
 //
 // Initialially the player list is empty
 //
-Sound::daSoundPlayerBase* radLinkedClass< Sound::daSoundPlayerBase >::s_pLinkedClassHead = NULL;
-Sound::daSoundPlayerBase* radLinkedClass< Sound::daSoundPlayerBase >::s_pLinkedClassTail = NULL;
-Sound::daSoundClipStreamPlayer* radLinkedClass< Sound::daSoundClipStreamPlayer >::s_pLinkedClassHead = NULL;
-Sound::daSoundClipStreamPlayer* radLinkedClass< Sound::daSoundClipStreamPlayer >::s_pLinkedClassTail = NULL;
+template<> Sound::daSoundPlayerBase* radLinkedClass< Sound::daSoundPlayerBase >::s_pLinkedClassHead = NULL;
+template<> Sound::daSoundPlayerBase* radLinkedClass< Sound::daSoundPlayerBase >::s_pLinkedClassTail = NULL;
+template<> Sound::daSoundClipStreamPlayer* radLinkedClass< Sound::daSoundClipStreamPlayer >::s_pLinkedClassHead = NULL;
+template<> Sound::daSoundClipStreamPlayer* radLinkedClass< Sound::daSoundClipStreamPlayer >::s_pLinkedClassTail = NULL;
 
 //=============================================================================
 // Namespace
@@ -561,7 +561,7 @@ void daSoundClipStreamPlayer::InitializeAsClipPlayer( void )
     m_ClipInfo.m_pClipPlayer = radSoundClipPlayerCreate( GetThisAllocator( ) );
     m_ClipInfo.m_pClipPlayer->AddRef( );
 
-#ifndef RAD_WIN32
+#if !defined(RAD_WIN32) && !defined(RAD_MACOS)
     // Prepare the player to listen for spacial effects
     for( unsigned int i = 0; i < ::radSoundHalSystemGet( )->GetNumAuxSends( ); i++ )
     {

@@ -46,7 +46,7 @@
 #include <events/eventlistener.h>
 #include <contexts/contextenum.h>
 
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
 #include <data/config/gameconfig.h>
 #endif
 
@@ -94,7 +94,7 @@ enum SoundMode
 //=============================================================================
 
 class SoundManager : public EventListener,
-                     #ifdef RAD_WIN32
+                     #if defined(RAD_WIN32) || defined(RAD_MACOS)
                      public GameConfigHandler,  //ziemek: this is ugly..doh
                      #endif
                      public GameDataHandler
@@ -272,7 +272,7 @@ class SoundManager : public EventListener,
         virtual void SaveData( GameDataByte* dataBuffer, unsigned int numBytes );
         virtual void ResetData();
 
-        #ifdef RAD_WIN32
+        #if defined(RAD_WIN32) || defined(RAD_MACOS)
         // Implementation of the GameConfigHandler interface
         virtual const char* GetConfigName() const;
         virtual int GetNumProperties() const;

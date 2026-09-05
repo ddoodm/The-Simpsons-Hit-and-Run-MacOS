@@ -91,7 +91,7 @@ MEMTRACK_PUSH_GROUP( "CGUIScreenMissionOver" );
         missionFailedText->CreateBitmapTextBuffer( textLength );
         missionFailedText->SetBitmapText( text );
         missionFailedText->SetBitmapTextLineSpacing( 10 );
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
         missionFailedText->ResetTransformation();
         missionFailedText->ScaleAboutCenter( 0.5f );
 #endif

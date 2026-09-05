@@ -22,7 +22,7 @@
 // Project Includes
 //========================================
 #include <input/inputmanager.h>
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
 #include <input/usercontrollerWin32.h>
 #else
 #include <input/usercontroller.h>
@@ -127,7 +127,7 @@ MEMTRACK_PUSH_GROUP( "InputManager" );
         // preallocate run time controller structure.
         mControllerArray[ i ].Create(i);
     }
-#ifndef RAD_WIN32
+#if !defined(RAD_WIN32) && !defined(RAD_MACOS)
     mxIControllerSystem2->RegisterConnectionChangeCallback( this );
 #endif
     rDebugString( "Just created User controller system\n" );
@@ -393,7 +393,7 @@ m_isProScanButtonsPressed( false )
     }
 
     GetGameDataManager()->RegisterGameData( this, 1, "Input Manager" );
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
     m_pFEMouse = new FEMouse;
 #endif
 }
@@ -403,11 +403,11 @@ InputManager::~InputManager()
 {
     ReleaseAllControllers();
 
-#ifndef RAD_WIN32
+#if !defined(RAD_WIN32) && !defined(RAD_MACOS)
     mxIControllerSystem2->UnRegisterConnectionChangeCallback( this );
 #endif
     ::radControllerTerminate();
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
     delete m_pFEMouse;
     m_pFEMouse = NULL;
 #endif
@@ -418,7 +418,7 @@ void InputManager::EnumerateControllers( void )
     // on the console the controller device and all the mappables are
     // preallocated.  So we don't have to create new associations.
     //
-#ifndef RAD_WIN32
+#if !defined(RAD_WIN32) && !defined(RAD_MACOS)
     radRef< IRadController > xIC2;
 #else
     radRef< IRadController > radController[ NUM_CONTROLLERTYPES ];
@@ -454,7 +454,7 @@ void InputManager::EnumerateControllers( void )
             sprintf( szLocation, "Channel%d", i );
 #endif
 
-#ifndef RAD_WIN32
+#if !defined(RAD_WIN32) && !defined(RAD_MACOS)
             xIC2 = mxIControllerSystem2->GetControllerAtLocation( szLocation );
 #else
             radController[KEYBOARD] = mxIControllerSystem2->GetControllerAtLocation( szLocation );
@@ -472,7 +472,7 @@ void InputManager::EnumerateControllers( void )
             UserController* controller = &mControllerArray[ i ];
 
 
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
             // One keyboard has to be present. (might want to change later)
             if ( (radController[KEYBOARD] == NULL || !radController[KEYBOARD]->IsConnected( )) && (i == 0) )
             {
@@ -605,7 +605,7 @@ InputManager::UnregisterAllControllerID()
     }
 }
 
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
 
 void InputManager::StartRumbleEffects()
 {

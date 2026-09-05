@@ -39,7 +39,7 @@ static const CheatInputMapping CHEAT_INPUT_MAPPINGS[] =
     { "RightTrigger",   CHEAT_INPUT_RTRIGGER },
 #endif
 
-#ifdef RAD_WIN32        // these are not laid out yet
+#if defined(RAD_WIN32) || defined(RAD_MACOS)        // these are not laid out yet
     { "Attack",         CHEAT_INPUT_0 },
     { "Jump",           CHEAT_INPUT_1 },
     { "Sprint",         CHEAT_INPUT_2 },

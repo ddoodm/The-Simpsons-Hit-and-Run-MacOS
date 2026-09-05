@@ -29,6 +29,13 @@
 
 extern bool gMemorySystemInitialized;
 
+#if defined( RAD_MACOS )
+// Cleared until main() runs. While false, the global operator new serves
+// allocations from malloc, because shared library initializers reach it before
+// the game's allocator can be brought up. See srrmemory.cpp.
+extern bool g_PastStaticInit;
+#endif
+
 //========================================
 // Global Declarations
 //========================================

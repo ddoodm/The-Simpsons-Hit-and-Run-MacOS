@@ -29,6 +29,9 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
 
+# clangd and other tooling read compile_commands.json from the source root.
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 include(SRR2Compiler)
 include(SRR2Dependencies)
 
@@ -45,6 +48,15 @@ add_subdirectory(src/libs/choreo)
 add_subdirectory(src/libs/scrooby)
 add_subdirectory(src/libs/radmovie)
 add_subdirectory(src/srr2)
+
+# Point clangd at the database this build wrote, without committing a path that
+# only makes sense for one build directory.
+if(NOT "${CMAKE_BINARY_DIR}" STREQUAL "${CMAKE_SOURCE_DIR}")
+    file(CREATE_LINK
+        "${CMAKE_BINARY_DIR}/compile_commands.json"
+        "${CMAKE_SOURCE_DIR}/compile_commands.json"
+        SYMBOLIC)
+endif()
 
 message(STATUS "")
 message(STATUS "SRR2 ${PROJECT_VERSION} configured")

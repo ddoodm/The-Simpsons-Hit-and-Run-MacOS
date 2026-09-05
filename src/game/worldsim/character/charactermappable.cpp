@@ -4,7 +4,7 @@
 #include <p3d/camera.hpp>
 
 #include <input/inputmanager.h>
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
 #include <input/usercontrollerWin32.h>
 #else
 #include <input/usercontroller.h>
@@ -189,7 +189,7 @@ void BipedCharacterMappable::OnButtonDown( int controllerId, int buttonId, const
 }
 void BipedCharacterMappable::GetDirection( rmt::Vector& outDirection ) const
 {
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
     if ( GetSuperCamManager()->GetSCC( 0 )->GetActiveSuperCam()->GetType() == SuperCam::PC_CAM ) //Mouse look enabled
     {
         float right = GetValue( CharacterController::MouseLookRight );
@@ -216,7 +216,7 @@ void BipedCharacterMappable::GetDirection( rmt::Vector& outDirection ) const
 
     //The DPad overrides the analog stick.
     outDirection = tempDir2.MagnitudeSqr() != 0.0f ? tempDir2 : tempDir;
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
     }
 #endif
 }
@@ -242,7 +242,7 @@ void InCarCharacterMappable::OnButtonDown( int controllerId, int buttonId, const
             GetCharacterController()->SetIntention( CharacterController::DoAction );
             break;
         }
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
     case CharacterController::GetOutCar:
         {
             GetCharacterController()->SetIntention( CharacterController::GetOutCar );

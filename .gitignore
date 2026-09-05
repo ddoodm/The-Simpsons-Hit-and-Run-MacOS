@@ -191,5 +191,9 @@ build-*/
 cmake-build-*/
 CMakeUserPresets.json
 
+# Symlink into the active build dir, written by CMake for clangd
+compile_commands.json
+.cache/
+
 # macOS
 .DS_Store

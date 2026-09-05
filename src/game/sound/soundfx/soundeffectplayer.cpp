@@ -24,7 +24,7 @@
 #include <sound/soundfx/soundfxgameplaylogic.h>
 #include <sound/soundfx/soundfxpauselogic.h>
 
-#if defined(RAD_WIN32) || defined(RAD_UWP)
+#if defined(RAD_WIN32) || defined(RAD_UWP) || defined(RAD_MACOS)
 #include <sound/soundfx/win32reverbcontroller.h>
 #endif
 
@@ -174,7 +174,7 @@ void SoundEffectPlayer::initialize()
     m_logicObjects[FXSTATE_GAMEPLAY] = new(GMA_PERSISTENT) SoundFXGameplayLogic();
     m_logicObjects[FXSTATE_PAUSED] = new(GMA_PERSISTENT) SoundFXPauseLogic();
 
-#if defined(RAD_WIN32) || defined(RAD_UWP)
+#if defined(RAD_WIN32) || defined(RAD_UWP) || defined(RAD_MACOS)
     m_reverbController = new(GMA_PERSISTENT) Win32ReverbController();
 #endif
 }

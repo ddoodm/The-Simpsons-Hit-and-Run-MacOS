@@ -18,7 +18,7 @@
 #include <radmath/radmath.hpp>
 
 #define DIRECTINPUT_VERSION 0x0800
-#include <dinput.h>
+#include <raddinputcodes.hpp>
 #include <string.h>
 
 //========================================
@@ -35,10 +35,12 @@
 #include <input/SteeringWheel.h>
 #include <input/inputmanager.h>
 
+#ifdef RAD_FORCE_FEEDBACK
 #include <input/steeringspring.h>
 #include <input/baseDamper.h>
 #include <input/constanteffect.h>
 #include <input/wheelrumble.h>
+#endif
 #include <presentation/tutorialmanager.h>
 
 #include <console/fbstricmp.h>
@@ -50,6 +52,10 @@
 
 #include <gameflow/gameflow.h>
 #include <contexts/context.h>
+
+#include <SDL2/SDL.h>
+
+#define _stricmp SDL_strcasecmp
 
 // needed for the mouse reset hack.
 static int maxes[] = { DIMOFS_X, DIMOFS_Y, DIMOFS_Z };
@@ -190,11 +196,13 @@ m_bTutorialDisabled(true)
 	m_pController[MOUSE] = new Mouse();
     m_pController[STEERINGWHEEL] = new Gamepad();
 
+#ifdef RAD_FORCE_FEEDBACK
     m_pSteeringSpring   = new SteeringSpring;
     m_pSteeringDamper   = new BaseDamper;
     m_pConstantEffect   = new ConstantEffect;
     m_pWheelRumble      = new WheelRumble;
     m_pHeavyWheelRumble = new WheelRumble;
+#endif
 
     //
     // Register with the game config manager
@@ -455,6 +463,7 @@ void UserController::Initialize( RADCONTROLLER* pIController )
     //
     RegisterInputPoints();
 
+#ifdef RAD_FORCE_FEEDBACK
     RADCONTROLLER pSteeringWheel = m_pController[STEERINGWHEEL]->getController();
 
     static bool bSteeringSet = false;
@@ -494,6 +503,7 @@ void UserController::Initialize( RADCONTROLLER* pIController )
         }
         bSteeringSet = true;
     }
+#endif
 
     // Set up rumbling for the gamepad.
     //
@@ -537,17 +547,20 @@ void UserController::ReleaseRadController( void )
         mbInputPointsRegistered = false;
     }
 
+#ifdef RAD_FORCE_FEEDBACK
     if( m_pSteeringSpring ) m_pSteeringSpring->ShutDownEffects();
     if( m_pSteeringDamper ) m_pSteeringDamper->ShutDownEffects();
     if( m_pConstantEffect ) m_pConstantEffect->ShutDownEffects();
     if( m_pWheelRumble ) m_pWheelRumble->ShutDownEffects();
     if( m_pHeavyWheelRumble ) m_pHeavyWheelRumble->ShutDownEffects();
+#endif
 
     mRumbleEffect.ShutDownEffects();
 }
 
 void UserController::SetRumble( bool bRumbleOn, bool pulse )
 {
+#ifdef RAD_FORCE_FEEDBACK
     if ( bRumbleOn && !mbIsRumbleOn && !CommandLineOptions::Get( CLO_NO_HAPTIC ) && m_bForceFeedback )
     {
         StartForceEffects();
@@ -556,6 +569,7 @@ void UserController::SetRumble( bool bRumbleOn, bool pulse )
     {
         StopForceEffects();
     }
+#endif
 
     if ( pulse && m_bForceFeedback )
     {
@@ -675,16 +689,19 @@ void UserController::Update( unsigned timeins )
         }
     }
 
+#ifdef RAD_FORCE_FEEDBACK
     m_pSteeringSpring->Update();
     m_pSteeringDamper->Update();
     m_pConstantEffect->Update();
     m_pWheelRumble->Update(timeins);
     m_pHeavyWheelRumble->Update(timeins);
+#endif
 
     //I leave this out so the FE can rumble me anyway.
     mRumbleEffect.Update( timeins );
 }
 
+#ifdef RAD_FORCE_FEEDBACK
 void UserController::StartForceEffects()
 {
     m_pSteeringSpring->Start();
@@ -702,6 +719,7 @@ void UserController::StopForceEffects()
     m_pWheelRumble->Stop();
     m_pHeavyWheelRumble->Stop();
 }
+#endif
 
 // Returns the value stored by input point at index.
 float UserController::GetInputValue( unsigned int index ) const
@@ -757,6 +775,7 @@ UserController::~UserController( void )
 		m_pController[i] = NULL;
 	}
 
+#ifdef RAD_FORCE_FEEDBACK
     delete m_pSteeringSpring;
     m_pSteeringSpring = NULL;
     delete m_pSteeringDamper;
@@ -767,6 +786,7 @@ UserController::~UserController( void )
     m_pWheelRumble = NULL;
     delete m_pHeavyWheelRumble;
     m_pHeavyWheelRumble = NULL;
+#endif
 }
 
 int UserController::RegisterMappable( Mappable *pMappable )
@@ -857,6 +877,7 @@ int UserController::GetIdByName( const char* pszName ) const
     return -1;
 }
 
+#ifdef RAD_FORCE_FEEDBACK
 SteeringSpring* UserController::GetSpring() 
 { 
     return m_pSteeringSpring->IsInit() ? m_pSteeringSpring : NULL; 
@@ -881,6 +902,7 @@ WheelRumble* UserController::GetHeavyWheelRumble()
 { 
     return m_pHeavyWheelRumble->IsInit() ? m_pHeavyWheelRumble : NULL; 
 }
+#endif
 
 void UserController::RegisterInputPoints()
 {

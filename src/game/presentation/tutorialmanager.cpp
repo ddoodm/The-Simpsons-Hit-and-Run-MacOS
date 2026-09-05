@@ -435,7 +435,7 @@ void TutorialManager::ProcessQueue()
         //
         this->SetTutorialSeen( event, true );
 
-#ifndef RAD_WIN32
+#if !defined(RAD_WIN32) && !defined(RAD_MACOS)
         switch( event )
         {
         case TUTORIAL_BREAK_CAMERA:
@@ -606,7 +606,7 @@ void TutorialManager::ProcessQueue()
         GetGuiSystem()->GotoScreen( CGuiWindow::GUI_SCREEN_ID_TUTORIAL, 0, 0,
                                     CLEAR_WINDOW_HISTORY | FORCE_WINDOW_CHANGE_IMMEDIATE );
 
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
         m_DialogCurrentlyPlaying = false;
 #endif
         GetGameFlow()->SetContext( CONTEXT_PAUSE );
@@ -673,14 +673,14 @@ TutorialManager::SaveData( GameDataByte* dataBuffer, unsigned int numBytes )
 void
 TutorialManager::ResetData()
 {
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
 
     if( !GetInputManager()->GetController(0)->IsTutorialDisabled() )
     {
 #endif       
         m_EnableTutorialEvents = true;
         m_tutorialsSeen = 0;
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
     }
 #endif 
 

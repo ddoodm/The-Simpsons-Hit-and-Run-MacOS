@@ -194,7 +194,7 @@ MEMTRACK_PUSH_GROUP( "CGUIScreenMainMenu" );
     //
     Scrooby::Text* otherMainMenu = NULL;
 
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
     m_pMenu->AddMenuItem( pPage->GetText( "MainMenu_PC" ),
                           pPage->GetText( "MainMenu_PC" ),
                           NULL,
@@ -323,7 +323,7 @@ MEMTRACK_PUSH_GROUP( "CGUIScreenMainMenu" );
     if( tvFrame != NULL )
     {
         tvFrame->ResetTransformation();
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
         tvFrame->ScaleAboutCenter( 1.03f );
 #endif
     }
@@ -391,7 +391,7 @@ void CGuiScreenMainMenu::HandleMessage
 {
     if( message == GUI_MSG_MENU_PROMPT_RESPONSE )
     {
-#ifndef RAD_WIN32
+#if !defined(RAD_WIN32) && !defined(RAD_MACOS)
         rAssert( param1 == PROMPT_CONFIRM_NEW_GAME );
 #endif
 
@@ -428,7 +428,7 @@ void CGuiScreenMainMenu::HandleMessage
                 }
             }
         }
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
         else if( param1 == PROMPT_CONFIRM_QUIT )
         {
             switch( param2 )
@@ -527,7 +527,7 @@ void CGuiScreenMainMenu::HandleMessage
                             // hide accept button icon
                             //
                             this->SetButtonVisible( BUTTON_ICON_ACCEPT, false );
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
                             GetInputManager()->GetFEMouse()->SetClickable( false );
 #endif
                             
@@ -541,7 +541,7 @@ void CGuiScreenMainMenu::HandleMessage
                         m_pMenu->GetMenuItem( MENU_ITEM_MAIN_MENU )->GetItemValue()->SetColour( menuHighlightColour );
 
                         this->SetButtonVisible( BUTTON_ICON_ACCEPT, true );
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
                         GetInputManager()->GetFEMouse()->SetClickable( true );
 #endif
                     }
@@ -577,7 +577,7 @@ void CGuiScreenMainMenu::HandleMessage
 
                 break;
             }
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
             case GUI_MSG_CONTROLLER_BACK:
             {
                 this->OnQuitGameSelected();
@@ -662,7 +662,7 @@ void CGuiScreenMainMenu::HandleMessage
 
                         break;
                     }
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
                     case MAIN_MENU_QUIT_GAME:
                     {
                         this->OnQuitGameSelected();
@@ -1237,7 +1237,7 @@ void CGuiScreenMainMenu::TurnOnGlowItems( unsigned int items )
     }
 #endif
 
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
     for( int i = 0; i < NUM_MAIN_MENU_SELECTIONS; i++ )
     {
         bool isOn = (items & (1 << i)) > 0;
@@ -1335,7 +1335,7 @@ CGuiScreenMainMenu::OnMiniGameSelected()
     this->StartTransitionAnimation( 880, 913 );
 }
 
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
 void
 CGuiScreenMainMenu::OnQuitGameSelected()
 {

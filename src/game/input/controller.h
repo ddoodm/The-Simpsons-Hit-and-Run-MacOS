@@ -16,19 +16,19 @@ namespace Input
     // Platform specific max controllers.
     const static unsigned int MaxControllers = (MaxPorts * MaxSlots);
 
-    #ifdef RAD_WIN32
+    #if defined(RAD_WIN32) || defined(RAD_MACOS)
         const static unsigned int NumExtraButtonsForSuperSprint = 7;
     #endif
 
     // Maximum number of physical buttons (in a UserController)
-    #ifdef RAD_WIN32
+    #if defined(RAD_WIN32) || defined(RAD_MACOS)
     const static unsigned int MaxPhysicalButtons = 42 + NumExtraButtonsForSuperSprint;
     #else
     const static unsigned int MaxPhysicalButtons = 40;
     #endif
 
     // Maximum number of logical buttons (in a UserController)
-    #ifdef RAD_WIN32
+    #if defined(RAD_WIN32) || defined(RAD_MACOS)
     const static unsigned int MaxLogicalButtons = 42 + NumExtraButtonsForSuperSprint;
     #else
     const static unsigned int MaxLogicalButtons = 40;
@@ -42,7 +42,7 @@ namespace Input
 
     // Maximum number of physical keys that can be assigned to a virtual key
     // for a controller.
-    #ifdef RAD_WIN32
+    #if defined(RAD_WIN32) || defined(RAD_MACOS)
     const static unsigned int MaxVirtualMappings = 2;
     #endif
 

@@ -193,7 +193,7 @@ private:
     Scrooby::Sprite* m_messageBox;
     MessageQueue m_helpMessageQueue;
 
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
     Scrooby::Text* m_actionButton;
     Scrooby::Text* m_actionLabel;
 #else

@@ -22,6 +22,17 @@ WINDOWS_ONLY = {
         'src/raddebugcommunication/targetconnection.cpp',
         'src/raddebugcommunication/targetsocketchannel.cpp',
     ],
+    # macOS shares the PC input path: keyboard, mouse and pad devices all come
+    # from radcore's SDL backend, which reports the same DirectInput codes the
+    # PC device wrappers already speak. Only the force-feedback effects are
+    # dropped, since those are built directly on DIEFFECT.
+    'SRR2': [
+        '../game/input/basedamper.cpp',
+        '../game/input/constanteffect.cpp',
+        '../game/input/forceeffect.cpp',
+        '../game/input/steeringspring.cpp',
+        '../game/input/wheelrumble.cpp',
+    ],
 }
 
 # Sources compiled only on macOS.

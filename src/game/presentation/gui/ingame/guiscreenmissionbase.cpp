@@ -111,7 +111,7 @@ GuiSFX::PulseScale    g_TitlePulse(          "TitlePulse"           );
 const float VEHICLE_ODDS_HARD_THRESHOLD = 3.0f;
 const float VEHICLE_ODDS_MEDIUM_THRESHOLD = 2.0f;
 
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
 const float MISSION_BITMAP_CORRECTION_SCALE = 0.67f;
 #endif
 
@@ -352,7 +352,7 @@ CGuiScreenMissionBase::CGuiScreenMissionBase( Scrooby::Screen* pScreen, CGuiEnti
     g_OutroHideEverything.SetDrawable( m_Foreground );
 
     m_missionStartBitmap->SetRawSprite( NULL );
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
     m_missionStartBitmap->ResetTransformation();
     m_missionStartBitmap->ScaleAboutCenter( MISSION_BITMAP_CORRECTION_SCALE );
     m_missionStartBitmap->Translate( -71, -32 );  // These are trial & error numbers that hopefully work.

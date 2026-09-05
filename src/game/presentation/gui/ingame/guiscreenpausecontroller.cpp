@@ -60,7 +60,7 @@ CGuiScreenPauseController::CGuiScreenPauseController
 )
 :   CGuiScreenController( pScreen, pParent )
 {
-#ifndef RAD_WIN32
+#if !defined(RAD_WIN32) && !defined(RAD_MACOS)
     rAssert( pScreen != NULL );
     Scrooby::Page* pPage = pScreen->GetPage( "ControllerImageS" );
     rAssert( pPage != NULL );

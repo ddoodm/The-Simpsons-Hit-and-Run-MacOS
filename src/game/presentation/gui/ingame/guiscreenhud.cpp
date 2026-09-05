@@ -238,7 +238,7 @@ MEMTRACK_PUSH_GROUP( "CGUIScreenHud" );
     m_timer->CreateBitmapTextBuffer( BITMAP_TEXT_BUFFER_SIZE );
     m_timer->SetBitmapTextSpacing( NUMERIC_TEXT_SPACING );
     m_defaultTimerColour = m_timer->GetColour();
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
     m_timer->Translate( -25, 0 );
     m_timer->ScaleAboutCenter( 0.5f );
 #endif
@@ -251,7 +251,7 @@ MEMTRACK_PUSH_GROUP( "CGUIScreenHud" );
     m_parTime->SetSpriteMode( Scrooby::SPRITE_BITMAP_TEXT );
     m_parTime->CreateBitmapTextBuffer( BITMAP_TEXT_BUFFER_SIZE );
     m_parTime->SetBitmapTextSpacing( NUMERIC_TEXT_SPACING );
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
     m_parTime->Translate( -25, 0 );
     m_parTime->ScaleAboutCenter( 0.5f );
 #endif
@@ -264,7 +264,7 @@ MEMTRACK_PUSH_GROUP( "CGUIScreenHud" );
     m_collectibles->SetSpriteMode( Scrooby::SPRITE_BITMAP_TEXT );
     m_collectibles->CreateBitmapTextBuffer( BITMAP_TEXT_BUFFER_SIZE );
     m_collectibles->SetBitmapTextSpacing( NUMERIC_TEXT_SPACING );
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
     m_collectibles->Translate( -25, 0 );
     m_collectibles->ScaleAboutCenter( 0.5f );
 #endif
@@ -278,7 +278,7 @@ MEMTRACK_PUSH_GROUP( "CGUIScreenHud" );
     m_position->SetSpriteMode( Scrooby::SPRITE_BITMAP_TEXT );
     m_position->CreateBitmapTextBuffer( BITMAP_TEXT_BUFFER_SIZE );
     m_position->SetBitmapTextSpacing( NUMERIC_TEXT_SPACING );
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
     m_position->Translate( -25, 0 );
     m_position->ScaleAboutCenter( 0.5f );
 #endif
@@ -291,7 +291,7 @@ MEMTRACK_PUSH_GROUP( "CGUIScreenHud" );
     m_lap->SetSpriteMode( Scrooby::SPRITE_BITMAP_TEXT );
     m_lap->CreateBitmapTextBuffer( BITMAP_TEXT_BUFFER_SIZE );
     m_lap->SetBitmapTextSpacing( NUMERIC_TEXT_SPACING );
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
     m_lap->Translate( -25, 0 );
     m_lap->ScaleAboutCenter( 0.5f );
 #endif
@@ -327,7 +327,7 @@ MEMTRACK_PUSH_GROUP( "CGUIScreenHud" );
     m_missionFailedSprite->CreateBitmapTextBuffer( 256 );
     m_missionFailedSprite->SetBitmapText( GetTextBibleString( "MISSION_FAILED" ) );
     m_missionFailedSprite->SetBitmapTextLineSpacing( 10 );
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
     m_missionFailedSprite->ScaleAboutCenter( 0.5f );
 #endif
 
@@ -381,7 +381,7 @@ MEMTRACK_PUSH_GROUP( "CGUIScreenHud" );
     pGroup = pPage->GetGroup( "ActionButton" );
     rAssert( pGroup != NULL );
     m_overlays[ HUD_ACTION_BUTTON ] = pGroup;
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
     m_actionButton = pGroup->GetText( "ActionTextButton" );
     m_actionLabel = pGroup->GetText( "ActionTextLabel" );
 #else
@@ -1468,7 +1468,7 @@ CGuiScreenHud::SetNumCoinsDisplay( Scrooby::Sprite* pSprite )
         pSprite->SetBitmapTextSpacing( NUMERIC_TEXT_SPACING );
         pSprite->SetVisible( false ); // hide by default
 
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
         pSprite->ResetTransformation();
         pSprite->Translate( 70, 0 );
         pSprite->ScaleAboutCenter( 0.5f );
@@ -1738,7 +1738,7 @@ CGuiScreenHud::UpdateOverlays( unsigned int elapsedTime )
     //
     if( m_overlays[ HUD_ACTION_BUTTON ]->IsVisible() )
     {
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
         const float PULSE_AMPLITUDE = 0.10f;
         const float PULSE_PERIOD = 600.0f; // in milliseconds
 #else
@@ -1754,7 +1754,7 @@ CGuiScreenHud::UpdateOverlays( unsigned int elapsedTime )
         m_actionButton->ResetTransformation();
         m_actionButton->ScaleAboutCenter( scale, scale, 1.0f );
 
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
         m_actionLabel->ResetTransformation();
         m_actionLabel->ScaleAboutCenter( 0.85f, 0.85f, 1.0f );
 #endif
@@ -1768,7 +1768,7 @@ CGuiScreenHud::UpdateOverlays( unsigned int elapsedTime )
     {
         static float MISSION_COMPLETE_DISPLAY_TIME = 2500; // in milliseconds
 
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
         bool done = GuiSFX::Flash( m_missionComplete,
                                    (float)m_elapsedTime[ HUD_MISSION_COMPLETE ],
                                     MISSION_COMPLETE_DISPLAY_TIME,

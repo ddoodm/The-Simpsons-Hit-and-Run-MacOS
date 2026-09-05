@@ -51,7 +51,7 @@ public:
     virtual void Pause();
     virtual void UnPause();
 
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
     void ForceStop();
 #endif
 

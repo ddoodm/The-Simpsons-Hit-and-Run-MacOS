@@ -188,7 +188,7 @@ const char* PROJECT_FILE_MINIGAME = "art\\frontend\\scrooby\\minigame.p3d";
 const char* PROJECT_FILE_INGAME = "art\\frontend\\scrooby\\ingame.p3d";
 
 const char* LICENSE_SCREEN_IMAGE_DIR = "art\\frontend\\dynaload\\images\\license\\";
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
 const char* MOUSE_CURSOR_DIR = "art\\frontend\\dynaload\\images\\";
 #endif
 
@@ -1205,14 +1205,14 @@ void CGuiSystem::OnInitBootUp()
 #ifdef RAD_UWP
              "%s%slicenseX.p3d",
 #endif
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
              "%s%slicensePC.p3d",
 #endif
              LICENSE_SCREEN_IMAGE_DIR,
              languageDir );
 
     //Load the mouse cursor
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
     char cursorImageFile[256];
     sprintf( cursorImageFile, "%smouse_cursor.p3d", MOUSE_CURSOR_DIR );
 

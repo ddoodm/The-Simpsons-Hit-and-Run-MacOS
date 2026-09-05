@@ -48,7 +48,7 @@ const tColour DEFAULT_OUTLINE_COLOUR( 0, 0, 0, 192 );
 const float SLIDER_FULL_RANGE_TIME = 2000; // in milliseconds
 const int SELECTION_MADE_DURATION = 250; // in milliseconds
 
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
 const float ARROW_SCALE = 0.5f;
 #endif
 
@@ -85,7 +85,7 @@ CGuiMenu::CGuiMenu( CGuiEntity* pParent, int maxNumItems,
     m_isGreyOutEnabled( true ),
     m_elapsedTime( 0 ),
     m_selectionMadeElapsedTime( 0 ),
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
     m_bIsSelectionOutlined( false ),
     m_selectionOutlineColour( tColour( 0, 0, 255, 192 ) ),
 #endif
@@ -200,7 +200,7 @@ void CGuiMenu::HandleMessage( eGuiMessage message, unsigned int param1,
 
             break;
         }
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
         case GUI_MSG_MOUSE_OVER:
         {
             this->SetNewSelection(param1);
@@ -283,7 +283,7 @@ GuiMenuItem* CGuiMenu::AddMenuItem( Scrooby::BoundedDrawable* pItem,
         if( pItemValueArrowL != NULL )
         {
             pItemValueArrowL->SetVisible( false );
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
             pItemValueArrowL->ScaleAboutCenter( ARROW_SCALE );
 #endif
             m_menuItems[ m_numItems ]->m_itemValueArrowL = pItemValueArrowL;
@@ -291,7 +291,7 @@ GuiMenuItem* CGuiMenu::AddMenuItem( Scrooby::BoundedDrawable* pItem,
         if( pItemValueArrowR != NULL )
         {
             pItemValueArrowR->SetVisible( false );
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
             pItemValueArrowR->ScaleAboutCenter( ARROW_SCALE );
 #endif
             m_menuItems[ m_numItems ]->m_itemValueArrowR = pItemValueArrowR;
@@ -306,7 +306,7 @@ GuiMenuItem* CGuiMenu::AddMenuItem( Scrooby::BoundedDrawable* pItem,
             //
             m_menuItems[ m_numItems ]->SetDisplayOutline( true );
         }
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
         pItem->SetVerticalJustification( Scrooby::Top );
 #endif
     }
@@ -561,7 +561,7 @@ void CGuiMenu::MakeSelection( bool isSelectionMade )
                 if( m_menuType == GUI_TEXT_MENU )
                 {
                     m_menuItems[ m_selection ]->SetOutlineColour( m_selectionMadeOutlineColour );
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
                     if( m_bIsSelectionOutlined )
                         m_menuItems[ m_selection ]->GetItem()->SetColour( DEFAULT_SELECTED_ITEM_COLOUR );
 #endif
@@ -795,7 +795,7 @@ void CGuiMenu::ChangeSelection( int deltaItems, bool isUserInput )
     }
 }
 
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
 //===========================================================================
 // CGuiMenu::ChangeSelection
 //===========================================================================
@@ -1074,7 +1074,7 @@ void CGuiMenu::UpdateCurrentSelection( int elapsedTime )
                 CGuiUserInputHandler* userInputHandler = GetGuiSystem()->GetUserInputHandler( i );
                 if( userInputHandler != NULL )
                 {
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
                     if( userInputHandler->IsXAxisOnLeft() || 
                         GetInputManager()->GetFEMouse()->OnSliderHorizontalClickDrag() == MDIR_LEFT )
 #else
@@ -1095,7 +1095,7 @@ void CGuiMenu::UpdateCurrentSelection( int elapsedTime )
                         }
                     }
 
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
                     if( userInputHandler->IsXAxisOnRight() ||
                         GetInputManager()->GetFEMouse()->OnSliderHorizontalClickDrag() == MDIR_RIGHT )
 #else
@@ -1157,7 +1157,7 @@ void CGuiMenu::UpdateCurrentSelection( int elapsedTime )
                     CGuiUserInputHandler* userInputHandler = GetGuiSystem()->GetUserInputHandler( i );
                     if( userInputHandler != NULL )
                     {
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
                         if( userInputHandler->IsXAxisOnLeft() || 
                             GetInputManager()->GetFEMouse()->LeftButtonDownOn() == HOTSPOT_ARROWLEFT )
 #else
@@ -1169,7 +1169,7 @@ void CGuiMenu::UpdateCurrentSelection( int elapsedTime )
                             m_menuItems[ m_selection ]->m_itemValueArrowL->SetIndex( 1 );
                         }
 
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
                         if( userInputHandler->IsXAxisOnRight() || 
                             GetInputManager()->GetFEMouse()->LeftButtonDownOn() == HOTSPOT_ARROWRIGHT )
 #else

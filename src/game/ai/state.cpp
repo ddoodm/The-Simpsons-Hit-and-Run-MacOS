@@ -345,7 +345,7 @@ void InCar::Update( float timeins )
     if(!GetHitnRunManager()->IsWaitingForReset())
     {
         theIntention = mpCharacter->GetController()->GetIntention();
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
         actionDown = mpCharacter->GetController()->IsButtonDown(CharacterController::GetOutCar);
 #else
         actionDown = mpCharacter->GetController()->IsButtonDown(CharacterController::DoAction);
@@ -360,7 +360,7 @@ void InCar::Update( float timeins )
         {
             case GETOUT_NONE:
                 {
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
                     if (theIntention == CharacterController::GetOutCar)
 #else
                     if (theIntention == CharacterController::DoAction)
@@ -1498,7 +1498,7 @@ void GetOut::HandleEvent( EventEnum id, void* pUserData )
 
         GetVehicleCentral()->ActivateVehicleTriggers(true);
 
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
         GetSuperCamManager()->GetSCC( 0 )->SelectSuperCam( SuperCam::ON_FOOT_CAM, SuperCamCentral::CUT, 0 );
 #else
         GetSuperCamManager()->GetSCC( 0 )->SelectSuperCam( SuperCam::WALKER_CAM, SuperCamCentral::CUT, 0 );

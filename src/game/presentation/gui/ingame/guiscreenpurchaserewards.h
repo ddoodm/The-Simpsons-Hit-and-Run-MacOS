@@ -46,7 +46,7 @@ public:
 
     void OnProcessRequestsComplete( void* pUserData );
 
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
     virtual eFEHotspotType CheckCursorAgainstHotspots( float x, float y );
 #endif
 
@@ -73,7 +73,7 @@ private:
     int m_bankValueBeforePurchase;
     Scrooby::Text* m_purchaseLabel;
 
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
     Scrooby::Sprite* m_leftArrow;
     Scrooby::Sprite* m_rightArrow;
 #endif

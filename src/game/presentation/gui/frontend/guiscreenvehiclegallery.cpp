@@ -52,7 +52,7 @@ const float VEHICLE_VIEW_TRANSITION_TIME = 250.0f; // in msec
 const float VEHICLE_VIEW_PROJECTILE_GRAVITY = 0.005f; // in m/ms/ms
 const int VEHICLE_VIEW_POS_X = 250;
 const int VEHICLE_VIEW_POS_Y = 140;
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
 const float VEHICLE_BASE_SCALE = 0.66f;
 const float VEHICLE_IMAGE_SCALE = 1.33f - 0.66f;
 #else
@@ -89,7 +89,7 @@ CGuiScreenVehicleGallery::CGuiScreenVehicleGallery
     m_elapsedTime( 0 ),
     m_projectileVelocity( 0.0f, 0.0f, 0.0f ),
     m_vehicleInfo( NULL ),
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
     m_selectedVehicle(0),
 #endif
     m_vehicleName( NULL )
@@ -257,7 +257,7 @@ void CGuiScreenVehicleGallery::HandleMessage
             {
                 this->OnMenuSelectionMade( static_cast<int>( param1 ) );
 
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
                 m_selectedVehicle = static_cast<int>( param1 );
                 // Hide/disable all other menu items.
                 this->SetVisibilityForAllOtherMenuItems( false );
@@ -571,7 +571,7 @@ CGuiScreenVehicleGallery::OnUpdate( unsigned int elapsedTime )
 
                 m_elapsedTime = 0;
                 m_screenState = SCREEN_STATE_NORMAL;
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
                 // Show/enable all hidden menu items.
                 this->SetVisibilityForAllOtherMenuItems( true );
 #endif
@@ -826,7 +826,7 @@ CGuiScreenVehicleGallery::Unload2DImages()
 
     m_isVehiclesLoaded = false;
 }
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
 void CGuiScreenVehicleGallery::SetVisibilityForAllOtherMenuItems( bool bVisible )
 {
     for( int i = 0; i < MAX_NUM_VEHICLES_PER_LEVEL; i++ )

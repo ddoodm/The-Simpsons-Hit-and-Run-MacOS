@@ -49,7 +49,7 @@
 
 #include <string.h>
 
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
 #include <data/config/gameconfigmanager.h>
 #endif
 
@@ -1111,7 +1111,7 @@ float SoundManager::GetAmbienceVolume()
 
     rAssert( m_pSoundRenderMgr != NULL );
 
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
     m_musicPlayer->SetAmbienceVolume( m_pSoundRenderMgr->GetTuner()->GetAmbienceVolume() );
 #endif
 
@@ -1575,7 +1575,7 @@ void SoundManager::LoadData( const GameDataByte* dataBuffer, unsigned int numByt
     SoundMode loadedSoundMode;
     float calculatedAmbienceVolume;
 
-#ifdef RAD_WIN32 // temp
+#if defined(RAD_WIN32) || defined(RAD_MACOS) // temp
     return;
 #endif
 
@@ -1710,7 +1710,7 @@ void SoundManager::ResetData()
     SetSoundMode( SOUND_SURROUND );
 }
 
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
 //=============================================================================
 // SoundManager::GetConfigName
 //=============================================================================
@@ -2046,7 +2046,7 @@ void SoundManager::Initialize()
     ::radFactoryRegister( "reverbSettings", (radFactoryProc*) reverbSettings::ObjCreate );
     ::radFactoryRegister( "positionalSoundSettings", (radFactoryProc*) positionalSoundSettings::ObjCreate );
 
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
     //
     // Register with the game config manager
     //

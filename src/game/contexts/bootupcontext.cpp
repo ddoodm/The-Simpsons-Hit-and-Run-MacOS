@@ -221,7 +221,7 @@ BootupContext::StartLoadingSound()
     GetLoadingManager()->AddCallback( this, (void*)GetSoundManager() );
 }
 
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
 void BootupContext::LoadConfig()
 {
     // Load the config file for the game.

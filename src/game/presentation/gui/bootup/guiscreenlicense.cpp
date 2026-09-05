@@ -67,7 +67,7 @@ CGuiScreenLicense::CGuiScreenLicense
 #ifdef RAD_UWP
     tSprite* pSprite = p3d::find<tSprite>( "licenseX.png" );
 #endif
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
     tSprite* pSprite = p3d::find<tSprite>( "licensePC.png" );
 #endif
     rAssert( pSprite != NULL );

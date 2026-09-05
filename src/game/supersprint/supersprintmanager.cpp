@@ -1430,7 +1430,7 @@ void SuperSprintManager::LoadControllerMappings( unsigned int controllerId )
         Map( "Y", ShowPositions, 0, controllerId );
 #endif
 
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
         ClearMap(0);
         Map( "Pause", Start, 0, controllerId );
         Map( "Attack", Select, 0, controllerId );

@@ -61,7 +61,7 @@
 const float NUM_LAPS_ARROW_ROTATION = 90.0f; // in degrees
 const float NUM_LAPS_ARROW_GREY_OUT_ALPHA = 0.5f;
 
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
 const float CHARACTER_SCALE = 0.67f; 
 const float VEHICLE_SCALE = 0.5f;
 const float CHARACTER_ARROW_SCALE = 0.45f;
@@ -188,7 +188,7 @@ CGuiScreenMiniMenu::CGuiScreenMiniMenu
     m_characterSlots( 0 ),
     m_numUnlockedVehicles( 0 ),
     m_optionsButton( NULL ),
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
     m_currentTrack(0),
     m_bTrackSelected(false),
 #endif
@@ -313,7 +313,7 @@ CGuiScreenMiniMenu::CGuiScreenMiniMenu
         {
             sprintf( name, "Character%d", i );
             Scrooby::Sprite* characterImage = pGroup->GetSprite( name );
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
             characterImage->ResetTransformation();
             characterImage->ScaleAboutCenter( CHARACTER_SCALE );
 #endif
@@ -369,7 +369,7 @@ CGuiScreenMiniMenu::CGuiScreenMiniMenu
         sprintf( name, "Vehicle%d_RArrow", p );
         Scrooby::Sprite* vehicleImageRArrow = pGroup->GetSprite( name );
 
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
         vehicleImage->ScaleAboutCenter( VEHICLE_SCALE );
         vehicleImageLArrow->ResetTransformation();
         vehicleImageRArrow->ResetTransformation();
@@ -407,7 +407,7 @@ CGuiScreenMiniMenu::CGuiScreenMiniMenu
         sprintf( name, "Vehicle%d_Rating", p );
         m_playerMenus[ p ].m_vehicleRating = pGroup->GetSprite( name );
 
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
         m_playerMenus[ p ].m_vehicleRating->ScaleAboutCenter( 0.5f );
 #endif
 
@@ -482,7 +482,7 @@ CGuiScreenMiniMenu::CGuiScreenMiniMenu
         m_characterSelectInfo->SetVisible( false ); // hide by default
     }
 
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
     Scrooby::Sprite* arrow = m_characterSelectInfo->GetSprite( "CharacterLArrow" );
     arrow->ResetTransformation();
     arrow->ScaleAboutCenter( CHARACTER_ARROW_SCALE );
@@ -693,7 +693,7 @@ void CGuiScreenMiniMenu::HandleMessage(	eGuiMessage message,
                             CGuiUserInputHandler* userInputHandler = GetGuiSystem()->GetUserInputHandler( i );
                             if( userInputHandler != NULL )
                             {
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
                                 if( userInputHandler->IsYAxisOnUp() ||
                                     GetInputManager()->GetFEMouse()->LeftButtonDownOn() == HOTSPOT_ARROWUP )
 #else
@@ -705,7 +705,7 @@ void CGuiScreenMiniMenu::HandleMessage(	eGuiMessage message,
                                     m_trackNumLapsArrowU->SetIndex( 1 );
                                 }
 
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
                                 if( userInputHandler->IsYAxisOnDown() ||
                                     GetInputManager()->GetFEMouse()->LeftButtonDownOn() == HOTSPOT_ARROWDOWN )
 #else
@@ -1021,7 +1021,7 @@ void CGuiScreenMiniMenu::HandleMessage(	eGuiMessage message,
 	CGuiScreen::HandleMessage( message, param1, param2 );
 }
 
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
 //===========================================================================
 // CGuiScreenMiniMenu::CheckCursorAgainstHotspots
 //===========================================================================
@@ -1337,7 +1337,7 @@ CGuiScreenMiniMenu::SetTrackSelectionEnabled( bool enable )
     {
         m_characterSelectInfo->SetVisible( !enable );
     }
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
     m_bTrackSelected = !enable;
 #endif
 }

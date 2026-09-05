@@ -121,7 +121,7 @@ enum eGuiMessage
 	GUI_MSG_ON_SAVE_GAME_COMPLETE,          // save game screen -> GUI in-game manager
 	GUI_MSG_PROMPT_UPDATE,                  // Prompt Screen -> Screen   called during CGuiScreenPrompt::HandleMessage GUI_MSG_UPDATE
 	GUI_MSG_MESSAGE_UPDATE,                  // Message Screen -> Screen called during CGuiScreenMessage::HandleMessage GUI_MSG_UPDATE
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
     GUI_MSG_MOUSE_OVER,                     // Called when a mouse cursor is on a hotspot.
     GUI_MSG_MOUSE_LCLICK,                   // Called when a mouse clicks the left button and releases.
     GUI_MSG_MOUSE_RCLICK,                   // Called when a mouse clicks the right button and releases.

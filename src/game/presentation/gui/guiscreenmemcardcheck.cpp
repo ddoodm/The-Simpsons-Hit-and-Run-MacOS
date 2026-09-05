@@ -91,7 +91,7 @@ CGuiScreenMemCardCheck::CGuiScreenMemCardCheck
     rAssert( m_messageText );
     m_messageText->SetTextMode( Scrooby::TEXT_WRAP );
 
-#if defined(RAD_WIN32) || defined(RAD_UWP)
+#if defined(RAD_WIN32) || defined(RAD_UWP) || defined(RAD_MACOS)
     m_messageText->SetIndex( CHECKING_HARDDISK_PC );
     // no need to display checking message on WIN32
     m_messageText->SetVisible( false );
@@ -263,7 +263,7 @@ CGuiScreenMemCardCheck::OnMemoryCardCheckDone( radFileError errorCode,
                                                int mostRecentSaveGameDriveIndex,
                                                int mostRecentSaveGameSlot )
 {
-#if defined(RAD_WIN32) || defined(RAD_UWP)
+#if defined(RAD_WIN32) || defined(RAD_UWP) || defined(RAD_MACOS)
     GetMemoryCardManager()->SetCurrentDrive( static_cast<unsigned int>( 0 ) );
 #endif
 

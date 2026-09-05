@@ -451,7 +451,7 @@ void CGuiScreenMissionLoad::InitPositionsNormal()
     missionStart->SetBoundingBoxSize( g_BitmapSizeX,     g_BitmapSizeY     );
 
     Scrooby::Text* title = GetTitleText();
-#ifndef RAD_WIN32  // temp fix.
+#if !defined(RAD_WIN32) && !defined(RAD_MACOS)  // temp fix.
     title->SetPosition( g_TitlePositionX, g_TitlePositionY );
 #endif
 

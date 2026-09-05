@@ -27,7 +27,7 @@ public:
         DPadDown,
         DPadLeft,
         DPadRight,
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
         GetOutCar,
         MouseLookLeft,
         MouseLookRight,

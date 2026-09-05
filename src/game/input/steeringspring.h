@@ -36,7 +36,7 @@ public:
 
     void OnInit();
     void SetCenterPoint( s8 degrees, u8 deadband ); //Where 0 is straight up.
-#ifdef RAD_WIN32
+#ifdef RAD_FORCE_FEEDBACK
     void SetSpringStrength( u16 strength );
 #else
     void SetSpringStrength( u8 strength );
@@ -45,7 +45,7 @@ public:
 
 private:
 
-#ifdef RAD_WIN32
+#ifdef RAD_FORCE_FEEDBACK
     DICONDITION m_conditon;
 #endif
     //Prevent wasteful constructor creation.

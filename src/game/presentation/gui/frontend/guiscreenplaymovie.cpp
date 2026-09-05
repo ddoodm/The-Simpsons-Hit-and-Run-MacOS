@@ -357,7 +357,7 @@ void CGuiScreenPlayMovie::InitIntro()
         m_elapsedTime = 0;
     }
 
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
     GetInputManager()->GetFEMouse()->SetInGameMode( true );
 #endif
 
@@ -437,7 +437,7 @@ void CGuiScreenPlayMovie::InitOutro()
         GetRenderManager()->mpLayer( RenderEnums::GUI )->Warm();
     }
 
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
     GetInputManager()->GetFEMouse()->SetInGameMode( false );
 #endif
 

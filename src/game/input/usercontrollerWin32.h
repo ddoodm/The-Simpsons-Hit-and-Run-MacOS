@@ -24,8 +24,8 @@
 // Platform check
 //========================================
 
-#ifndef RAD_WIN32
-#error 'This implementation of the user controller is specific to Win32.'
+#if !defined(RAD_WIN32) && !defined(RAD_MACOS)
+#error 'This implementation of the user controller is specific to desktop platforms.'
 #endif
 
 //========================================
@@ -139,8 +139,10 @@ public:
     // per-frame update
     void Update( unsigned timeins );
 
+#ifdef RAD_FORCE_FEEDBACK
     void StartForceEffects();
     void StopForceEffects();
+#endif
 
     // set the current game state (to activate / deactivate appropriate logical controllerts)
     void SetGameState(unsigned);
@@ -177,11 +179,13 @@ public:
     // return the button id from the name.
     int GetIdByName( const char* pszName ) const;
 
+#ifdef RAD_FORCE_FEEDBACK
     SteeringSpring* GetSpring();
     BaseDamper* GetDamper();
     ConstantEffect* GetConstantEffect();
     WheelRumble* GetWheelRumble();
     WheelRumble* GetHeavyWheelRumble();
+#endif
 
     Mappable* GetMappable( unsigned int which ) { return mMappable[ which ];  };
 
@@ -252,11 +256,13 @@ private:
 
     RealController* m_pController[ NUM_CONTROLLERTYPES ];
 
+#ifdef RAD_FORCE_FEEDBACK
     SteeringSpring*  m_pSteeringSpring;
     BaseDamper*      m_pSteeringDamper;
     ConstantEffect*  m_pConstantEffect;
     WheelRumble*     m_pWheelRumble;
     WheelRumble*     m_pHeavyWheelRumble;
+#endif
 
     Mappable* mMappable[ Input::MaxMappables ];
 

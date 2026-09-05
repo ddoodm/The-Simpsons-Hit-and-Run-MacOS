@@ -540,7 +540,7 @@ LoadingManager::LoadingManager()
         mCementLibraries[i].isLoading = false;
     }
 
-#if defined(RAD_WIN32) || defined(RAD_UWP)
+#if defined(RAD_WIN32) || defined(RAD_UWP) || defined(RAD_MACOS)
     mRequestsProcessed = 0;
 #endif
 }
@@ -598,7 +598,7 @@ void LoadingManager::ProcessNextRequest()
                 {            
                     rReleasePrintf( "<<START>> Async Loading: %s\n", request.filename );
                 }
-#if defined(RAD_WIN32) || defined(RAD_UWP)
+#if defined(RAD_WIN32) || defined(RAD_UWP) || defined(RAD_MACOS)
                 mRequestsProcessed++;
 #endif
 

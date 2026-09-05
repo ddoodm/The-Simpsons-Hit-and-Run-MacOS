@@ -23,7 +23,7 @@
 
 #include <strings/unicodestring.h>
 
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
 const float MESSAGE_ICON_CORRECTION_SCALE = 0.875f;
 #else
 const float MESSAGE_ICON_CORRECTION_SCALE = 1.75f;
@@ -65,7 +65,7 @@ public:
 		MSG_ID_DELETING_XBOX,
         MSG_ID_LOADING_MISSION,
         MSG_ID_PROGRESSIVE_SCAN_TEST,
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
         MSG_ID_LOADING_GAME_PC,
         MSG_ID_SAVING_GAME_PC,
         MSG_ID_AUTO_LOADING_GAME_PC,

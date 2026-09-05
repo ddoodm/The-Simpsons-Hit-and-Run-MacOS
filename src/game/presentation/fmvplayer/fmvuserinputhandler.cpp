@@ -73,7 +73,7 @@ const ControlMap FMV_CONTROL_MAP[] =
 #endif // RAD_UWP
     
     // TODO(3ur): what is space bar? I wanna allow space to skip too in the future
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
     { "feStart",         FMVInput::Skip },
     { "feBack",          FMVInput::Skip },
     { "feKeyboardBack",  FMVInput::Skip },

@@ -1,0 +1,22 @@
+# clangd reads per-file flags from compile_commands.json (symlinked to the
+# active build dir). Headers have no entry of their own, so these stand in for
+# the platform and config defines they would otherwise be missing.
+CompileFlags:
+  Add:
+    - -DRAD_MACOS
+    - -DRAD_UNIX
+    - -DRAD_DEBUG
+    - -D_DEBUG
+    - -DDEBUG
+    - -fdeclspec
+    - -fms-extensions
+  Remove:
+    - -W*
+
+Diagnostics:
+  Suppress:
+    # This is 2003 game code: it leans on writable string literals, offsetof
+    # into non-PODs, and narrowing conversions throughout.
+    - deprecated_declarations
+    - writable_strings
+    - invalid_offsetof

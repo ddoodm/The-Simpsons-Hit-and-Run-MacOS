@@ -26,7 +26,7 @@
 #include <sprite.h>
 #include <text.h>
 
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
 const float HUDCARD_THUMBNAIL_SCALE = 0.44f;
 #endif
 
@@ -173,7 +173,7 @@ HudCardCollected::Update( float elapsedTime )
                     // fade in card image (and scale up)
                     //
                     m_cardImage->SetAlpha( percentageDone );
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
                     m_cardImage->ScaleAboutCenter( percentageDone * HUDCARD_THUMBNAIL_SCALE );
 #else
                     m_cardImage->ScaleAboutCenter( percentageDone );
@@ -219,7 +219,7 @@ HudCardCollected::Update( float elapsedTime )
                 {
                     m_cardImage->SetAlpha( 1.0f );
                     m_itemsCount->SetAlpha( 1.0f );
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
                     m_cardImage->ScaleAboutCenter( HUDCARD_THUMBNAIL_SCALE );
 #endif
 
@@ -284,7 +284,7 @@ HudCardCollected::Update( float elapsedTime )
                     m_cardText->ResetTransformation();
                     m_cardText->ScaleAboutCenter( 1.0f + percentageDone * 0.5f );
 
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
                     m_cardImage->ScaleAboutCenter( HUDCARD_THUMBNAIL_SCALE );
 #endif
 

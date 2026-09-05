@@ -47,7 +47,7 @@
 //=============================================================================
 WheelRumble::WheelRumble()
 {
-#ifdef RAD_WIN32
+#ifdef RAD_FORCE_FEEDBACK
     m_diPeriodic.dwMagnitude             = 0;
     m_diPeriodic.lOffset                 = 0;
     m_diPeriodic.dwPhase                 = 0;
@@ -114,7 +114,7 @@ WheelRumble::~WheelRumble()
 //=============================================================================
 void WheelRumble::OnInit()
 {
-#ifdef RAD_WIN32
+#ifdef RAD_FORCE_FEEDBACK
     m_diPeriodic.dwMagnitude = 0;
 #else
     mForceEffect.p.periodic.magnitude = 0;
@@ -131,13 +131,13 @@ void WheelRumble::OnInit()
 // Return:      void 
 //
 //=============================================================================
-#ifdef RAD_WIN32
+#ifdef RAD_FORCE_FEEDBACK
 void WheelRumble::SetMagDir( u16 mag, u16 dir )
 #else
 void WheelRumble::SetMagDir( u8 mag, u16 dir )
 #endif
 {
-#ifdef RAD_WIN32
+#ifdef RAD_FORCE_FEEDBACK
     LONG rglDirection[2]      = { dir, 0 };
     m_diPeriodic.dwMagnitude = mag;
     mForceEffect.rglDirection = rglDirection;
@@ -161,7 +161,7 @@ void WheelRumble::SetMagDir( u8 mag, u16 dir )
 //=============================================================================
 void WheelRumble::SetPPO( u16 per, u16 phas, s16 offset )
 {
-#ifdef RAD_WIN32
+#ifdef RAD_FORCE_FEEDBACK
     m_diPeriodic.dwPeriod                = per;
     m_diPeriodic.dwPhase                 = phas;
     m_diPeriodic.lOffset                 = offset;
@@ -186,7 +186,7 @@ void WheelRumble::SetPPO( u16 per, u16 phas, s16 offset )
 //=============================================================================
 void WheelRumble::SetRumbleType( u8 type ) 
 {
-#ifdef RAD_WIN32
+#ifdef RAD_FORCE_FEEDBACK
     
 #else
     mForceEffect.type = type;
@@ -194,7 +194,7 @@ void WheelRumble::SetRumbleType( u8 type )
      
 };
 
-#ifdef RAD_WIN32
+#ifdef RAD_FORCE_FEEDBACK
 void WheelRumble::Update(unsigned timeins)
 {
     m_currentTime += timeins;

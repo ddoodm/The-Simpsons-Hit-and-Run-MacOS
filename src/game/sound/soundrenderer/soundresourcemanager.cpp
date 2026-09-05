@@ -53,7 +53,7 @@ daSoundResourceManager* daSoundResourceManager::s_pSingleton = NULL;
 //
 const unsigned int MaxNumResourceFiles = 512;
 
-#if defined( RAD_UWP ) || defined( RAD_WIN32 )
+#if defined(RAD_UWP) || defined(RAD_WIN32) || defined(RAD_MACOS)
     const IRadSoundHalAudioFormat::Encoding DEFAULT_ENCODING = IRadSoundHalAudioFormat::PCM;
 #else
     Uh oh.

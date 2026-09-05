@@ -1,7 +1,11 @@
 #include <input/SteeringWheel.h>
 
 #define DIRECTINPUT_VERSION 0x0800
-#include <dinput.h>
+#include <raddinputcodes.hpp>
+
+#include <SDL2/SDL.h>
+
+#define _stricmp SDL_strcasecmp
 
 //--------------------------------------------------------
 // Constructor/Destructor 

@@ -64,7 +64,7 @@ static float CAMERA_FOV[ RenderEnums::MAX_LEVEL - RenderEnums::numLevels ] =
 
 #endif
 
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
 //Straight copy of xbox. Will figure out later.
 static float CAMERA_VALUES[ RenderEnums::MAX_LEVEL - RenderEnums::numLevels ][ 3 ] = 
 {

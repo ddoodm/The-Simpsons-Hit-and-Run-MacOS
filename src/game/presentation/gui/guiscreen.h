@@ -118,7 +118,7 @@ class CGuiScreen : public CGuiWindow
         static bool IsWideScreenDisplay();
         static void ApplyWideScreenCorrectionScale( Scrooby::Drawable* drawable );
 
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
         virtual eFEHotspotType CheckCursorAgainstHotspots( float x, float y );
 #endif
 

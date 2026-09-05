@@ -46,7 +46,7 @@
 BaseDamper::BaseDamper()
 {
     //Setup the respective force effect structures.
-#ifdef RAD_WIN32
+#ifdef RAD_FORCE_FEEDBACK
     m_conditon.lOffset              = 0;
     m_conditon.lDeadBand            = 0;
     m_conditon.lPositiveCoefficient = 127;
@@ -118,7 +118,7 @@ void BaseDamper::OnInit()
 //=============================================================================
 void BaseDamper::SetCenterPoint( s8 point, u8 deadband  )
 {
-#ifdef RAD_WIN32
+#ifdef RAD_FORCE_FEEDBACK
     m_conditon.lOffset                            = point;
     m_conditon.lDeadBand                          = deadband;
 #else
@@ -139,13 +139,13 @@ void BaseDamper::SetCenterPoint( s8 point, u8 deadband  )
 // Return:      void 
 //
 //=============================================================================
-#ifdef RAD_WIN32
+#ifdef RAD_FORCE_FEEDBACK
 void BaseDamper::SetDamperStrength( u16 strength )
 #else
 void BaseDamper::SetDamperStrength( u8 strength )
 #endif
 {
-#ifdef RAD_WIN32
+#ifdef RAD_FORCE_FEEDBACK
     m_conditon.dwPositiveSaturation               = strength;
     m_conditon.dwNegativeSaturation               = strength;
 #else
@@ -167,7 +167,7 @@ void BaseDamper::SetDamperStrength( u8 strength )
 //=============================================================================
 void BaseDamper::SetDamperCoefficient( s16 coeff )
 {
-#ifdef RAD_WIN32
+#ifdef RAD_FORCE_FEEDBACK
     m_conditon.lPositiveCoefficient               = coeff;
     m_conditon.lNegativeCoefficient               = coeff; 
 #else

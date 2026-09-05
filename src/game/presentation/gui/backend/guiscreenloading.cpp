@@ -55,19 +55,19 @@
 
 // this is to correct the original reduced scale in the source image
 //
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
     const float LOADING_BGD0_CORRECTION_SCALE = 1.05f;
 #else
     const float LOADING_BGD0_CORRECTION_SCALE = 4.2f;
 #endif
 
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
     const float LOADING_BGD1_CORRECTION_SCALE = 1.75f;
 #else
     const float LOADING_BGD1_CORRECTION_SCALE = 8.4f;
 #endif
 
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
     const float LOADING_IMAGE_CORRECTION_SCALE = 0.925f;
 #else
     const float LOADING_IMAGE_CORRECTION_SCALE = 1.85f;
@@ -255,7 +255,7 @@ void CGuiScreenLoading::HandleMessage
                 rAssert( m_loadingBarGroup != NULL );
                 m_loadingBarGroup->SetVisible( true );
 
-#if defined( RAD_WIN32 ) || defined( RAD_UWP )
+#if defined(RAD_WIN32) || defined(RAD_UWP) || defined(RAD_MACOS)
                 // this sucks but i just want to finish it.
                 float memUsage = float( GetLoadingManager()->GetNumRequestsProcessed() ) / TOTAL_INGAME_FILES;
                 float newMemoryUsage = m_currentMemoryUsage;
@@ -351,7 +351,7 @@ void CGuiScreenLoading::HandleMessage
 #endif
             rReleasePrintf( "Starting Memory Available = %.2f MB\n", (float)m_startingMemoryAvailable / MB );
 
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
             GetLoadingManager()->ResetRequestsProcessed();
 #endif
             break;

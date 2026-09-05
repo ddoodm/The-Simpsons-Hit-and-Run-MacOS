@@ -148,7 +148,7 @@ CGuiScreenPause::CGuiScreenPause
     pPage = m_pScroobyScreen->GetPage( "PauseFgd" );
     if( pPage != NULL )
     {
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
         pPage->SetVisible( false );
 #endif
 
@@ -224,7 +224,7 @@ void CGuiScreenPause::HandleMessage
 	unsigned int param2 
 )
 {
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
     if( message == GUI_MSG_MENU_PROMPT_RESPONSE && 
         param1 == PROMPT_CONFIRM_QUIT_TO_SYSTEM )
     {
@@ -313,7 +313,7 @@ void CGuiScreenPause::HandleMessage
                 break;
             }
 
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
             case GUI_MSG_CONTROLLER_BACK:
             {
                 // This is our start button for PC.
@@ -556,7 +556,7 @@ void CGuiScreenPause::HandleQuitGame()
     m_guiManager->DisplayPrompt( PROMPT_CONFIRM_QUIT, this );
 }
 
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
 //===========================================================================
 // CGuiScreenPause::HandleQuitToSystem
 //===========================================================================

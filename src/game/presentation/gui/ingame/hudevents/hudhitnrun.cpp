@@ -27,7 +27,7 @@
 // Global Data, Local Data, Local Classes
 //===========================================================================
 
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
 const float HNR_MESSAGE_SCALE = 1.75f;
 const float HNR_MESSAGE_BUSTED_SCALE = 2.0f;
 const float HNR_TICKET_SCALE = 1.0f;

@@ -110,19 +110,14 @@ set(SRR2_SOURCES
     ../game/input/MouseCursor.cpp
     ../game/input/RealController.cpp
     ../game/input/SteeringWheel.cpp
-    ../game/input/basedamper.cpp
     ../game/input/button.cpp
-    ../game/input/constanteffect.cpp
-    ../game/input/forceeffect.cpp
     ../game/input/inputmanager.cpp
     ../game/input/mappable.cpp
     ../game/input/mapper.cpp
     ../game/input/rumbleeffect.cpp
     ../game/input/rumblewin32.cpp
-    ../game/input/steeringspring.cpp
     ../game/input/usercontrollerWin32.cpp
     ../game/input/virtualinputs.cpp
-    ../game/input/wheelrumble.cpp
     ../game/interiors/interiormanager.cpp
     ../game/loading/cameradataloader.cpp
     ../game/loading/cementfilehandler.cpp
@@ -533,7 +528,11 @@ set(SRR2_SOURCES
 
 if(WIN32)
     list(APPEND SRR2_SOURCES
-)
+        ../game/input/basedamper.cpp
+        ../game/input/constanteffect.cpp
+        ../game/input/forceeffect.cpp
+        ../game/input/steeringspring.cpp
+        ../game/input/wheelrumble.cpp)
 endif()
 
 if(APPLE)

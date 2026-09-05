@@ -157,7 +157,7 @@ void RenderFlow::DoAllRegistration()
     mpDebugUwpGamma->GetGamma( &mDebugGammaR, &mDebugGammaG, &mDebugGammaB );
 #endif
 
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
     mpGammaControl = (pddiExtGammaControl*)p3d::pddi->GetExtension(PDDI_EXT_GAMMACONTROL);
 
     float r,g,b;
@@ -229,7 +229,7 @@ END_PROFILE("RenderFlow");
 
 }
 
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
 //==============================================================================
 // RenderFlow::SetGamma
 //==============================================================================
@@ -308,7 +308,7 @@ RenderFlow::RenderFlow() :
 
     mpDebugUwpGamma = NULL;
 #endif
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
     mpGammaControl = NULL;
     mGamma = 0.0f;
 #endif

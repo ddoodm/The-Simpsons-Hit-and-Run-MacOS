@@ -414,7 +414,7 @@ CGuiScreenLoadGame::OnLoadGameComplete( radFileError errorCode )
         }
 #endif // RAD_UWP
 
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
         switch( errorCode )
         {
             case Success:
@@ -641,7 +641,7 @@ void CGuiScreenLoadGame::InitOutro()
 void
 CGuiScreenLoadGame::GotoMemoryCardScreen( bool isFromPrompt )
 {
-#if defined( RAD_WIN32 ) || defined( RAD_UWP )
+#if defined(RAD_WIN32) || defined(RAD_UWP) || defined(RAD_MACOS)
     if( isFromPrompt )
     {
         CGuiScreen* pScreen = static_cast<CGuiScreen*>( m_guiManager->FindWindowByID( GUI_SCREEN_ID_GENERIC_PROMPT ) );

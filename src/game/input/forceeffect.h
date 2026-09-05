@@ -17,12 +17,12 @@
 //========================================
 #include <radcontroller.hpp>
 
-#ifdef RAD_WIN32
+#ifdef RAD_FORCE_FEEDBACK
 #define DIRECTINPUT_VERSION 0x0800
 #include <dinput.h>
 #endif
 
-#if defined(RAD_WIN32) || defined(RAD_MACOS)
+#if defined(RAD_FORCE_FEEDBACK)
 typedef char s8;
 typedef unsigned char u8;
 typedef short s16;
@@ -46,7 +46,7 @@ public:
     ForceEffect();
     virtual ~ForceEffect();
 
-#ifdef RAD_WIN32
+#ifdef RAD_FORCE_FEEDBACK
     void SetForceID( u8 forceID ) { m_index = forceID; }
     u8   GetForceID() const { return m_index; }
     
@@ -58,7 +58,7 @@ public:
     void Start();
     void Stop();
 
-#ifdef RAD_WIN32
+#ifdef RAD_FORCE_FEEDBACK
     virtual void Update(unsigned timeins = 0);
     void ShutDownEffects();
     void SetResetTime( DWORD dwMilliSeconds );
@@ -68,7 +68,7 @@ public:
 
 protected:
     IRadControllerOutputPoint* mOutputPoint;
-#ifdef RAD_WIN32
+#ifdef RAD_FORCE_FEEDBACK
     DIEFFECT      mForceEffect;
     DWORD         m_rgdwAxes[2];
     LONG          m_rglDirection[2];

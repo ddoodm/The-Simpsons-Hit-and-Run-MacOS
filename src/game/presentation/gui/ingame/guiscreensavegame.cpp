@@ -88,7 +88,7 @@ MEMTRACK_PUSH_GROUP( "CGUIScreenSaveGame" );
         m_pMenu->AddMenuItem( menu->GetText( objectName ) );
     }
 
-#if defined(RAD_WIN32) || defined(RAD_UWP)
+#if defined(RAD_WIN32) || defined(RAD_UWP) || defined(RAD_MACOS)
     Scrooby::Text* pText = pPage->GetText( "LoadSaveMessage" );
     if( pText != NULL )
     {
@@ -657,7 +657,7 @@ void CGuiScreenSaveGame::InitIntro()
 			message_index = 1; // has existing slot
 		// we have 2 group of per platform messages, gc,ps2,xbox_mu, xbox_hd
 		message_index = message_index * 4 + PLATFORM_TEXT_INDEX;
-#if defined(RAD_WIN32) || defined(RAD_UWP)
+#if defined(RAD_WIN32) || defined(RAD_UWP) || defined(RAD_MACOS)
         message_index = 9;
 #endif
 		m_pFullText->SetIndex(message_index);
@@ -710,7 +710,7 @@ void CGuiScreenSaveGame::InitOutro()
 void
 CGuiScreenSaveGame::GotoMemoryCardScreen( bool isFromPrompt )
 {
-#if defined(RAD_WIN32) || defined(RAD_UWP)
+#if defined(RAD_WIN32) || defined(RAD_UWP) || defined(RAD_MACOS)
     m_pParent->HandleMessage( GUI_MSG_BACK_SCREEN );
 #else
     if( isFromPrompt )

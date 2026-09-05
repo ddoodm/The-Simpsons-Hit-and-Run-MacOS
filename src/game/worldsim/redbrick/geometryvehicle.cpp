@@ -183,7 +183,7 @@ GeometryVehicle::GeometryVehicle():
         mBrakeLights[i] = NULL;
     }
 
-#if defined( RAD_WIN32 ) || defined( RAD_UWP )
+#if defined(RAD_WIN32) || defined(RAD_UWP) || defined(RAD_MACOS)
     mFrinkArc = NULL;
 #endif
 
@@ -345,7 +345,7 @@ GeometryVehicle::~GeometryVehicle()
         }
     }
 
-#if defined( RAD_WIN32 ) || defined( RAD_UWP )
+#if defined(RAD_WIN32) || defined(RAD_UWP) || defined(RAD_MACOS)
     if( mFrinkArc )
     {
         mFrinkArc->Release();
@@ -867,7 +867,7 @@ BEGIN_PROFILE("GeometryVehicle::Display Render")
     }
 
 
-#if defined( RAD_WIN32 ) || defined( RAD_UWP )
+#if defined(RAD_WIN32) || defined(RAD_UWP) || defined(RAD_MACOS)
 const tName& name = mVehicleOwner->GetNameObject();
     if( name == "frink_v" )
     {
@@ -2163,7 +2163,7 @@ bool GeometryVehicle::GetArt( const char* name)
             rAssert( mRefractionShader[ i ] != NULL );
         }
 
-#if defined( RAD_WIN32 ) || defined( RAD_UWP )
+#if defined(RAD_WIN32) || defined(RAD_UWP) || defined(RAD_MACOS)
         tPose* p3dPose = mCompositeDrawable->GetPose();
 
         char buffy[128];
@@ -2924,7 +2924,7 @@ void GeometryVehicle::Update(float dt)
         {
             float adjustedRefraction = 0.5f + (0.5f * refraction);
 
-            #if !defined( RAD_WIN32 ) && !defined( RAD_UWP )
+            #if !defined(RAD_WIN32) && !defined(RAD_UWP) && !defined(RAD_MACOS)
                 mRefractionShader[ 0 ]->SetFloat( PDDI_SP_REFRACTBLEND, adjustedRefraction );
                 mRefractionShader[ 0 ]->SetFloat( PDDI_SP_REFRACTINDEX, refractiveIndex );
             #endif
@@ -2938,7 +2938,7 @@ void GeometryVehicle::Update(float dt)
         {
             if( mRefractionShader[ i ] != NULL )
             {
-                #if !defined( RAD_WIN32 ) && !defined( RAD_UWP )
+                #if !defined(RAD_WIN32) && !defined(RAD_UWP) && !defined(RAD_MACOS)
                     mRefractionShader[ i ]->SetFloat( PDDI_SP_REFRACTBLEND, refraction );
                     mRefractionShader[ i ]->SetFloat( PDDI_SP_REFRACTINDEX, refractiveIndex );
                 #endif

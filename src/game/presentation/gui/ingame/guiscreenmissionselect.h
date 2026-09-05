@@ -54,7 +54,7 @@ public:
 								unsigned int param2 = 0 );
 
     virtual CGuiMenu* HasMenu() { return m_pMenu; }
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
     virtual eFEHotspotType CheckCursorAgainstHotspots( float x, float y );
 #endif
 
@@ -71,7 +71,7 @@ private:
     CGuiMenu* m_pMenu;
     int m_numLevelSelections;
 
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
     Scrooby::Sprite* m_leftArrow;
     Scrooby::Sprite* m_rightArrow;
 #endif

@@ -23,7 +23,7 @@
 // Forward References
 //===========================================================================
 
-#ifdef RAD_WIN32 // temporary.. for art testing.
+#if defined(RAD_WIN32) || defined(RAD_MACOS) // temporary.. for art testing.
 const float MISSION_ICON_SCALE = 0.78f;
 #else
 const float MISSION_ICON_SCALE = 1.5f;

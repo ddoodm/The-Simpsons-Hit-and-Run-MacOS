@@ -164,7 +164,7 @@ static const char s_CharacterNamespace[] = "CharSounds";
 //
 // Dialog cement file names
 //
-#if defined( RAD_UWP ) || defined( RAD_WIN32 )
+#if defined(RAD_UWP) || defined(RAD_WIN32) || defined(RAD_MACOS)
 
 static const unsigned int s_NumDialogCementFiles = 3;
 
@@ -737,7 +737,7 @@ void daSoundRenderingManager::QueueCementFileRegistration()
         m_languageSelected = true;
     }
 
-#if defined( RAD_UWP ) || defined( RAD_WIN32 )
+#if defined(RAD_UWP) || defined(RAD_WIN32) || defined(RAD_MACOS)
     //
     // Register the music rcfs -- no localization needed.
     //
@@ -1568,7 +1568,7 @@ void daSoundRenderingManagerTerminate( void )
 //=============================================================================
 void daSoundRenderingManager::registerDialogueCementFiles( const char* cementFilename )
 {
-#if defined( RAD_UWP ) || defined( RAD_WIN32 )
+#if defined(RAD_UWP) || defined(RAD_WIN32) || defined(RAD_MACOS)
     char dialogNameBuffer[ 16 ];
     int i = 0;
 

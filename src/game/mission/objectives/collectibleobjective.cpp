@@ -52,7 +52,7 @@
 // Global Data, Local Data, Local Classes
 //
 //******************************************************************************
-#if defined( DEBUGWATCH ) || defined( RAD_WIN32 ) || defined ( RAD_UWP )
+#if defined( DEBUGWATCH ) || defined( RAD_WIN32 ) || defined ( RAD_UWP ) || defined( RAD_MACOS )
 float DEFAULT_DIST = 5.0f;
 #endif
 //******************************************************************************

@@ -24,7 +24,7 @@
 #include <loading/loadingmanager.h>
 #include <memory/srrmemory.h>
 
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
 #define LOAD_DAMAGED_VEHICLE_IMAGES
 #endif
 

@@ -41,7 +41,7 @@
 // Global Data, Local Data, Local Classes
 //===========================================================================
 
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
 const float LEVEL_BAR_CORRECTION_SCALE = 1.0f;
 #else
 const float LEVEL_BAR_CORRECTION_SCALE = 2.0f;
@@ -84,7 +84,7 @@ MEMTRACK_PUSH_GROUP( "CGUIScreenMissionSelect" );
     Scrooby::Group* levelBar = pPage->GetGroup( "Level" );
     rAssert( levelBar != NULL );
 
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
     m_leftArrow = levelBar->GetSprite( "LArrowBgd" );
     rAssert( m_leftArrow != NULL );
     m_leftArrow->ScaleAboutCenter( 1.7f );
@@ -302,7 +302,7 @@ void CGuiScreenMissionSelect::HandleMessage
 	CGuiScreen::HandleMessage( message, param1, param2 );
 }
 
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
 //===========================================================================
 // CGuiScreenMissionSelect::CheckCursorAgainstHotspots
 //===========================================================================

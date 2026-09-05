@@ -58,7 +58,7 @@ HudCoinCollected::HudCoinCollected( Scrooby::Page* pPage )
     m_numCoins->SetSpriteMode( Scrooby::SPRITE_BITMAP_TEXT );
     m_numCoins->CreateBitmapTextBuffer( BITMAP_TEXT_BUFFER_SIZE );
     m_numCoins->SetBitmapTextSpacing( NUMERIC_TEXT_SPACING );
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
     m_numCoins->Translate( 70, 0 );
     m_numCoins->ScaleAboutCenter( 0.5f );
 #endif

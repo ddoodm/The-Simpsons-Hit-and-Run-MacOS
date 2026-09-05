@@ -25,7 +25,7 @@
 #include <radtime.hpp>
 
 #include <input/inputmanager.h>
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
 #include <input/usercontrollerWin32.h>
 #else
 #include <input/usercontroller.h>
@@ -44,7 +44,7 @@
 
 inline bool AnyStickMovement(Character* character, float tol = 0.0f)
 {
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
     float mright = character->GetController()->GetValue(CharacterController::MouseLookRight);
     float mleft = character->GetController()->GetValue(CharacterController::MouseLookLeft);
     float mouselook = ( mright > mleft ) ? mright : -mleft;
@@ -52,7 +52,7 @@ inline bool AnyStickMovement(Character* character, float tol = 0.0f)
 
     return (rmt::Abs(character->GetController()->GetValue(CharacterController::LeftStickX)) > tol) ||
            (rmt::Abs(character->GetController()->GetValue(CharacterController::LeftStickY)) > tol) ||
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
            (
                GetInputManager()->GetController(0)->IsMouseLookOn() && 
                rmt::Abs(mouselook) > tol

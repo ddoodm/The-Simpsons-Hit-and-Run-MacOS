@@ -175,7 +175,7 @@ unsigned int CalculateStreamerSize( unsigned int ms, AudioFormat * pAf )
 void SoundNucleusInitialize( radMemoryAllocator alloc )
 {
     
-#if defined( RAD_UWP ) || defined( RAD_WIN32 )
+#if defined(RAD_UWP) || defined(RAD_WIN32) || defined(RAD_MACOS)
     ::radSoundHalSystemInitialize( alloc );
 #endif
 
@@ -277,7 +277,7 @@ void SoundNucleusInitialize( radMemoryAllocator alloc )
     
     desc.m_MaxRootAllocations  = 170;
     desc.m_NumAuxSends         = NUM_AUX_SENDS;
-#if defined(RAD_WIN32) || defined(RAD_UWP)
+#if defined(RAD_WIN32) || defined(RAD_UWP) || defined(RAD_MACOS)
     desc.m_SamplingRate = 48000;
 #endif  
     

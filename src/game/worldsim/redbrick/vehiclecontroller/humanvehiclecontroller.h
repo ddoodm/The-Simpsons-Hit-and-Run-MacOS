@@ -57,7 +57,7 @@ private:
 
     int mControllerId;
 
-#if defined(RAD_WIN32) || defined(RAD_MACOS)
+#if defined(RAD_FORCE_FEEDBACK)
     SteeringSpring* mSpring;
     BaseDamper* mDamper;
     ConstantEffect* mConstantEffect;

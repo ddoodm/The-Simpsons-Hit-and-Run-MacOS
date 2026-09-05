@@ -19,7 +19,7 @@
 #include <string.h>
 
 // needed to get access to the getcwd command
-#if defined(RAD_WIN32) || defined(RAD_UWP)
+#if defined( RAD_WIN32 ) || defined( RAD_UWP )
     #include <direct.h>
 #endif
 
@@ -33,7 +33,7 @@ bool AsyncFileLoader::g_UseBackSlashes = true;
 //
 // This is the name of a drive we are using
 //
-#if defined(RAD_WIN32) || defined(RAD_UWP)
+#if defined( RAD_WIN32 ) || defined( RAD_UWP )
 static char MyDrive[ ] = "C:";               //windows
 #endif
 

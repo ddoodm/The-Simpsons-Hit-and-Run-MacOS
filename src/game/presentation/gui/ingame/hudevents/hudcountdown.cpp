@@ -159,7 +159,7 @@ HudCountDown::Update( float elapsedTime )
             GetEventManager()->TriggerEvent( EVENT_IN_GAMEPLAY_CONVERSATION, static_cast<void*>( &m_dialogData ) );
         }
 
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
         static float COUNT_DOWN_MAX_SCALE = 1.5f;
 #else
         static float COUNT_DOWN_MAX_SCALE = 3.0f;

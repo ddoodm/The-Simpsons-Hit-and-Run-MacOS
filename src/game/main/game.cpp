@@ -27,7 +27,7 @@
 #include <p3d/loadmanager.hpp>
 #include <p3d/utility.hpp>
 
-#if defined(RAD_WIN32) || defined(RAD_UWP)
+#if defined(RAD_WIN32) || defined(RAD_UWP) || defined(RAD_MACOS)
 #include <SDL2/SDL.h>  // for SDL_PollEvent...
 #endif
 
@@ -486,7 +486,7 @@ void Game::Run()
         //
         // Service the windows message loop.
         //
-#if defined(RAD_WIN32) || defined(RAD_UWP)
+#if defined(RAD_WIN32) || defined(RAD_UWP) || defined(RAD_MACOS)
         SDL_Event msg;
         while( SDL_PollEvent( &msg ) )
         {

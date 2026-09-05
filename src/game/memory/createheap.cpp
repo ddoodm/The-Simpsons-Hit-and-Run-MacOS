@@ -43,7 +43,7 @@ HeapCreationData g_HeapCreationData[] =
     { HEAP_TYPE_TRACKING, GMA_DEFAULT, "Temp"                 },
 #endif    
     { HEAP_TYPE_NONE,     GMA_DEFAULT, "Gamecube VMM"         }, // cant remove yet
-#if defined(RAD_WIN32) || defined(RAD_UWP)
+#if defined(RAD_WIN32) || defined(RAD_UWP) || defined(RAD_MACOS)
     { HEAP_TYPE_TRACKING, GMA_DEFAULT, "Persistent"           },  // no static heap for pc
 #else
     { HEAP_TYPE_STATIC,   GMA_DEFAULT, "Persistent"           },

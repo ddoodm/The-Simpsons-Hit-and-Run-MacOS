@@ -112,7 +112,7 @@ CGuiScreenPurchaseRewards::CGuiScreenPurchaseRewards
     Scrooby::Page* pPage = m_pScroobyScreen->GetPage( "Rewards" );
     rAssert( pPage != NULL );
 
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
     m_leftArrow = pPage->GetGroup( "Arrows" )->GetSprite( "LeftArrow" );
     m_rightArrow = pPage->GetGroup( "Arrows" )->GetSprite( "RightArrow" );
     m_leftArrow->ScaleAboutCenter( 1.3f );
@@ -443,7 +443,7 @@ CGuiScreenPurchaseRewards::OnProcessRequestsComplete( void* pUserData )
     }
 }
 
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
 //===========================================================================
 // CGuiScreenPurchaseRewards::CheckCursorAgainstHotspots
 //===========================================================================

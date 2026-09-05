@@ -30,7 +30,7 @@
 
 #include <string.h>
 
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
 #include <data/config/gameconfigmanager.h>
 #endif
 
@@ -50,7 +50,7 @@ const char* SOUND_MENU_ITEMS[] =
 
 const float SLIDER_CORRECTION_SCALE = 4.0f; // in x-direction only
 
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
 const float SLIDER_ICON_SCALE = 0.5f;
 #endif
 //===========================================================================
@@ -157,7 +157,7 @@ MEMTRACK_PUSH_GROUP( "CGUIScreenSound" );
             //
             sprintf( itemName, "%s_Off", SOUND_MENU_ITEMS[ i ] );
             m_soundOffIcons[ i ] = group->GetSprite( itemName );
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
             m_soundOffIcons[ i ]->ScaleAboutCenter( SLIDER_ICON_SCALE );
 
             sprintf( itemName, "%s_Icon", SOUND_MENU_ITEMS[ i ] );
@@ -167,7 +167,7 @@ MEMTRACK_PUSH_GROUP( "CGUIScreenSound" );
         }
     }
 
-#ifndef RAD_WIN32 // for PC don't shift the pixels... essential for the mouse cursor.
+#if !defined(RAD_WIN32) && !defined(RAD_MACOS) // for PC don't shift the pixels... essential for the mouse cursor.
     // and move regular sound menu down a bit to re-center vertically
     //
     Scrooby::Group* soundMenu = pPage->GetGroup( "Menu" );
@@ -484,7 +484,7 @@ void CGuiScreenSound::InitRunning()
 //===========================================================================
 void CGuiScreenSound::InitOutro()
 {
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
     // Save the new controller mappings to the config file.
     GetGameConfigManager()->SaveConfigFile();
 #endif

@@ -273,7 +273,7 @@ void FMVPlayer::Stop()
 // Return:      void 
 //
 //=============================================================================
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
 void FMVPlayer::ForceStop()
 { 
     // Force a clear screen.
@@ -350,7 +350,7 @@ void FMVPlayer::Initialize( radMemoryAllocator Allocator )
     m_refIRadMoviePlayer = ::radMoviePlayerCreate2( Allocator );
     rAssert( m_refIRadMoviePlayer != NULL );
 
-#if defined(RAD_UWP) || defined(RAD_WIN32)
+#if defined(RAD_UWP) || defined(RAD_WIN32) || defined(RAD_MACOS)
     m_refIRadMoviePlayer->Initialize(
         refIRadMovieRenderLoop,
         refIRadMovieRenderStrategy );

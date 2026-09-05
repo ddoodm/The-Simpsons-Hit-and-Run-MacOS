@@ -161,7 +161,7 @@ void LoadingContext::OnStart( ContextEnum previousContext )
 //=============================================================================
 void LoadingContext::OnStop( ContextEnum nextContext )
 {
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
     if( nextContext == CONTEXT_EXIT )
     {
         GetLoadingManager()->CancelPendingRequests();

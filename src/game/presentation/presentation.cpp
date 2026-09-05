@@ -422,7 +422,7 @@ void PresentationManager::PlayFMV( const char* FileName,
     mWaitingOnFade = true;
     FMVEvent* pEvent = 0;
     GetPresentationManager()->QueueFMV( &pEvent, this );
-#if defined(RAD_WIN32) || defined(RAD_UWP)
+#if defined(RAD_WIN32) || defined(RAD_UWP) || defined(RAD_MACOS)
     strcpy( pEvent->fileName, "movies\\" );
 #else
     strcpy( pEvent->fileName, "movies/" );
@@ -1165,7 +1165,7 @@ bool PresentationManager::InConversation() const
 //=============================================================================
 void PresentationManager::StopAll()
 {
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
     mpFMVPlayer->ForceStop();
 #else
     mpFMVPlayer->Stop();

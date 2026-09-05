@@ -35,7 +35,7 @@ public:
 
     void OnInit();
 
-#ifdef RAD_WIN32
+#ifdef RAD_FORCE_FEEDBACK
     void SetMagDir( u16 mag, u16 dir );
 #else
     void SetMagDir( u8 mag, u16 dir );
@@ -43,13 +43,13 @@ public:
     void SetPPO( u16 per, u16 phas, s16 offset );
 
     void SetRumbleType( u8 type );
-#ifdef RAD_WIN32
+#ifdef RAD_FORCE_FEEDBACK
     void Update(unsigned timeins = 0);
 #endif
 
 private:
 
-#ifdef RAD_WIN32
+#ifdef RAD_FORCE_FEEDBACK
     DIPERIODIC m_diPeriodic;
     DIENVELOPE m_diEnvelope;
 #endif

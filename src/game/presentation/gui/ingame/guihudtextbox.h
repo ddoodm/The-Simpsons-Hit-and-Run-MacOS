@@ -22,7 +22,7 @@
 const float MESSAGE_TEXT_SCALE = 0.8f;
 const float MESSGAE_TEXT_HORIZONTAL_STRETCH = 1.1f;
 
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
 const float MESSAGE_BOX_CORRECTION_SCALE = 1.0f;
 const float MESSAGE_BOX_HORIZONTAL_STRETCH = 1.1f;
 #else

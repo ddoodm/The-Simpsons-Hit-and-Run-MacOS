@@ -47,7 +47,7 @@
 SteeringSpring::SteeringSpring()
 {
     //Setup the respective force effect structures.
-#ifdef RAD_WIN32
+#ifdef RAD_FORCE_FEEDBACK
     m_conditon.lOffset              = 0;
     m_conditon.lDeadBand            = 0;
     m_conditon.lPositiveCoefficient = 127;
@@ -119,7 +119,7 @@ void SteeringSpring::OnInit()
 //=============================================================================
 void SteeringSpring::SetCenterPoint( s8 point, u8 deadband  )
 {
-#ifdef RAD_WIN32
+#ifdef RAD_FORCE_FEEDBACK
     m_conditon.lOffset                            = point;
     m_conditon.lDeadBand                          = deadband;
 #else
@@ -139,13 +139,13 @@ void SteeringSpring::SetCenterPoint( s8 point, u8 deadband  )
 // Return:      void 
 //
 //=============================================================================
-#ifdef RAD_WIN32
+#ifdef RAD_FORCE_FEEDBACK
 void SteeringSpring::SetSpringStrength( u16 strength )
 #else
 void SteeringSpring::SetSpringStrength( u8 strength )
 #endif
 {
-#ifdef RAD_WIN32
+#ifdef RAD_FORCE_FEEDBACK
     m_conditon.dwPositiveSaturation               = strength;
     m_conditon.dwNegativeSaturation               = strength;
 #else
@@ -168,7 +168,7 @@ void SteeringSpring::SetSpringStrength( u8 strength )
 //=============================================================================
 void SteeringSpring::SetSpringCoefficient( s16 coeff )
 {
-#ifdef RAD_WIN32
+#ifdef RAD_FORCE_FEEDBACK
     m_conditon.lPositiveCoefficient               = coeff;
     m_conditon.lNegativeCoefficient               = coeff; 
 #else

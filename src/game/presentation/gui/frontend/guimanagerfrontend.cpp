@@ -39,7 +39,7 @@
 #include <presentation/gui/frontend/guiscreenmultisetup.h>
 #include <presentation/gui/frontend/guiscreenmultichoosechar.h>
 #include <presentation/gui/frontend/guiscreenoptions.h>
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
 #include <presentation/gui/frontend/guiscreencontrollerWin32.h>
 #else
 #include <presentation/gui/frontend/guiscreencontroller.h>
@@ -48,7 +48,7 @@
 #include <presentation/gui/frontend/guiscreenviewcredits.h>
 #include <presentation/gui/frontend/guiscreenviewmovies.h>
 #include <presentation/gui/frontend/guiscreenplaymovie.h>
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
 #include <presentation/gui/frontend/guiscreendisplay.h>
 #endif
 
@@ -118,7 +118,7 @@ CGuiManagerFrontEnd::CGuiManagerFrontEnd
     m_isControllerReconnected( false ),
     m_wasFMVInputHandlerEnabled( false )
 {
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
     m_quittingGame = false;
 #endif
 }
@@ -332,7 +332,7 @@ MEMTRACK_PUSH_GROUP( "CGUIManagerFrontEnd" );
         this->AddWindow( CGuiWindow::GUI_SCREEN_ID_VIEW_MOVIES, pScreen );
     }
 
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
     pScroobyScreen = m_pScroobyProject->GetScreen( "Display" );
     if( pScroobyScreen != NULL )
     {
@@ -562,7 +562,7 @@ void CGuiManagerFrontEnd::HandleMessage
                     //
                     GetGameFlow()->SetContext( CONTEXT_SUPERSPRINT_FE );
                 }
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
                 else if( m_quittingGame )
                 {
                     // let's begin the quit procedure
@@ -691,7 +691,7 @@ void CGuiManagerFrontEnd::HandleMessage
 
         case GUI_MSG_QUIT_GAME:
         {
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
             rAssert( GUI_FE_SCREEN_RUNNING == m_state );
 
             m_state = GUI_FE_SHUTTING_DOWN;

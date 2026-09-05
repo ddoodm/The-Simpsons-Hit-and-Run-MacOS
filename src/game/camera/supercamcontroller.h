@@ -48,7 +48,7 @@ public:
         leftStickY,
         start,
         cameraToggle
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
         ,stickXup,
         stickXdown,
         stickYup,
@@ -147,7 +147,7 @@ inline void SuperCamController::OnButtonUp( int controllerId, int buttonId, cons
 //=============================================================================
 inline float SuperCamController::GetAxisValue( unsigned int buttonId ) const
 {
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
     switch( buttonId )
     {
     case stickX:

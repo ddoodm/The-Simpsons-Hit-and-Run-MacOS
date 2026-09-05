@@ -1,7 +1,7 @@
 #ifndef WHEEL_DEFINES
 #define WHEEL_DEFINES
 
-#ifdef RAD_WIN32
+#ifdef RAD_FORCE_FEEDBACK
 enum eForceTypes
 {
     CONSTANT_FORCE, 

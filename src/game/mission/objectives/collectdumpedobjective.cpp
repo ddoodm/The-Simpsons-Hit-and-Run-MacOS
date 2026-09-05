@@ -65,7 +65,7 @@ static const unsigned int CD_DEFAULT_TIMEOUT = 5000;
 static const unsigned int DEFAULT_DUMP_LIFETIME = 15000;
 #endif
 
-#if defined( DEBUGWATCH ) || defined( RAD_WIN32 ) || defined( RAD_UWP )
+#if defined( DEBUGWATCH ) || defined( RAD_WIN32 ) || defined( RAD_UWP ) || defined( RAD_MACOS )
 extern float DEFAULT_DIST;
 #endif
 

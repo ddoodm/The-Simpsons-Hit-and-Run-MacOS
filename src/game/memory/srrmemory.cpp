@@ -49,6 +49,91 @@
 #define SHUTDOWN_MEM()  PLATFORMCLASS::ShutdownMemory();
 void MemoryHackCallback() { INIT_MEM() };
 
+#if defined( RAD_MACOS )
+
+//
+// A global operator new replaces the one every loaded library uses, so dyld's
+// shared library initializers allocate through here -- OpenAL building its
+// static tables, for one -- and those run before the executable's main(). The
+// game's allocator cannot serve them: INIT_MEM calls SDL_CreateMutex, and a
+// library initialized after OpenAL (which SDL is) has not bound its own
+// entry points yet, so the call jumps through a null pointer.
+//
+// Allocations made before main() therefore come from malloc, behind a tagged
+// header so operator delete can route each free to the allocator that owns it.
+// Reading the header back is safe because every pointer reaching operator
+// delete came from operator new: either malloc with this header, or a game
+// heap block, which always has a radMemory header of its own in front of it.
+//
+namespace
+{
+    // Two words, because a single 64-bit value is plausible enough to occur by
+    // chance in the bytes preceding a game heap block.
+    const unsigned long long PRE_MAIN_TAG_0 = 0x5052454D41494E30ull;
+    const unsigned long long PRE_MAIN_TAG_1 = 0x5352523248454150ull;
+
+    struct PreMainHeader
+    {
+        unsigned long long tag0;
+        unsigned long long tag1;
+    };
+
+    void* PreMainAlloc( size_t size )
+    {
+        // sizeof( PreMainHeader ) is 16, so the payload keeps the alignment
+        // malloc handed back.
+        PreMainHeader* header =
+            static_cast< PreMainHeader* >( malloc( sizeof( PreMainHeader ) + size ) );
+
+        if( header == NULL )
+        {
+            return NULL;
+        }
+
+        header->tag0 = PRE_MAIN_TAG_0;
+        header->tag1 = PRE_MAIN_TAG_1;
+
+        return header + 1;
+    }
+
+    // Returns false if the block is not one of ours, leaving it for the caller.
+    bool PreMainFree( void* pMemory )
+    {
+        if( pMemory == NULL )
+        {
+            return false;
+        }
+
+        PreMainHeader* header = reinterpret_cast< PreMainHeader* >(
+            static_cast< char* >( pMemory ) - sizeof( PreMainHeader ) );
+
+        if( header->tag0 != PRE_MAIN_TAG_0 || header->tag1 != PRE_MAIN_TAG_1 )
+        {
+            return false;
+        }
+
+        header->tag0 = 0;
+        header->tag1 = 0;
+        free( header );
+
+        return true;
+    }
+}
+
+bool g_PastStaticInit = false;
+
+#define PRE_MAIN_ALLOC( size )                                                 \
+    if( g_PastStaticInit == false ) { return PreMainAlloc( size ); }
+#define PRE_MAIN_FREE( pMemory )                                               \
+    if( PreMainFree( pMemory ) ) { return; }
+
+#else
+
+#define PRE_MAIN_ALLOC( size )
+#define PRE_MAIN_FREE( pMemory )
+
+#endif // RAD_MACOS
+
 //******************************************************************************
 //
 // Global Data, Local Data, Local Classes
@@ -155,6 +240,8 @@ inline void* AllocateThis( GameMemoryAllocator allocator, size_t size )
 //==============================================================================
 void* operator new( size_t size )
 {
+    PRE_MAIN_ALLOC( size )
+
     if( gMemorySystemInitialized == false )
     {
         INIT_MEM();
@@ -196,6 +283,8 @@ void* operator new( size_t size )
 //==============================================================================
 void operator delete(void* pMemory)
 {
+    PRE_MAIN_FREE( pMemory )
+
     radMemoryFree( pMemory );
 }
 
@@ -213,6 +302,8 @@ void operator delete(void* pMemory)
 //==============================================================================
 void* operator new[]( size_t size )
 {
+    PRE_MAIN_ALLOC( size )
+
     if( gMemorySystemInitialized == false )
     {
         INIT_MEM();
@@ -253,6 +344,8 @@ void* operator new[]( size_t size )
 //==============================================================================
 void operator delete[]( void* pMemory )
 {
+    PRE_MAIN_FREE( pMemory )
+
     radMemoryFree( pMemory );
 }
 

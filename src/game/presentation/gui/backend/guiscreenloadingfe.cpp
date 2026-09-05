@@ -282,7 +282,7 @@ void CGuiScreenLoadingFE::HandleMessage
 
             rReleasePrintf( "Starting Memory Available = %.2f MB\n", (float)m_startingMemoryAvailable / MB );
 
-#if defined( RAD_WIN32 ) || defined( RAD_UWP )
+#if defined(RAD_WIN32) || defined(RAD_UWP) || defined(RAD_MACOS)
             GetLoadingManager()->ResetRequestsProcessed();
 #endif
             break;
@@ -517,7 +517,7 @@ CGuiScreenLoadingFE::GetCurrentMemoryUsage( ContextEnum currentContext ) const
             }
             case CONTEXT_LOADING_SUPERSPRINT:
             {
-#if !defined( RAD_WIN32 ) && !defined( RAD_UWP )
+#if !defined(RAD_WIN32) && !defined(RAD_UWP) && !defined(RAD_MACOS)
                 currentMemoryUsage = (m_startingMemoryAvailable - totalMemoryFree) / TOTAL_SUPERSPRINT_MEMORY_USAGE;
 #else
                 // this sucks but i just want to finish it.

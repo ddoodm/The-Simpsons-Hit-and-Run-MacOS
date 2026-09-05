@@ -54,7 +54,7 @@ const float SKIN_VIEW_PROJECTILE_GRAVITY = 0.005f; // in m/ms/ms
 const int SKIN_VIEW_POS_X = 250;
 const int SKIN_VIEW_POS_Y = 130;
 
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
 const float SKIN_BASE_SCALE = 1.0f / 2.5f;
 const float SKIN_IMAGE_SCALE = 0.5f / 2.5f;
 #else
@@ -91,7 +91,7 @@ CGuiScreenSkinGallery::CGuiScreenSkinGallery
     m_elapsedTime( 0 ),
     m_projectileVelocity( 0.0f, 0.0f, 0.0f ),
     m_skinInfo( NULL ),
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
     m_selectedSkin(0),
 #endif
     m_skinName( NULL )
@@ -250,7 +250,7 @@ void CGuiScreenSkinGallery::HandleMessage
             case GUI_MSG_MENU_SELECTION_MADE:
             {
                 this->OnMenuSelectionMade( static_cast<int>( param1 ) );
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
                 m_selectedSkin = static_cast<int>( param1 );
                 // Hide/disable all other menu items.
                 this->SetVisibilityForAllOtherMenuItems( false );
@@ -575,7 +575,7 @@ CGuiScreenSkinGallery::OnUpdate( unsigned int elapsedTime )
 
                 m_elapsedTime = 0;
                 m_screenState = SCREEN_STATE_NORMAL;
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
                 // Show/enable all hidden menu items.
                 this->SetVisibilityForAllOtherMenuItems( true );
 #endif
@@ -775,7 +775,7 @@ CGuiScreenSkinGallery::Unload2DImages()
     m_isSkinsLoaded = false;
 }
 
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
 void CGuiScreenSkinGallery::SetVisibilityForAllOtherMenuItems( bool bVisible )
 {
     for( int i = 0; i < MAX_NUM_SKINS_PER_LEVEL; i++ )

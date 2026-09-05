@@ -22,11 +22,13 @@
 //========================================
 #include <data/gamedata.h>
 #include <input/controller.h>
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
 #include <input/usercontrollerWin32.h>
-#include <input/FEMouse.h>
 #else
 #include <input/usercontroller.h>
+#endif
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
+#include <input/FEMouse.h>
 #endif
 #include <constants/maxplayers.h>
 
@@ -178,7 +180,7 @@ public:
     void SetRumbleEnabled( bool isEnabled );
     bool IsRumbleEnabled() const;
 
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
     void StartRumbleEffects();
     void StopRumbleEffects();
 #endif
@@ -220,7 +222,7 @@ public:
 
     bool IsProScanButtonsPressed() const { return m_isProScanButtonsPressed; }
 
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
     FEMouse* GetFEMouse() const { return m_pFEMouse; }
 #endif
 
@@ -254,7 +256,7 @@ private:
 
     bool m_isProScanButtonsPressed : 1;
 
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
     FEMouse* m_pFEMouse;
 #endif
 };

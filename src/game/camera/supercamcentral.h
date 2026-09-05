@@ -65,7 +65,7 @@ public:
     enum 
     { 
         MAX_CAMERAS = 32, 
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
         MAX_COLLISIONS = 15,
 #else
         MAX_COLLISIONS = 10, 

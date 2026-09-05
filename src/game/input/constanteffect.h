@@ -40,7 +40,7 @@ public:
 
 private:
 
-#ifdef RAD_WIN32
+#ifdef RAD_FORCE_FEEDBACK
     DICONSTANTFORCE     m_diConstant;
     DIENVELOPE          m_diEnvelope;
 #endif

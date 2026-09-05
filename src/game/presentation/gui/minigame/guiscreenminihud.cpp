@@ -21,7 +21,7 @@
 #include <contexts/supersprint/supersprintcontext.h>
 #include <gameflow/gameflow.h>
 
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
 #include <input/inputmanager.h>
 #endif
 
@@ -97,7 +97,7 @@ void CGuiScreenMiniHud::HandleMessage
     {
         switch( message )
         {
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
             case GUI_MSG_CONTROLLER_BACK:
             {
                 if( GetInputManager()->GetValue( 0, InputManager::KeyboardEsc ) > 0.0f )
@@ -165,7 +165,7 @@ void CGuiScreenMiniHud::HandleMessage
 //===========================================================================
 void CGuiScreenMiniHud::InitIntro()
 {
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
     GetInputManager()->GetFEMouse()->SetInGameMode( true );
 #endif
 }

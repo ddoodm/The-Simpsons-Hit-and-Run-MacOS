@@ -84,7 +84,7 @@ CGuiScreenTutorial::CGuiScreenTutorial
     rAssert( m_tutorialMessage != NULL );
     m_tutorialMessage->SetSpriteMode( Scrooby::SPRITE_BITMAP_TEXT );
     m_tutorialMessage->CreateBitmapTextBuffer( MAX_TUTORIAL_MESSAGE_LENGTH );
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
     m_tutorialMessage->ScaleAboutCenter( 0.25f );
 #else
     m_tutorialMessage->ScaleAboutCenter( 0.5f );

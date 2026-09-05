@@ -187,7 +187,7 @@ CGuiScreenMiniSummary::CGuiScreenMiniSummary
     m_totalTimeKingIcon = pGroupTotalTime->GetSprite( "TotalTimeKingIcon" );
     m_bestLapKingIcon = pGroupBestLap->GetSprite( "BestLapKingIcon" );
     
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
     m_totalTimeKingIcon->ScaleAboutCenter( 0.5f );
     m_bestLapKingIcon->ScaleAboutCenter( 0.5f );
     pGroupRanks->GetSprite( "RankKingIcon" )->ScaleAboutCenter( 0.5f );
@@ -387,7 +387,7 @@ void CGuiScreenMiniSummary::InitRunning()
 //===========================================================================
 void CGuiScreenMiniSummary::InitOutro()
 {
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
     GetInputManager()->GetFEMouse()->SetInGameMode( false );
 #endif
 }

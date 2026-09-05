@@ -43,7 +43,7 @@ public:
 
     unsigned int GetCurrentLevel() const;
     void SetLevelBarVisible( bool isVisible );
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
     virtual eFEHotspotType CheckCursorAgainstHotspots( float x, float y );
 #endif
 

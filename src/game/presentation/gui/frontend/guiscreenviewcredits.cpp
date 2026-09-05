@@ -237,7 +237,7 @@ void CGuiScreenViewCredits::HandleMessage
                     CGuiUserInputHandler* userInputHandler = GetGuiSystem()->GetUserInputHandler( i );
                     if( userInputHandler != NULL )
                     {
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
                         if( userInputHandler->IsYAxisOnUp() )
 #else
                         if( userInputHandler->IsButtonDown( GuiInput::Up ) ||
@@ -251,7 +251,7 @@ void CGuiScreenViewCredits::HandleMessage
 
                         if( !m_playKKDialog ) // only allow speed-up if dialog is not playing
                         {
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
                             if( userInputHandler->IsYAxisOnDown() )
 #else
                             if( userInputHandler->IsButtonDown( GuiInput::Down ) ||
@@ -406,7 +406,7 @@ CGuiScreenViewCredits::FormatTextWithLineBreaks( Scrooby::Text* pText )
     int height = 0;
     pText->GetBoundingBoxSize( width, height );
 
-#ifdef RAD_WIN32
+#if defined(RAD_WIN32) || defined(RAD_MACOS)
     const float SPACING_FUDGE_FACTOR = 1.20f;
 #else
     const float SPACING_FUDGE_FACTOR = 1.15f;
