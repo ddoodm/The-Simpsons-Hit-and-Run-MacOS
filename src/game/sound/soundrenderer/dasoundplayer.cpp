@@ -378,7 +378,7 @@ void daSoundClipStreamPlayer::UpdateStream( void )
                         {
                             m_pAllocatedResource->GetFileInstance( m_AllocResInstanceID )->CreateFileDataSource( & m_StreamInfo.m_pRsdFileDataSource );
                         }
-                        else if ( IRadSoundRsdFileDataSource::Initialized == m_StreamInfo.m_pRsdFileDataSource->GetState( ) )
+                        else if ( IRadSoundHalDataSource::Initialized == m_StreamInfo.m_pRsdFileDataSource->GetState( ) )
                         {
                             /* rDebugPrintf( "DASOUND: Playing Streamed File: [%s], format: [%d], channels: [%d]\n",
                                 pFileInstance->GetFileName( ),
@@ -992,7 +992,7 @@ void daSoundClipStreamPlayer::OnStitch( IRadSoundHalDataSource ** ppHds , unsign
         }
         else
         {            
-            radRef< IRadSoundRsdFileDataSource > refFds;
+            radRef< IRadSoundHalDataSource > refFds;
             m_pAllocatedResource->GetFileInstance( m_AllocResInstanceID )->CreateFileDataSource( & refFds );
         
              *ppHds = refFds;

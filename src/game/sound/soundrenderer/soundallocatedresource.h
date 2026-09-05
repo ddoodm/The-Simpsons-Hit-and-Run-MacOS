@@ -60,7 +60,7 @@ public:
     inline IDaSoundResource::Type GetType( void );
 
     inline IRadSoundClip* GetSoundClip( void );
-    void CreateFileDataSource( IRadSoundRsdFileDataSource** );
+    void CreateFileDataSource( IRadSoundHalDataSource** );
 
     // Internal state
     enum State { Loading, Loaded, UnLoaded };

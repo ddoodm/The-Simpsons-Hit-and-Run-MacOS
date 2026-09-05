@@ -260,6 +260,7 @@ RadicalAdpcmDecodeStream::RadicalAdpcmDecodeStream( void )
     :
     radRefCount( 0 )
 {
+    info.passThrough = false;
 }
 
 RadicalAdpcmDecodeStream::~RadicalAdpcmDecodeStream( void )
@@ -282,6 +283,7 @@ void RadicalAdpcmDecodeStream::Initialize( IRadSoundHalDataSource* pHalStream )
     info.pHalStream = pHalStream;
     info.pHalStream->AddRef( );
     info.state = RadicalAdpcmDecodeState_InitializingSource;
+    info.passThrough = false;
     info.pHalAudioFormat = 0;
     DoWork( );
 }
@@ -309,19 +311,29 @@ void RadicalAdpcmDecodeStream::DoWork( void )
                 case IRadSoundHalDataSource::Initialized:
                 {
                     IRadSoundHalAudioFormat* pInFormat = info.pHalStream->GetFormat( );
-                    
-                    rAssert( (IRadSoundHalAudioFormat::RadicalAdpcm) == pInFormat->GetEncoding( ) );
-                    rAssert( 16 == pInFormat->GetBitResolution( ) );
-                    
-                    info.pHalAudioFormat = radSoundHalAudioFormatCreate( RADMEMORY_ALLOC_TEMP );
-                    info.pHalAudioFormat->AddRef( );
-                    info.pHalAudioFormat->Initialize(
-                        IRadSoundHalAudioFormat::PCM,
-                        NULL,
-                        pInFormat->GetSampleRate( ),
-                        pInFormat->GetNumberOfChannels( ),
-                        pInFormat->GetBitResolution( ) );
-                        
+
+                    info.passThrough =
+                        ( IRadSoundHalAudioFormat::RadicalAdpcm != pInFormat->GetEncoding( ) );
+
+                    if( info.passThrough )
+                    {
+                        info.pHalAudioFormat = pInFormat;
+                        info.pHalAudioFormat->AddRef( );
+                    }
+                    else
+                    {
+                        rAssert( 16 == pInFormat->GetBitResolution( ) );
+
+                        info.pHalAudioFormat = radSoundHalAudioFormatCreate( RADMEMORY_ALLOC_TEMP );
+                        info.pHalAudioFormat->AddRef( );
+                        info.pHalAudioFormat->Initialize(
+                            IRadSoundHalAudioFormat::PCM,
+                            NULL,
+                            pInFormat->GetSampleRate( ),
+                            pInFormat->GetNumberOfChannels( ),
+                            pInFormat->GetBitResolution( ) );
+                    }
+
                     info.state = RadicalAdpcmDecodeState_Idle;
                     break;
                 }
@@ -422,13 +434,23 @@ unsigned int RadicalAdpcmDecodeStream::GetRemainingFrames( void )
     
     unsigned int sourceFrames = info.pHalStream->GetRemainingFrames( );
     
-    if ( 0xFFFFFFFF == sourceFrames )
+    if ( 0xFFFFFFFF == sourceFrames || info.passThrough )
     {
         return sourceFrames;
     }
 
     return sourceFrames * RADICAL_ADPCM_SAMPLES_PER_FRAME;
 
+}
+
+unsigned int RadicalAdpcmDecodeStream::GetAvailableFrames( void )
+{
+    if ( info.passThrough )
+    {
+        return info.pHalStream->GetAvailableFrames( );
+    }
+
+    return 0xFFFFFFFF;
 }
 
 void RadicalAdpcmDecodeStream::GetFramesAsync(
@@ -439,6 +461,14 @@ void RadicalAdpcmDecodeStream::GetFramesAsync(
 {
     rAssert( pBytes != NULL );
     rAssert( radMemorySpace_Local == destinationMemorySpace );
+
+    if ( info.passThrough )
+    {
+        info.pHalStream->GetFramesAsync(
+            pBytes, destinationMemorySpace, numberOfFrames, pCallback );
+
+        return;
+    }
 
     switch( info.state )
     {

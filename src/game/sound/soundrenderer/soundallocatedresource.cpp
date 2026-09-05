@@ -145,7 +145,7 @@ daSoundFileInstance::~daSoundFileInstance( )
 //-----------------------------------------------------------------------------
 
 void daSoundFileInstance::CreateFileDataSource(
-    IRadSoundRsdFileDataSource** ppFds )
+    IRadSoundHalDataSource** ppDs )
 {
     rAssert( GetType( ) == IDaSoundResource::STREAM );
     rAssert( Loaded == m_State );    
@@ -153,16 +153,30 @@ void daSoundFileInstance::CreateFileDataSource(
     char fileName[ 256 ];
     m_pResource->GetFileKeyAt( m_FileIndex, fileName, 256 );
     
-    *ppFds = radSoundRsdFileDataSourceCreate( GMA_AUDIO_PERSISTENT );
-    (*ppFds)->AddRef( );
+    IRadSoundRsdFileDataSource* pFds =
+        radSoundRsdFileDataSourceCreate( GMA_AUDIO_PERSISTENT );
+    pFds->AddRef( );
     
-       (*ppFds)->InitializeFromFileName(
+       pFds->InitializeFromFileName(
         fileName,
         true,
         0,
         IRadSoundHalAudioFormat::Milliseconds,
         SoundNucleusGetStreamFileAudioFormat( ) );
-        
+
+    //
+    // The encoding is only known once the header has been read, so every
+    // stream goes through the decoder; it passes anything but Radical ADPCM
+    // straight through.
+    //
+    IRadSoundAdpcmDecodeStream* pDecoder =
+        radSoundAdpcmDecodeStreamCreate( GMA_AUDIO_PERSISTENT );
+    pDecoder->AddRef( );
+    pDecoder->Initialize( pFds );
+
+    pFds->Release( );
+
+    *ppDs = pDecoder;
 }
 
 //=============================================================================

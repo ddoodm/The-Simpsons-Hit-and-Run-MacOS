@@ -44,7 +44,11 @@ enum RadicalAdpcmDecodeState
 struct RadicalAdpcmDecodeStreamInfo
 {
     RadicalAdpcmDecodeState state;
-    
+
+    // Set once the source reports a non-ADPCM encoding; reads are then handed
+    // straight to the source.
+    bool passThrough;
+
     IRadSoundHalDataSource* pHalStream;
     IRadSoundHalAudioFormat* pHalAudioFormat;
 
@@ -76,7 +80,7 @@ struct RadicalAdpcmDecodeStream
 
     virtual IRadSoundHalAudioFormat* GetFormat( void );
     virtual unsigned int GetRemainingFrames( void );
-    virtual unsigned int GetAvailableFrames( void ) { return 0xFFFFFFFF; }
+    virtual unsigned int GetAvailableFrames( void );
     virtual void GetFramesAsync( 
         void* pBytes, 
         radMemorySpace destinationMemorySpace, 

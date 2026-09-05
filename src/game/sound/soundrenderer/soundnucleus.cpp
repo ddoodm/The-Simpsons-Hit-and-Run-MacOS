@@ -337,7 +337,10 @@ void SoundNucleusTerminate( void )
 
 IRadSoundHalAudioFormat * SoundNucleusGetStreamFileAudioFormat( void )
 {
-#if ( defined( RAD_UWP ) && defined( PAL ) )
+// NULL means every stream reads its own header instead of being forced to one
+// format. Retail PC data needs this: dialogue is Radical ADPCM while all other
+// streams are PCM.
+#if ( defined( RAD_UWP ) && defined( PAL ) ) || defined( RAD_MACOS )
         return NULL;
     #else
         return gUnCompressedStreamAudioFormat.m_pAudioFormat;
