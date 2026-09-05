@@ -13,14 +13,26 @@
 
 #include <microprofile.h>
 
-// bruh
-#define GL_COMPRESSED_RGB_S3TC_DXT1_EXT   0x83F0 // TODO(3UR): we need these still cant use the new stuff such as GL_COMPRESSED_RGBA_BPTC_UNORM in SetGLState because idk and I know nothing about graphics but having the new ones in PickPixelFormat makes tge lighting sooo much better so... if a graphics pro wants to actually clean this feel free to
+#ifndef GL_COMPRESSED_RGB_S3TC_DXT1_EXT
+#define GL_COMPRESSED_RGB_S3TC_DXT1_EXT   0x83F0
+#endif
+#ifndef GL_COMPRESSED_RGBA_S3TC_DXT1_EXT
 #define GL_COMPRESSED_RGBA_S3TC_DXT1_EXT  0x83F1
+#endif
+#ifndef GL_COMPRESSED_RGBA_S3TC_DXT3_EXT
 #define GL_COMPRESSED_RGBA_S3TC_DXT3_EXT  0x83F2
+#endif
+#ifndef GL_COMPRESSED_RGBA_S3TC_DXT5_EXT
 #define GL_COMPRESSED_RGBA_S3TC_DXT5_EXT  0x83F3
-#define GL_BGRA_EXT                       0x80E1 // TODO(3UR): why cant we use GL_BGRA
+#endif
+#ifndef GL_BGRA_EXT
+#define GL_BGRA_EXT                       0x80E1
+#endif
 
-static inline GLenum PickPixelFormat(pddiPixelFormat format)
+// srgb selects the sRGB-decoding internal formats, which is what makes the
+// game's lighting come out right. Callers must pass false when the context
+// lacks EXT_texture_sRGB, since these enums are then not accepted.
+static inline GLenum PickPixelFormat(pddiPixelFormat format, bool srgb)
 {
     switch (format)
     {
@@ -28,15 +40,17 @@ static inline GLenum PickPixelFormat(pddiPixelFormat format)
     case PDDI_PIXEL_RGB565: return GL_RGB5;
     case PDDI_PIXEL_ARGB1555: return GL_RGB5_A1;
     case PDDI_PIXEL_ARGB4444: return GL_RGBA4;
-    case PDDI_PIXEL_RGB888: return GL_SRGB8;
-    case PDDI_PIXEL_ARGB8888: return GL_SRGB8_ALPHA8;
+    case PDDI_PIXEL_RGB888: return srgb ? GL_SRGB8 : GL_RGB8;
+    case PDDI_PIXEL_ARGB8888: return srgb ? GL_SRGB8_ALPHA8 : GL_RGBA8;
     case PDDI_PIXEL_PAL8: return GL_RGB8;
     case PDDI_PIXEL_PAL4: return GL_RGB8;
     case PDDI_PIXEL_LUM8: return GL_R8;
     case PDDI_PIXEL_DUDV88: return GL_RG8;
-    case PDDI_PIXEL_DXT1: return GL_COMPRESSED_RGBA_BPTC_UNORM;
-    case PDDI_PIXEL_DXT3: return GL_COMPRESSED_RGBA_BPTC_UNORM;
-    case PDDI_PIXEL_DXT5: return GL_COMPRESSED_SRGB_ALPHA_BPTC_UNORM;
+    // The DXT cases are unreachable: SetGLState routes compressed formats to
+    // glCompressedTexImage2D with these same S3TC enums.
+    case PDDI_PIXEL_DXT1: return GL_COMPRESSED_RGBA_S3TC_DXT1_EXT;
+    case PDDI_PIXEL_DXT3: return GL_COMPRESSED_RGBA_S3TC_DXT3_EXT;
+    case PDDI_PIXEL_DXT5: return GL_COMPRESSED_RGBA_S3TC_DXT5_EXT;
     }
     PDDIASSERT(false);
     return GL_INVALID_ENUM;
@@ -116,7 +130,8 @@ void pglTexture::SetGLState(void)
         }
         else
         {
-            glTexImage2D(GL_TEXTURE_2D, 0, PickPixelFormat(lock.format), xSize,
+            glTexImage2D(GL_TEXTURE_2D, 0,
+                PickPixelFormat(lock.format, context->GetDisplay()->ExtSRGB()), xSize,
                 ySize, 0, lock.native ? GL_BGRA_EXT : GL_RGBA, GL_UNSIGNED_BYTE,
                 (GLvoid *)bits[0]);
         }

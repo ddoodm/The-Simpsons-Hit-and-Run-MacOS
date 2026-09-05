@@ -30,7 +30,7 @@
 
 #define MIN_FRAMES 2
 
-#if defined( RAD_WIN32 ) || defined( RAD_UWP )
+#if defined( RAD_WIN32 ) || defined( RAD_UWP ) || defined( RAD_MACOS )
 	#define PLATFORM_AUDIO_FORMAT IRadSoundHalAudioFormat::PCM
 #endif
 

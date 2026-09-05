@@ -12,6 +12,13 @@
 #include<string.h>
 #include<math.h>
 
+// KHR_debug does not exist in macOS' legacy GL 2.1 profile, so the debug
+// message callback has to compile out entirely there rather than being
+// probed at runtime.
+#if defined(RAD_DEBUG) && !defined(SRR2_GL_FRAMEWORK)
+#define PDDI_GL_DEBUG_OUTPUT
+#endif
+
 bool pglDisplay::CheckExtension( const char *extName )
 {
     return SDL_GL_ExtensionSupported(extName) == SDL_TRUE;
@@ -32,6 +39,7 @@ pglDisplay ::pglDisplay(pddiDisplayInfo* info)
     prevRC = NULL;
 
     extBGRA = false;
+    extSRGB = false;
 
     gammaR = gammaG = gammaB = 1.0f;
 
@@ -93,7 +101,7 @@ bool pglDisplay ::InitDisplay(int x, int y, int bpp)
     return InitDisplay(&displayInit);
 }
 
-#ifdef RAD_DEBUG
+#ifdef PDDI_GL_DEBUG_OUTPUT
 void GLAPIENTRY
 MessageCallback(GLenum source,
     GLenum type,
@@ -168,7 +176,7 @@ bool pglDisplay ::InitDisplay(const pddiDisplayInit* init)
     else
         SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 0);
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, SDL_TRUE);
-#ifdef RAD_DEBUG
+#ifdef PDDI_GL_DEBUG_OUTPUT
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_DEBUG_FLAG);
 #endif
 
@@ -178,8 +186,10 @@ bool pglDisplay ::InitDisplay(const pddiDisplayInit* init)
         SDL_Log("SDL_GL_CreateContext() error: %s", SDL_GetError());
     PDDIASSERT(hRC);
 
+#ifndef SRR2_GL_FRAMEWORK
     if (!gladLoadGLLoader( (GLADloadproc)SDL_GL_GetProcAddress ))
         return false;
+#endif
 
     char* glVendor   = (char*)glGetString(GL_VENDOR);
     char* glRenderer = (char*)glGetString(GL_RENDERER);
@@ -210,10 +220,11 @@ bool pglDisplay ::InitDisplay(const pddiDisplayInit* init)
     }
 
     extBGRA = CheckExtension("GL_EXT_bgra") || CheckExtension("GL_EXT_texture_format_BGRA8888");
+    extSRGB = CheckExtension("GL_EXT_texture_sRGB") || CheckExtension("GL_ARB_framebuffer_sRGB");
 
     SDL_Log("OpenGL - Vendor: %s, Renderer: %s, Version: %s",glVendor,glRenderer,glVersion);
 
-#if defined RAD_DEBUG
+#ifdef PDDI_GL_DEBUG_OUTPUT
     glEnable(GL_DEBUG_OUTPUT);
     glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
     glDebugMessageCallback(MessageCallback, NULL);

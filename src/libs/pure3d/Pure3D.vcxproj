@@ -783,7 +783,7 @@
     <ClCompile Include="pddi\base\base_font.cpp" />
     <ClCompile Include="pddi\base\pddiobj.cpp" />
     <ClCompile Include="pddi\gl\decompress.cpp" />
-    <ClCompile Include="pddi\gl\display_win32\gldisplay.cpp" />
+    <ClCompile Include="pddi\gl\display_sdl\gldisplay.cpp" />
     <ClCompile Include="pddi\gl\glcon.cpp" />
     <ClCompile Include="pddi\gl\gldev.cpp" />
     <ClCompile Include="pddi\gl\glmat.cpp" />
@@ -918,7 +918,7 @@
     <ClInclude Include="pddi\base\base_font.hpp" />
     <ClInclude Include="pddi\base\romans.h" />
     <ClInclude Include="pddi\gl\decompress.h" />
-    <ClInclude Include="pddi\gl\display_win32\resource.h" />
+    <ClInclude Include="pddi\gl\display_sdl\resource.h" />
     <ClInclude Include="pddi\gl\glcon.hpp" />
     <ClInclude Include="pddi\gl\gldev.hpp" />
     <ClInclude Include="pddi\gl\glmat.hpp" />

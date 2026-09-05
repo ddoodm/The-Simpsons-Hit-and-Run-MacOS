@@ -35,7 +35,7 @@ enum enum_resource_buffer_state {
 // Global Data, Local Data, Local Classes
 //-----------------------------------------------------------------------------
 
-#if defined( RAD_WIN32 ) || defined( RAD_UWP )
+#if defined( RAD_WIN32 ) || defined( RAD_UWP ) || defined( RAD_MACOS )
 	#define PLATFORM_AUDIO_FORMAT IRadSoundHalAudioFormat::PCM
 #endif
 	

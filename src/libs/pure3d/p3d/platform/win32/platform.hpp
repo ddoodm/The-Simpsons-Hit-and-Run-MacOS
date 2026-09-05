@@ -10,7 +10,12 @@
 #include <p3d/platform/win32/plat_types.hpp>
 #include <pddi/pddi.hpp>
 
+#if defined( RAD_WIN32 ) || defined( RAD_UWP )
 #include <malloc.h>
+#else
+#include <stdlib.h>
+#include <alloca.h>
+#endif
 
 static const int P3D_MAX_CONTEXTS = 4;
 

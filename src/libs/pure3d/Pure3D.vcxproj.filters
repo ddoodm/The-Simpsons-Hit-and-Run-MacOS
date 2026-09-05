@@ -68,10 +68,10 @@
     <Filter Include="Pddi Headers\gl">
       <UniqueIdentifier>{f35bb267-cc9c-49e5-88ff-834a8f763337}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Pddi Source\gl\display_win32">
+    <Filter Include="Pddi Source\gl\display_sdl">
       <UniqueIdentifier>{3dfb4ef4-c3ca-47bd-96dc-63ab756bca9e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Pddi Headers\gl\display_win32">
+    <Filter Include="Pddi Headers\gl\display_sdl">
       <UniqueIdentifier>{2dc3f221-583d-43c0-9424-ba6b773c872d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -400,8 +400,8 @@
     <ClCompile Include="pddi\gl\gltex.cpp">
       <Filter>Pddi Source\gl</Filter>
     </ClCompile>
-    <ClCompile Include="pddi\gl\display_win32\gldisplay.cpp">
-      <Filter>Pddi Source\gl\display_win32</Filter>
+    <ClCompile Include="pddi\gl\display_sdl\gldisplay.cpp">
+      <Filter>Pddi Source\gl\display_sdl</Filter>
     </ClCompile>
     <ClCompile Include="pddi\gl\decompress.cpp">
       <Filter>Pddi Source\gl</Filter>
@@ -804,8 +804,8 @@
     <ClInclude Include="pddi\gl\decompress.h">
       <Filter>Pddi Headers\gl</Filter>
     </ClInclude>
-    <ClInclude Include="pddi\gl\display_win32\resource.h">
-      <Filter>Pddi Headers\gl\display_win32</Filter>
+    <ClInclude Include="pddi\gl\display_sdl\resource.h">
+      <Filter>Pddi Headers\gl\display_sdl</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

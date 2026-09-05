@@ -6,12 +6,10 @@
 #ifndef RADMOIVE_PCH_HPP
 #define RADMOIVE_PCH_HPP
 
+#if defined( RAD_WIN32 ) || defined( RAD_UWP )
 //
-// only win32 and UWP take advantage of the pch at this moment.
-//
-#if defined( RAD_WIN32 ) || defined( RAD_UWP ) || defined( RAD_MACOS )
-//
-// Microsoft header files
+// Microsoft header files. The DirectShow headers are left over from the
+// original movie backend; playback now goes through FFmpeg.
 //
 #define _WIN32_WINNT 0x0602
 #include <windows.h>
@@ -21,6 +19,7 @@
 #include <uuids.h>
 #include <evcode.h>
 #include <vfwmsgs.h>
+#endif
 
 //
 // Standard C header files
@@ -36,7 +35,5 @@
 // FTech header files
 //
 #include "radoptions.hpp"
-
-#endif // defined RAD_WIN32 || defined RAD_UWP
 
 #endif // RADMOIVE_PCH_HPP

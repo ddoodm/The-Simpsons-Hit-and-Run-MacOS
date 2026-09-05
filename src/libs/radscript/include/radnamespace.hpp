@@ -34,6 +34,13 @@
 
 struct IRadNameSpace;
 
+//
+// Declared here so the inline members of IRadNameSpace below do not trigger an
+// implicit instantiation before namespace.cpp defines these specializations.
+//
+template<> IRadNameSpace* radLinkedClass< IRadNameSpace >::s_pLinkedClassHead;
+template<> IRadNameSpace* radLinkedClass< IRadNameSpace >::s_pLinkedClassTail;
+
 //============================================================================
 // Factories and functions
 //============================================================================

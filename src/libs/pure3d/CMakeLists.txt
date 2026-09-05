@@ -106,7 +106,7 @@ set(pure3d_SOURCES
     pddi/base/baseshader.cpp
     pddi/base/pddiobj.cpp
     pddi/gl/decompress.cpp
-    pddi/gl/display_win32/gldisplay.cpp
+    pddi/gl/display_sdl/gldisplay.cpp
     pddi/gl/glcon.cpp
     pddi/gl/gldev.cpp
     pddi/gl/glmat.cpp

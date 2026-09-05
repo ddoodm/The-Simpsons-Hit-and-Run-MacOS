@@ -5,8 +5,8 @@
 
 #include<gl.hpp>
 #ifdef RAD_WIN32
-    #include <pddi/gl/display_win32/gldisplay.hpp>
-    #include <pddi/gl/display_win32/gl.hpp>
+    #include <pddi/gl/display_sdl/gldisplay.hpp>
+    #include <pddi/gl/display_sdl/gl.hpp>
 #endif
 
 #ifdef RAD_LINUX
