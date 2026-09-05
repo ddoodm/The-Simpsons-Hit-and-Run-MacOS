@@ -15,10 +15,35 @@
 #include <radmemory.hpp>
 #include <map>
 #include <mutex>
+#include <stdlib.h>
+#include <utility>
 
 //-----------------------------------------------------------------------------
 // Definitions
 //-----------------------------------------------------------------------------
+
+//-----------------------------------------------------------------------------
+// The tracking map cannot allocate through the game's operator new. That
+// re-enters the memory manager, which locates a block's owner by asking every
+// heap in turn and taking each one's lock -- while this heap's lock is already
+// held. Two heaps doing that concurrently deadlock. Going straight to malloc
+// keeps the bookkeeping out of the heaps it is keeping book on.
+//-----------------------------------------------------------------------------
+template< class T >
+class MallocAllocator
+{
+public:
+    typedef T value_type;
+
+    MallocAllocator() {}
+    template< class U > MallocAllocator( const MallocAllocator< U >& ) {}
+
+    T*   allocate( size_t n )        { return static_cast< T* >( malloc( n * sizeof( T ) ) ); }
+    void deallocate( T* p, size_t )  { free( p ); }
+
+    template< class U > bool operator==( const MallocAllocator< U >& ) const { return true; }
+    template< class U > bool operator!=( const MallocAllocator< U >& ) const { return false; }
+};
 
 //-----------------------------------------------------------------------------
 // StaticHeap
@@ -51,7 +76,8 @@ public:
     bool   ValidateHeap( void );
 protected:
     void   RecordAllocation( void* address, size_t size );
-    typedef std::map< void*, size_t > ADDRESS_SIZE_MAP;
+    typedef std::map< void*, size_t, std::less< void* >,
+                      MallocAllocator< std::pair< void* const, size_t > > > ADDRESS_SIZE_MAP;
     ADDRESS_SIZE_MAP m_Map;
 
     // The game replaces global operator new, so system frameworks allocate and

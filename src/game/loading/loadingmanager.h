@@ -172,7 +172,9 @@ class LoadingManager : public FileHandler::LoadFileCallback
         //
         // Store cement libraries
         //
-#ifdef RAD_UWP
+        // The PC sound build registers NUM_SOUND_CEMENT_FILES (12) of these on
+        // its own, so the console budget of 10 is not enough.
+#if defined( RAD_UWP ) || defined( RAD_MACOS )
         static const int MAX_CEMENT_LIBRARIES = 15;
 #else
         static const int MAX_CEMENT_LIBRARIES = 10;

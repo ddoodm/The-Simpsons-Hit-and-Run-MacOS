@@ -1570,14 +1570,39 @@ void daSoundRenderingManager::registerDialogueCementFiles( const char* cementFil
 {
 #if defined(RAD_UWP) || defined(RAD_WIN32) || defined(RAD_MACOS)
     char dialogNameBuffer[ 16 ];
-    int i = 0;
+    unsigned int i = 0;
 
     strcpy( dialogNameBuffer, cementFilename );
     char* numberPosition = strchr( dialogNameBuffer, '?' );
-    for ( unsigned int j = 0; j < s_NumDialogCementFiles; j++ )
+    rAssert( numberPosition != NULL );
+
+    *numberPosition = '0';
+
+    FILE* splitFile = fopen( dialogNameBuffer, "rb" );
+    if( splitFile != NULL )
     {
-        *numberPosition = j + '0';
+        fclose( splitFile );
+
+        for ( unsigned int j = 0; j < s_NumDialogCementFiles; j++ )
+        {
+            *numberPosition = j + '0';
+            m_soundCementFileHandles[i++] = GetLoadingManager()->RegisterCementLibrary( dialogNameBuffer );
+        }
+    }
+    else
+    {
+        // Retail PC data keeps all dialogue in one un-numbered rcf, so drop the
+        // "0?" pair: dialog0?.rcf becomes dialog.rcf.
+        memmove( numberPosition - 1, numberPosition + 1, strlen( numberPosition + 1 ) + 1 );
         m_soundCementFileHandles[i++] = GetLoadingManager()->RegisterCementLibrary( dialogNameBuffer );
+    }
+
+    // SetLanguage unregisters every dialogue slot, so pad unused ones with an
+    // already-registered handle rather than index 0, which another library owns.
+    while( i < s_NumDialogCementFiles )
+    {
+        m_soundCementFileHandles[i] = m_soundCementFileHandles[i - 1];
+        i++;
     }
 #endif
 }
