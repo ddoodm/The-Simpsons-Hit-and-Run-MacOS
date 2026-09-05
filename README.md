@@ -1,7 +1,16 @@
-# The Simpsons: Hit & Run
+# The Simpsons: Hit & Run — macOS
 
-This repository contains the source code for _The Simpsons: Hit & Run_ with quite a few enhancements done to it, Such as C++ 20 & x64 Builds, Vcpkg for easier third-party 
-library management, UWP Builds & more. 
+A macOS port of _The Simpsons: Hit & Run_, using CMake in place of the original Visual Studio solution.
+
+## Upstream & Credits
+
+This is a downstream project based on [3UR/Simpsons-Hit-Run](https://github.com/3UR/Simpsons-Hit-Run), which did
+the heavy lifting of getting the game onto x64, C++20, vcpkg and OpenGL. All credit for that work goes to
+[3UR](https://github.com/3UR) and the contributors to that repository.
+
+This repository has been modified from that source, starting September 2026, to build with CMake and run on macOS.
+It is not affiliated with or endorsed by the upstream project, and changes made here are not submitted back to it.
+Licensed under GPL-3.0, the same as upstream — see [LICENSE](LICENSE).
 
 ## Disclaimer
 
@@ -16,22 +25,22 @@ _The Simpsons: Hit & Run_ and all related characters, assets, audio, trademarks,
 
 ## Contributing
 
-I currently don't have the time to actively work on this as much so contributations help everyone! There are some pretty bad bugs that need fixing such as the UWP memory leak.
+Contributions are welcome. Please [create a fork](https://github.com/ddoodm/The-Simpsons-Hit-and-Run-MacOS/fork) and then [open a pull request](https://github.com/ddoodm/The-Simpsons-Hit-and-Run-MacOS/pulls).
 
-If you would like to contribute to this project please [create a fork](https://github.com/3UR/Simpsons-Hit-Run/fork) and then [open a pull request](https://github.com/3UR/Simpsons-Hit-Run/pulls).
+Bugs in code inherited from upstream are usually better reported [there](https://github.com/3UR/Simpsons-Hit-Run/issues) unless they are macOS-specific.
 
 ## Issues
 
-If you encounter issues, please [create an issue](https://github.com/3UR/Simpsons-Hit-Run/issues/new).
+If you encounter issues, please [create an issue](https://github.com/ddoodm/The-Simpsons-Hit-and-Run-MacOS/issues/new).
 
 ### Known Bugs
 
-- Memory Corruption
+- Memory Corruption (inherited from upstream)
 - Assets (Need a good way to include them)
 
 ## Commit History
 
-All previous commit history has been archived in [this branch](https://github.com/3UR/Simpsons-Hit-Run/tree/commit-history-archive). This was done because of how messy and inconsistent the commit messages were.
+This repository starts from upstream's squashed history. Upstream's earlier commit history is archived in [this branch](https://github.com/3UR/Simpsons-Hit-Run/tree/commit-history-archive).
 
 ## Installation
 
