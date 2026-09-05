@@ -185,3 +185,11 @@ src/libs/sim/obj/
 
 # temp
 assets
+# CMake build output
+build/
+build-*/
+cmake-build-*/
+CMakeUserPresets.json
+
+# macOS
+.DS_Store

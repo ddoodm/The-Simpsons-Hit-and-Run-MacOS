@@ -3,6 +3,10 @@
     "ffmpeg",
     "libpng",
     "openal-soft",
-    "glad"
+    "sdl2",
+    {
+      "name": "glad",
+      "platform": "!osx"
+    }
   ]
 }
