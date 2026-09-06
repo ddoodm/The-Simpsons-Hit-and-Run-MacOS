@@ -188,6 +188,13 @@ This repository starts from upstream's squashed history. Upstream's earlier comm
 
 ## Media
 
+### MacOS
+
+<img width="912" height="744" alt="Screenshot 2026-09-06 at 7 12 07 pm" src="https://github.com/user-attachments/assets/93800223-a9a5-409e-9e5f-beeff081eac1" />
+
+<img width="912" height="744" alt="Screenshot 2026-09-06 at 7 12 41 pm" src="https://github.com/user-attachments/assets/e48a9dc0-4fae-487c-9347-e404139908e6" />
+
+
 ### Windows
 ![Screenshot 2025-02-10 092453](https://github.com/user-attachments/assets/7b5c9c6a-259d-4e5d-bd07-e429bd2f54bb)
 
