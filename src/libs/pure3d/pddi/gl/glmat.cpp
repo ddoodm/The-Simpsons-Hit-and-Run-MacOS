@@ -349,14 +349,9 @@ void pglMat::SetDevPass(unsigned pass)
         glDisableClientState(GL_NORMAL_ARRAY);
     }
 
-    if( texEnv[i].twoSided || context->GetCullMode() == PDDI_CULL_NONE )
-    {
-        glDisable(GL_CULL_FACE);
-    }
-    else
-    {
-        glEnable(GL_CULL_FACE);
-    }
+    // Culling is forced off port-wide, so one-sided materials draw two-sided
+    // too; the shader's PDDI_SP_TWOSIDED flag no longer decides anything here.
+    glDisable(GL_CULL_FACE);
 }
 
 

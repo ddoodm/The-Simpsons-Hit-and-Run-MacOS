@@ -149,8 +149,7 @@ void pglContext::BeginFrame()
         contextID++;
 
         glEnableClientState(GL_VERTEX_ARRAY);
-        glEnable(GL_CULL_FACE);
-        glCullFace(GL_FRONT);
+        glDisable(GL_CULL_FACE);
         glColor4f(1,1,1,1);
 
         glEnable(GL_DITHER);
@@ -801,26 +800,13 @@ void pglContext::SetAmbientLight(pddiColour col)
 
 
 // backface culling
-GLenum cullModeTable[3] =
-{
-    GL_FRONT, // PDDI_CULL_NONE (disabled using glDisable())
-    GL_FRONT, // PDDI_CULL_NORMAL
-    GL_BACK   // PDDI_CULL_INVERTED
-};
-    
 void pglContext::SetCullMode(pddiCullMode mode)
 {
+    // Culling is forced off port-wide; the requested mode is still recorded so
+    // GetCullMode() keeps reporting what the caller asked for.
     pddiBaseContext::SetCullMode(mode);
 
-    if(mode == PDDI_CULL_NONE)
-    {
-        glDisable(GL_CULL_FACE);
-    }
-    else
-    {
-        glEnable(GL_CULL_FACE);
-        glCullFace(cullModeTable[mode]);
-    }
+    glDisable(GL_CULL_FACE);
 }
 
 // z-buffer control
