@@ -395,7 +395,9 @@ void radSoundHalVoiceWin::SetPitchInternal( void )
         alSourcef( m_Source, AL_REFERENCE_DISTANCE, 1.0f );
         alSourcef( m_Source, AL_MAX_DISTANCE, 1000.0f );
         alSourcef( m_Source, AL_ROLLOFF_FACTOR, 0.0f );
-//        alSourcef( m_Source, AL_SOURCE_RELATIVE, AL_TRUE );
+
+        // Non-positional voices sit on top of the listener.
+        alSourcei( m_Source, AL_SOURCE_RELATIVE, AL_TRUE );
     }
 }
 
@@ -432,7 +434,9 @@ void radSoundHalVoiceWin::SetPitchInternal( void )
     alSourcef(m_Source, AL_REFERENCE_DISTANCE, p->m_ReferenceDistance);
     alSourcef(m_Source, AL_MAX_DISTANCE, p->m_MaxDistance);
     alSourcef(m_Source, AL_ROLLOFF_FACTOR, listenerRolloffFactor);
-//    alSourcef(m_Source, AL_SOURCE_RELATIVE, AL_FALSE);
+
+    // Positions come from the game in world space, as does the listener.
+    alSourcei(m_Source, AL_SOURCE_RELATIVE, AL_FALSE);
 
     rWarningMsg(alGetError() == AL_NO_ERROR, "radSoundHalVoiceWin::OnApplyPositionalInfo Failed.\n");
 }
